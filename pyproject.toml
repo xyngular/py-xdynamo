@@ -5,8 +5,11 @@ description = "Use dynamo with xmodel objects."
 authors = ["Josh Orr <josh@orr.blue>"]
 packages = [{include = "xmodel_dynamo"}]
 readme = "README.md"
-license = "The Unlicense (Unlicense)"
 repository = "https://github.com/xyngular/py-xmodel-rest"
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: The Unlicense (Unlicense)"
+]
 
 [tool.poetry.dependencies]
 python = "~3.8"
