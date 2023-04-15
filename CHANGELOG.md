@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.1](https://github.com/xyngular/py-xmodel-dynamo/compare/v0.1.0...v0.1.1) (2023-04-15)
+
+
+### Bug Fixes
+
+* doc links. ([6fccf08](https://github.com/xyngular/py-xmodel-dynamo/commit/6fccf0841b3855a3baae0c77469217cf03b55af3))
+* license ([ee1e94e](https://github.com/xyngular/py-xmodel-dynamo/commit/ee1e94e9348405e41d5601300aafef3715d99a49))
+
+
+### Documentation
+
+* added doc links. ([3504efa](https://github.com/xyngular/py-xmodel-dynamo/commit/3504efaa97c92a035a30593cc1130d4fc376215f))
+
 ## 0.1.0 (2023-04-15)
 
 
