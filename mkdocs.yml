@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: Docs for xmodel-rest
+site_name: Docs for xmodel-dynamo
 dev_addr: 127.0.0.1:7000
 
 nav:
