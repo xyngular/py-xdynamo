@@ -1,0 +1,2 @@
+class XModelDynamoError(Exception):
+    pass

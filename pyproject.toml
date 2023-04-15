@@ -1,0 +1,77 @@
+[tool.poetry]
+name = "xmodel_dynamo"
+version = "1.0.1"
+description = "Xyngular Dynamo Model Library"
+authors = ["Josh Orr <josh@orr.blue>"]
+packages = [{include = "xmodel_dynamo"}]
+readme = "README.md"
+license = "The Unlicense (Unlicense)"
+repository = "https://github.com/xyngular/py-xmodel-rest"
+
+[tool.poetry.dependencies]
+python = "~3.8"
+boto3 = "^1.17.54"
+#xyn-aws = "^1.1.1"
+#xyn-config = "^1.2.2"
+#xyn-model = "^1.1.0"
+#xyn-logging = "^1.1.1"
+
+xmodel = "^0.2.0"
+xinject = "^1.4.0"
+xloop = "^1.0.1"
+xsentinels = "^1.2.1"
+xurls = "^0.2.0"
+ciso8601 = "^2.3.0"
+xsettings = "^1.3.0"
+
+# Right now, we are compatiable with both v2 and v3 of xyn-resource.
+#xyn-resource = ">=2.1.2,<4"
+xboto = "^1.0.2"
+xcon = "^0.4.0"
+
+[tool.poetry.dev-dependencies]
+ipdb = "^0.13.9"
+autopep8 = "^1.5.7"
+moto = "^1.3.13"
+pycodestyle = "^2.7.0"
+pdoc3 = "^0"
+pylint = "^2.11.1"
+pytest = "^6.2.5"
+pytest-mock = "^3.6.1"
+pytest-pycodestyle = "^2.2.0"
+black = {version = "*", allow-prereleases = true}
+mkdocstrings = { extras = ["python"], version = "^0" }
+mkdocs-autorefs = "^0"
+mkdocs-git-revision-date-plugin = "^0"
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.0.12"
+mike = "^1.1.2"
+tomlkit = "^0.11.7"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 99
+target_version = ['py38']
+skip-string-normalization = 1
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
