@@ -19,7 +19,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, Optional
 
-
+import xcon
+from xcon import xcon_settings
 from botocore.exceptions import ClientError
 from xinject import Dependency
 
@@ -29,6 +30,8 @@ from .errors import XModelDynamoError
 log = logging.getLogger(__name__)
 
 __all__ = ["DynamoTableCreator", "DynamoDB"]
+
+_auto_create_table_only_in_environments = {'unittest', 'local'}
 
 
 class DynamoTableCreator:
@@ -93,8 +96,12 @@ class DynamoDB(Dependency, attributes_to_skip_while_copying=["_table", "_verifie
                     [example: If table is 'DELETING'], we raise an XynLibError.
         """
         verified = self._verified.get(name, False)
-        table = self._tables.get(name)
 
+        # We only verify/create-table-if-needed in specific environments.
+        if xcon_settings.environment not in _auto_create_table_only_in_environments:
+            verified = True
+
+        table = self._tables.get(name)
         if table is not None and verified:
             return table
 
