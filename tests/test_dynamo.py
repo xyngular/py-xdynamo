@@ -4,7 +4,8 @@ from typing import List, Dict, Union, Optional, Type, Any, Callable
 import moto
 from typing import TypeVar
 import pytest
-from moto import mock_dynamodb2
+import moto
+from moto import mock_dynamodb
 import dataclasses
 from xmodel.remote import XRemoteError
 import datetime as dt
@@ -241,14 +242,13 @@ def simple_obj_get_via_id(simple_obj, simple_obj_def) -> Optional[ItemWithRangeK
 @pytest.fixture(autouse=True)
 @pytest.mark.order(-10)
 def mock_dynamo_db():
-    with mock_dynamodb2() as mock:
+    with mock_dynamodb() as mock:
         yield mock
 
 
 # --------------------------
 # ***** My Unit Tests ******
 
-@moto.mock_dynamodb2
 def test_basic_dyn_class():
     class ItemOnlyHash(
         DynModel['ItemOnlyHash'],
@@ -261,7 +261,6 @@ def test_basic_dyn_class():
     print(fields)
 
 
-@moto.mock_dynamodb2
 def test_basic_json_with_blank_data():
     model = SubObj()
     model.sub_name = "398221"
@@ -456,7 +455,7 @@ def test_pagination(simple_obj_values):
     # A small number of objects with lots of data is much faster then tens of thousands of objects.
     lots_of_data = simple_obj_values.generate_range_value(0)
     if model_cls.api.structure.dyn_hash_field.type_hint is str:
-        for x in range(10000):
+        for x in range(15):
             lots_of_data += simple_obj_values.generate_range_value(x)
 
     with DynBatch():

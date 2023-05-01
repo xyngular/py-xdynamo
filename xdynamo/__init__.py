@@ -7,7 +7,7 @@ Intended use of this library is for an quick way to get/retrieve objects from Dy
 Things that it can help with:
 
 - If table does not exist, it will create it automatically.
-    - Helps when unit-testing with `@moto.mock_dynamodb2` decorator, since mock expects you to
+    - Helps when unit-testing with `@moto.mock_dynamodb` decorator, since mock expects you to
         create the table before using it. This means tables are automatically/lazily created as
         needed (with no special effort on the part of the unit test).
         .. tip:: To use
@@ -348,7 +348,7 @@ the renaming unsent objects are sent to dynamo.
 
 ## Mocking Dynamo with moto
 
-You can use the `moto` 3rd part dependency, and their `@moto.mock_dynamodb2` method decorator
+You can use the `moto` 3rd part dependency, and their `@moto.mock_dynamodb` method decorator
 to 'mock' dynamo. There is something to be aware though, but they are easy to get correct:
 
 - The mocking library expects you to first your dynamo tables via boto3 calls
