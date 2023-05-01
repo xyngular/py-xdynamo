@@ -106,7 +106,7 @@ class DynamoDB(Dependency, attributes_to_skip_while_copying=["_table", "_verifie
             return table
 
         if not table_creator:
-            # Do't verify table if we don't have a table creator, just return it.
+            # Don't verify table if we don't have a table creator, just return it.
             self._tables[name] = table
             self._verified[name] = False
             return table
