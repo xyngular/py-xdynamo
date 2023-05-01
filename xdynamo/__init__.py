@@ -76,7 +76,7 @@ with some basic data fields (str/bool).
 .. note:: You can see models vary similar to these in action in sine unit-tests
     Look at
     [tests/test_dynamo.py](https://github.com/xyngular/py-xyn-model-dynamo/blob/master/tests/test_dynamo.py)
-    in xmodel_dynamo source if your interested.
+    in xdynamo source if your interested.
 
 >>> class ModelWithRangeKey(
 ...     DynModel["ModelWithRangeKey"],
@@ -352,16 +352,16 @@ You can use the `moto` 3rd part dependency, and their `@moto.mock_dynamodb2` met
 to 'mock' dynamo. There is something to be aware though, but they are easy to get correct:
 
 - The mocking library expects you to first your dynamo tables via boto3 calls
-    before they are used.  `xmodel_dynamo.DynClient` will check and ensure the tables
+    before they are used.  `xdynamo.DynClient` will check and ensure the tables
     are created automatically in a lazy fashion
     (ie: first time an attempt to send/get a `DynMode` from Dynamo).
 - In an effort to reuse already opened connections to dynamo, we use a shared resource
-    `xmodel_dynamo.dyn_connections.DynamoDB`.  It's important that the connection is created
+    `xdynamo.dyn_connections.DynamoDB`.  It's important that the connection is created
     while `moto` is active for `moto` to mock the connection/session.
 
     .. note:: `xinject.fixtures.context` fixture is automatically used when `xinject` is
         installed as a dependency.
-        This ensures when a `xmodel_dynamo.dyn_connections.DynamoDB` is asked for, a brand new
+        This ensures when a `xdynamo.dyn_connections.DynamoDB` is asked for, a brand new
         one will be created for the unit test and therefore create a new connection/session.
 
     - It's relatively expensive to open a new connection vs using an already existing
@@ -505,10 +505,10 @@ so you don't have figure it out your self.
 
 """  # noqa -- Some lines can't be cut shorter (URL's).
 
-from xmodel_dynamo.model import DynModel
-from xmodel_dynamo.fields import DynField, HashField, RangeField
-from xmodel_dynamo.common_types import DynKey
-from xmodel_dynamo.resources import DynBatch
+from xdynamo.model import DynModel
+from xdynamo.fields import DynField, HashField, RangeField
+from xdynamo.common_types import DynKey
+from xdynamo.resources import DynBatch
 
 __all__ = [
     "DynKey", "DynModel", "HashField", "RangeField", "DynBatch", "DynField"

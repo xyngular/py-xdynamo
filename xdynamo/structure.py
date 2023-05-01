@@ -3,8 +3,8 @@ from typing import Optional, Set, TypeVar, TYPE_CHECKING
 from xcon import xcon_settings
 from xmodel.remote import RemoteStructure
 from xmodel.remote import XRemoteError
-from xmodel_dynamo.fields import DynField
-from xmodel_dynamo.common_types import DynKeyType
+from xdynamo.fields import DynField
+from xdynamo.common_types import DynKeyType
 from xsentinels.default import Default
 
 F = TypeVar('F', bound=DynField)
@@ -90,7 +90,7 @@ class DynStructure(RemoteStructure[F]):
         This method accepts every argument in the super-class version, with the addition
         of ones more specific to Dynamo. So se
 
-        This method accepts named-class-parameters for `xmodel_dynamo.model.DynModel`
+        This method accepts named-class-parameters for `xdynamo.model.DynModel`
         subclasses.
 
         See super-class method `xmodel.base.structure.BaseStructure.configure_for_model_type`
@@ -113,7 +113,7 @@ class DynStructure(RemoteStructure[F]):
                 for our normal API's.  And so it makes sense to look up the APP_ENV dynamically
                 each time to get the final table name.
             **kwargs: These all come from class-arguments given to the
-                `xmodel_dynamo.model.DynModel` at class-definition time that need to be sent to
+                `xdynamo.model.DynModel` at class-definition time that need to be sent to
                 my super-class via
                 `xmodel.base.structure.BaseStructure.configure_for_model_type`. See that
                 for more on what other arguments are supported.
@@ -156,7 +156,7 @@ class DynStructure(RemoteStructure[F]):
         # The purpose of that is to indicate that the `id` field is not a normal field
         # on this class, but a virtual property instead (see `DynModel.id`).
 
-        from xmodel_dynamo.model import DynModel
+        from xdynamo.model import DynModel
         if self.model_cls is DynModel:
             # Restore `DynModel.id` normal non-field property for DynModel.
             # We want it to be a virtual-id.

@@ -5,7 +5,7 @@ from xmodel.remote import XRemoteError
 from xinject import DependencyPerThread
 
 if TYPE_CHECKING:
-    from xmodel_dynamo.api import DynApi
+    from xdynamo.api import DynApi
 
 
 class _DynBatcher(object):

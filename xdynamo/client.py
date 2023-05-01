@@ -11,17 +11,17 @@ from xmodel.common.types import FieldNames
 from xmodel.remote import XRemoteError
 from xmodel.base.fields import Converter
 from xmodel.remote.client import RemoteClient
-from xmodel_dynamo.common_types import (
+from xdynamo.common_types import (
     DynKey, DynParams, _ProcessedQuery, get_dynamo_type_from_python_type
 )
-from xmodel_dynamo.resources import _DynBatchResource
+from xdynamo.resources import _DynBatchResource
 from xsentinels.default import Default
 from xurls.url import URLStr, Query
 from xloop import xloop
 
 if TYPE_CHECKING:
-    from xmodel_dynamo.model import DynModel
-    from xmodel_dynamo.api import DynApi
+    from xdynamo.model import DynModel
+    from xdynamo.api import DynApi
 
 log = getLogger(__name__)
 M = TypeVar('M')

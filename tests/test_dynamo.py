@@ -1,4 +1,4 @@
-from xmodel_dynamo import DynKey, DynModel, HashField, RangeField, DynBatch, DynField
+from xdynamo import DynKey, DynModel, HashField, RangeField, DynBatch, DynField
 from xmodel import JsonModel, Field
 from typing import List, Dict, Union, Optional, Type, Any, Callable
 import moto

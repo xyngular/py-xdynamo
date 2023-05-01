@@ -7,9 +7,9 @@ from xurls.url import Query
 from xloop import xloop
 
 if TYPE_CHECKING:
-    from xmodel_dynamo.api import DynApi
-    from xmodel_dynamo.model import DynModel
-    from xmodel_dynamo.fields import DynField
+    from xdynamo.api import DynApi
+    from xdynamo.model import DynModel
+    from xdynamo.fields import DynField
 
 DynParams = Dict[str, Any]
 
@@ -198,7 +198,7 @@ class DynKey:
                     f"({delimiter}) is either not present, or is in it more than once. "
                     f"'id' needs to contain exactly one hash and range key combined together "
                     f"with the delimiter, ie: 'hash-key-value{delimiter}range-key-value'. "
-                    f"See xmodel_dynamo.dyn_connections documentation for more details on how "
+                    f"See xdynamo.dyn_connections documentation for more details on how "
                     f"this works."
                 )
             # todo: Consider converting these `from_json`, like we convert `to_json`

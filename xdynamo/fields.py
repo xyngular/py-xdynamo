@@ -1,6 +1,6 @@
 from typing import Optional, Type, Dict
 from xmodel import Field, Converter
-from xmodel_dynamo.common_types import DynKeyType
+from xdynamo.common_types import DynKeyType
 from xsentinels.default import Default
 
 

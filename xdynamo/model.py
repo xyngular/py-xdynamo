@@ -1,8 +1,8 @@
 from typing import TypeVar, Optional
 from xmodel.remote import XRemoteError
 from xmodel.remote.model import RemoteModel
-from xmodel_dynamo.api import DynApi
-from xmodel_dynamo.common_types import DynKey
+from xdynamo.api import DynApi
+from xdynamo.common_types import DynKey
 
 M = TypeVar('M')
 

@@ -9,11 +9,11 @@ to be written.
 
 
 ```shell
-poetry install xmodel-dynamo
+poetry install xdynamo
 ```
 
 or
 
 ```shell
-pip install xmodel-dynamo
+pip install xdynamo
 ```

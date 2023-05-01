@@ -6,10 +6,10 @@ from .db import DynamoDB
 from xmodel.common.types import FieldNames
 from xmodel.remote import XRemoteError
 from xmodel.remote.api import RemoteApi
-from xmodel_dynamo.client import DynClient
-from xmodel_dynamo.common_types import DynKey
-from xmodel_dynamo.fields import DynField
-from xmodel_dynamo.structure import DynStructure
+from xdynamo.client import DynClient
+from xdynamo.common_types import DynKey
+from xdynamo.fields import DynField
+from xdynamo.structure import DynStructure
 from xsentinels.default import Default
 from xurls.url import Query
 from xloop import xloop
