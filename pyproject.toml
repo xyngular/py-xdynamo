@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "xdynamo"
-version = "0.1.0"
+version = "0.1.1"
 description = "Use dynamo with xmodel objects."
 authors = ["Josh Orr <josh@orr.blue>"]
 packages = [{include = "xdynamo"}]
 readme = "README.md"
-repository = "https://github.com/xyngular/py-xmodel-rest"
+repository = "https://github.com/xyngular/py-xmodel-dynamo"
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "License :: OSI Approved :: The Unlicense (Unlicense)"
