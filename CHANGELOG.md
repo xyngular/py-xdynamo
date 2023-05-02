@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/xyngular/py-xdynamo/compare/v0.2.0...v0.3.0) (2023-05-02)
+
+
+### Features
+
+* add Self + dataclass transform features from Python 3.11 (but still works with &lt; 3.11) ([c7d3b68](https://github.com/xyngular/py-xdynamo/commit/c7d3b68e9044e4acef97687ebd5bdf69bdece658))
+
 ## [0.2.0](https://github.com/xyngular/py-xdynamo/compare/v0.1.1...v0.2.0) (2023-05-01)
 
 
