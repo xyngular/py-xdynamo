@@ -26,15 +26,12 @@ def utc() -> dt.datetime:
 # ***** My Models ******
 
 
-class SubObj(JsonModel['SubObj']):
+class SubObj(JsonModel):
     sub_name: str = Field(include_in_repr=True)
     queue: bool
 
 
-class ItemWithRangeKey(
-    DynModel[M],
-    dyn_name=None
-):
+class ItemWithRangeKey(DynModel, dyn_name=None):
     hash_field: str = HashField()
     range_field: str = RangeField()
     name: str
@@ -58,7 +55,7 @@ class ItemWithRangeKey(
 
 
 class ItemWithRangeKeyForStr(
-    ItemWithRangeKey['ItemWithRangeKeyStr'],
+    ItemWithRangeKey,
     dyn_name="testItemWithRangeKey"
 ):
     hash_field: str = HashField()
@@ -66,7 +63,7 @@ class ItemWithRangeKeyForStr(
 
 
 class ItemWithRangeKeyForInt(
-    ItemWithRangeKey['ItemOnlyHash'],
+    ItemWithRangeKey,
     dyn_name="testItemWithRangeWithIntKeys",
 ):
     hash_field: int = HashField()
@@ -74,17 +71,14 @@ class ItemWithRangeKeyForInt(
 
 
 class ItemWithRangeKeyForDateTime(
-    ItemWithRangeKey['ItemOnlyHash'],
+    ItemWithRangeKey,
     dyn_name="testItemWithRangeWithIntKeys",
 ):
     hash_field: dt.datetime = HashField()
     range_field: dt.datetime = RangeField()
 
 
-class ItemOnlyHash(
-    DynModel['ItemOnlyHash'],
-    dyn_name="testItemOnlyHash",
-):
+class ItemOnlyHash(DynModel, dyn_name="testItemOnlyHash"):
     hash_field_id: str = HashField()
     basic_int: int
     dict_list: List[Dict[str, str]]
@@ -250,10 +244,7 @@ def mock_dynamo_db():
 # ***** My Unit Tests ******
 
 def test_basic_dyn_class():
-    class ItemOnlyHash(
-        DynModel['ItemOnlyHash'],
-        dyn_name="testItemOnlyHash",
-    ):
+    class ItemOnlyHash(DynModel, dyn_name="testItemOnlyHash"):
         hash_field_id: str = HashField()
         basic_int: int
 
@@ -469,13 +460,13 @@ def test_pagination(simple_obj_values):
     assert len(result) == 40
 
 
-class MultipleHashes(DynModel['MultipleHashes'], dyn_name="tableWithError1"):
+class MultipleHashes(DynModel, dyn_name="tableWithError1"):
     """ This class has an intentional error, it has two hash fields. """
     hash_field_1: str = HashField()
     hash_field_2: str = HashField()
 
 
-class MultipleRanges(DynModel['MultipleRanges'], dyn_name="tableWithError2"):
+class MultipleRanges(DynModel, dyn_name="tableWithError2"):
     """ This class has an intentional error, it has two range fields. """
     hash_field_1: int = HashField()
     range_field_1: int = RangeField()

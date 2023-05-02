@@ -3,11 +3,13 @@ from xmodel.remote import XRemoteError
 from xmodel.remote.model import RemoteModel
 from xdynamo.api import DynApi
 from xdynamo.common_types import DynKey
+from xmodel.base.model import Self
+
 
 M = TypeVar('M')
 
 
-class DynModel(RemoteModel[M], dyn_name=None, dyn_service=None):
+class DynModel(RemoteModel, dyn_name=None, dyn_service=None):
     """
     Used to easily parse/generate JSON from xyn_sdk model's for use in Dynamo.
     So it will take advantage of all the other features of the xyn_sdk models.
@@ -19,7 +21,7 @@ class DynModel(RemoteModel[M], dyn_name=None, dyn_service=None):
     We pass in None for name/service to indicate we don't have an associated table,
     that we are more of an abstract class.
     """
-    api: DynApi[M]
+    api: DynApi[Self]
     id: str
 
     @property

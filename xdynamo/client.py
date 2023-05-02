@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from xdynamo.api import DynApi
 
 log = getLogger(__name__)
-M = TypeVar('M')
+M = TypeVar('M', bound='DynModel')
 
 
 class DynClient(RemoteClient[M]):
@@ -38,7 +38,7 @@ class DynClient(RemoteClient[M]):
     # See `xmodel.remote.client.RemoteClient.api` for more details.
     api: 'DynApi[M]'
 
-    def delete_obj(self, obj: Union['DynModel[M]', DynKey]):
+    def delete_obj(self, obj: Union['M', DynKey]):
         # raise NotImplementedError()
 
         # table_name = self.api.structure.dyn_name
@@ -61,7 +61,7 @@ class DynClient(RemoteClient[M]):
         # todo: Check for primary key and raise a nicer, higher-level exception in that case.
         resource.delete_item(Key=key.key_as_dict())
 
-    def delete_objs(self, objs: Sequence[Union['DynModel[M]', DynKey]]):
+    def delete_objs(self, objs: Sequence[Union['M', DynKey]]):
         """ Uses a batch-writer to put the items.
             WAY more efficient then doing it one at a time.
             If you only give me one item, directly calls `delete_obj` without a batch-writer.
@@ -79,7 +79,7 @@ class DynClient(RemoteClient[M]):
 
     def send_objs(
             self,
-            objs: Sequence['DynModel[M]'],
+            objs: Sequence['M'],
             *,
             url: URLStr = None,
             send_limit: int = None
@@ -413,8 +413,8 @@ class DynClient(RemoteClient[M]):
                 depending on what attributes are in the query dict.
 
         Yields:
-            DynModel[M]: The next object we got from dynamo. This method returns a generator
-                that will eventually go though all the results from dynamo in a memory-efficient
+            M: The next object we got from dynamo. This method returns a generator
+                that will eventually go through all the results from dynamo in a memory-efficient
                 manner.
         """
 
