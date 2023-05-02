@@ -79,7 +79,7 @@ with some basic data fields (str/bool).
     in xdynamo source if your interested.
 
 >>> class ModelWithRangeKey(
-...     DynModel["ModelWithRangeKey"],
+...     DynModel,
 ...     # ---> used for end of table name:
 ...     dyn_name="modelWithRangeKey"
 ... ):
@@ -96,7 +96,7 @@ We enabled `Field.include_in_repr` in the below example, it will make `sub_name`
 in string when object is converted to a string (such as when logging object out).
 
 >>> from xmodel.fields import Field
->>> class ModelAsSubJsonDict(BaseModel['ModelAsSubDict'], has_id_field=False):
+>>> class ModelAsSubJsonDict(BaseModel, has_id_field=False):
 ...
 ...     # It puts 'sub-name' into the object description when converting object
 ...     # to a string
@@ -108,7 +108,7 @@ Here is a second `DynModel` for a separate table.  It has a relationship to a
 `ModelWithRangeKey`.
 
 >>> class ModelOnlyHash(
-...     DynModel['VisiblePackage'],
+...     DynModel,
 ...     dyn_name="visibleShipConfirm",
 ...     dyn_service="experimental"
 ... ):

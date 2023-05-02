@@ -23,9 +23,11 @@ class DynStructure(RemoteStructure[F]):
     #  dynamo tables.
     virtual_id: bool = True
 
-    dyn_name: str = None
+    dyn_name: str = Default
     """ Table name, minus service/environment name.
         We generally want to use camelCase for this and no dashes/underscores.
+
+        If left as `Default`, will use a "camelCase" version of the model class name.
     """
 
     dyn_service: str = Default
@@ -41,11 +43,25 @@ class DynStructure(RemoteStructure[F]):
     dyn_hash_key_name: str = None
     """ Name of hash key [for now both model and table attribute must be same name].
         If left as None, an error will be raised when we try connect to table.
+
+        You can more easily indicate this via `HashField`, ie:
+
+        >>> class MyModel(DynModel):
+        ...     my_hash: str = HashField()
+
+        When you do this, we will fill in `dyn_hash_key_name` for you.
     """
 
     dyn_range_key_name: str = None
     """ Name of range key [for now both model and table attribute must be same name];
         If left as None, we don't have one on the table.
+
+        You can more easily indicate this via `RangeField`, ie:
+
+        >>> class MyModel(DynModel):
+        ...     my_hash: str = RangeField()
+
+        When you do this, we will fill in `dyn_range_key_name` for you.
     """
 
     dyn_id_delimiter = "|"
@@ -75,9 +91,15 @@ class DynStructure(RemoteStructure[F]):
 
     def configure_for_model_type(
             self,
-            dyn_name: str,
+
+            # These fields are used to name the table
+            # format: `{dyn_service}-{dyn_environment}-{dyn_name}`
+            dyn_name: Optional[str] = Default,
+            dyn_environment: str = Default,
             dyn_service: str = Default,
+
             dyn_id_delimiter: str = Default,
+
             **kwargs
     ):
         """
@@ -100,18 +122,27 @@ class DynStructure(RemoteStructure[F]):
             dyn_name: Name of the table.  We will add dyn_service and current environment to the
                 final name.  See `DynStructure.fully_qualified_table_name` for more details.
 
-            dyn_service: Name of the service.  For now this is required. I was thinking of making
-                this optional and grabbing the current `xcon.conf.XconSettings.service`
-                each time it's needed.  But this would be a bit weird. It would be the equivalent
-                of changing an API endpoint name based on the current service name.
+                This can also be `None` to indicate that it has no direct-table
+                (ie: this is an abstract base class, with commonly shared fields, etc).
 
-                I consider the table's service + table names part of the 'endpoint' name.
+            dyn_service: Name of the service to use for that portion of the table name.
+                If not provided, and `xcon` is available, will use `con.conf.XconSettings.service`.
+                Right now `xcon` is a required dependency, but will make it optional in the future.
 
-                However....
-                The current `xcon.conf.XconSettings.environment` environmental name makes sense to
-                look up each time when needed. The current APP_ENV is used in the host-name
-                for our normal API's.  And so it makes sense to look up the APP_ENV dynamically
-                each time to get the final table name.
+                In that future version, leaving this as `Default` would make it not format
+                the service name into the table name.
+
+            dyn_environment: Name of the environment to use for that portion of the table name.
+                Right now `xcon` is a required dependency, but will make it optional in the future.
+
+                In that future version, leaving this as `Default` would make it not format
+                the environment name into the table name.
+
+            dyn_id_delimiter: Delimiter to use for the `id` value when table has both a
+                hash and range key (to delimit the values of the two).
+
+                By default, a pipe char `|` is used.
+
             **kwargs: These all come from class-arguments given to the
                 `xdynamo.model.DynModel` at class-definition time that need to be sent to
                 my super-class via
@@ -119,8 +150,22 @@ class DynStructure(RemoteStructure[F]):
                 for more on what other arguments are supported.
         """
         super().configure_for_model_type(**kwargs)
+
+        # Resolve default `dyn_name` if needed
+        if dyn_name is Default:
+            model_name = self.model_cls.__name__
+            dyn_name = model_name[:1].lower() + model_name[1:] if model_name else ''
+
+        if dyn_name == '':
+            raise XRemoteError(
+                f"The `dyn_name` of dynamo model ({self.model_cls}) was blank/None; "
+                f"model must be `None` or have a non-blank `dyn_name`."
+            )
+
         self.dyn_name = dyn_name
         self.dyn_service = dyn_service
+        self.dyn_environment = dyn_environment
+
         if dyn_id_delimiter:
             self.dyn_id_delimiter = dyn_id_delimiter
 
