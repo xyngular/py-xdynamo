@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.4.0](https://github.com/xyngular/py-xdynamo/compare/v0.3.0...v0.4.0) (2023-07-07)
+
+
+### Features
+
+* can use any future version of xmodel up until &lt;1.0.0. ([2cd1508](https://github.com/xyngular/py-xdynamo/commit/2cd150898568a1573086972974a014d64c212228))
+
+## [0.3.0](https://github.com/xyngular/py-xdynamo/compare/v0.2.0...v0.3.0) (2023-05-02)
+
+
+### Features
+
+* add Self + dataclass transform features from Python 3.11 (but still works with &lt; 3.11) ([c7d3b68](https://github.com/xyngular/py-xdynamo/commit/c7d3b68e9044e4acef97687ebd5bdf69bdece658))
+
+## [0.2.0](https://github.com/xyngular/py-xdynamo/compare/v0.1.1...v0.2.0) (2023-05-01)
+
+
+### Features
+
+* finish rest of xmodel-dynamo to just xdynamo rename. ([6de99ab](https://github.com/xyngular/py-xdynamo/commit/6de99ab5a1b3821d1f91381e6b71023bcdced9eb))
+* make `xcon` optional dependency. ([85cd8e4](https://github.com/xyngular/py-xdynamo/commit/85cd8e445206a4ae6fc2a31096d9a9cdd6ec2030))
+* only auto-create tables if in `unittest` or `local` environments. ([e42a0f6](https://github.com/xyngular/py-xdynamo/commit/e42a0f65e960081dce0aea8d78d6b3248c62be09))
+* rename/simplify library name to `xdynamo` (file chages). ([f3d6590](https://github.com/xyngular/py-xdynamo/commit/f3d659034cd1ade3965b9283c28480dd0c87e1cd))
+* rename/simplify library to `xdynamo`. ([247f5fc](https://github.com/xyngular/py-xdynamo/commit/247f5fc6e03249fb3e32f0c5a0990567a8976731))
+* upgrade moto + adapt to it. ([f898db6](https://github.com/xyngular/py-xdynamo/commit/f898db6e8a2dab44e929f84317bfd92c1cae7bad))
+
 ## [0.1.1](https://github.com/xyngular/py-xdynamo/compare/v0.1.0...v0.1.1) (2023-04-15)
 
 

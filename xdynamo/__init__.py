@@ -96,7 +96,7 @@ We enabled `Field.include_in_repr` in the below example, it will make `sub_name`
 in string when object is converted to a string (such as when logging object out).
 
 >>> from xmodel.fields import Field
->>> class ModelAsSubJsonDict(BaseModel['ModelAsSubDict'], has_id_field=False):
+>>> class ModelAsSubJsonDict(BaseModel, has_id_field=False):
 ...
 ...     # It puts 'sub-name' into the object description when converting object
 ...     # to a string

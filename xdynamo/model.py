@@ -5,6 +5,8 @@ from xsentinels import Default
 
 from xdynamo.api import DynApi, lazy_load_types_for_dyn_api
 from xdynamo.common_types import DynKey
+from xmodel.base.model import Self
+
 
 M = TypeVar('M')
 
@@ -27,7 +29,7 @@ class DynModel(
     We pass in None for name/service to indicate we don't have an associated table,
     that we are more of an abstract class.
     """
-    api: DynApi[M]
+    api: DynApi[Self]
     id: str
 
     @property

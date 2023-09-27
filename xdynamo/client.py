@@ -562,7 +562,7 @@ class DynClient(RemoteClient[M]):
 
         Yields:
             M: (DynModel subclass instances) - The next object we got from dynamo. This method returns a generator
-                that will eventually go though all the results from dynamo in a memory-efficient
+                that will eventually go through all the results from dynamo in a memory-efficient
                 manner.
         """
 
