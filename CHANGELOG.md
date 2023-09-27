@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0](https://github.com/xyngular/py-xdynamo/compare/v0.4.0...v0.5.0) (2023-09-27)
+
+
+### Features
+
+* conditional updates/deletes + updating if removal + table scanning support ([38c1e8c](https://github.com/xyngular/py-xdynamo/commit/38c1e8c27443e163d214788443db1fb9ee21017e))
+* update dependencies to get latest xmodel. ([34b24f5](https://github.com/xyngular/py-xdynamo/commit/34b24f5ad5e5104636b510e98596db7daaa38ad5))
+
 ## [0.4.0](https://github.com/xyngular/py-xdynamo/compare/v0.3.0...v0.4.0) (2023-07-07)
 
 
