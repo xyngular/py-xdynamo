@@ -561,9 +561,9 @@ class DynClient(RemoteClient[M]):
                 depending on what attributes are in the query dict.
 
         Yields:
-            M: (DynModel subclass instances) - The next object we got from dynamo. This method returns a generator
-                that will eventually go through all the results from dynamo in a memory-efficient
-                manner.
+            M: (DynModel subclass instances) - The next object we got from dynamo.
+                This method returns a generator that will eventually go through all the results
+                from dynamo in a memory-efficient manner.
         """
 
         # todo: support in/lists as values....
