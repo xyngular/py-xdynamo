@@ -15,7 +15,7 @@ classifiers = [
 python = "^3.9"
 boto3 = "^1.17.54"
 
-xmodel = "^0"
+xmodel = "^0,>=0.8.0"
 xinject = "^1.4.0"
 xloop = "^1.0.1"
 xsentinels = "^1.2.1"
