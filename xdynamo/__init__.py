@@ -79,7 +79,7 @@ with some basic data fields (str/bool).
     in xdynamo source if your interested.
 
 >>> class ModelWithRangeKey(
-...     DynModel["ModelWithRangeKey"],
+...     DynModel,
 ...     # ---> used for end of table name:
 ...     dyn_name="modelWithRangeKey"
 ... ):
@@ -108,7 +108,7 @@ Here is a second `DynModel` for a separate table.  It has a relationship to a
 `ModelWithRangeKey`.
 
 >>> class ModelOnlyHash(
-...     DynModel['VisiblePackage'],
+...     DynModel,
 ...     dyn_name="visibleShipConfirm",
 ...     dyn_service="experimental"
 ... ):

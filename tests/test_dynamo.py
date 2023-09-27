@@ -26,15 +26,12 @@ def utc() -> dt.datetime:
 # ***** My Models ******
 
 
-class SubObj(JsonModel['SubObj']):
+class SubObj(JsonModel):
     sub_name: str = Field(include_in_repr=True)
     queue: bool
 
 
-class ItemWithRangeKey(
-    DynModel[M],
-    dyn_name=None
-):
+class ItemWithRangeKey(DynModel, dyn_name=None):
     hash_field: str = HashField()
     range_field: str = RangeField()
     name: str
@@ -57,34 +54,22 @@ class ItemWithRangeKey(
         assert self.basic_bool == other.basic_bool
 
 
-class ItemWithRangeKeyForStr(
-    ItemWithRangeKey['ItemWithRangeKeyStr'],
-    dyn_name="testItemWithRangeKey"
-):
+class ItemWithRangeKeyForStr(ItemWithRangeKey, dyn_name="testItemWithRangeKey"):
     hash_field: str = HashField()
     range_field: str = RangeField()
 
 
-class ItemWithRangeKeyForInt(
-    ItemWithRangeKey['ItemOnlyHash'],
-    dyn_name="testItemWithRangeWithIntKeys",
-):
+class ItemWithRangeKeyForInt(ItemWithRangeKey, dyn_name="testItemWithRangeWithIntKeys"):
     hash_field: int = HashField()
     range_field: int = RangeField()
 
 
-class ItemWithRangeKeyForDateTime(
-    ItemWithRangeKey['ItemOnlyHash'],
-    dyn_name="testItemWithRangeWithIntKeys",
-):
+class ItemWithRangeKeyForDateTime(ItemWithRangeKey, dyn_name="testItemWithRangeWithIntKeys"):
     hash_field: dt.datetime = HashField()
     range_field: dt.datetime = RangeField()
 
 
-class ItemOnlyHash(
-    DynModel['ItemOnlyHash'],
-    dyn_name="testItemOnlyHash",
-):
+class ItemOnlyHash(DynModel, dyn_name="testItemOnlyHash"):
     hash_field_id: str = HashField()
     basic_int: int
     dict_list: List[Dict[str, str]]
@@ -250,10 +235,7 @@ def mock_dynamo_db():
 # ***** My Unit Tests ******
 
 def test_basic_dyn_class():
-    class ItemOnlyHash(
-        DynModel['ItemOnlyHash'],
-        dyn_name="testItemOnlyHash",
-    ):
+    class ItemOnlyHash(DynModel, dyn_name="testItemOnlyHash"):
         hash_field_id: str = HashField()
         basic_int: int
 
@@ -469,13 +451,13 @@ def test_pagination(simple_obj_values):
     assert len(result) == 40
 
 
-class MultipleHashes(DynModel['MultipleHashes'], dyn_name="tableWithError1"):
+class MultipleHashes(DynModel, dyn_name="tableWithError1"):
     """ This class has an intentional error, it has two hash fields. """
     hash_field_1: str = HashField()
     hash_field_2: str = HashField()
 
 
-class MultipleRanges(DynModel['MultipleRanges'], dyn_name="tableWithError2"):
+class MultipleRanges(DynModel, dyn_name="tableWithError2"):
     """ This class has an intentional error, it has two range fields. """
     hash_field_1: int = HashField()
     range_field_1: int = RangeField()
@@ -491,3 +473,59 @@ def test_multiple_keys_error():
         MultipleHashes.api.get()
     with pytest.raises(XRemoteError):
         MultipleRanges.api.get()
+
+
+def test_scan_raise_exception():
+    with pytest.raises(NotImplementedError, match='There are no hash-keys'):
+        ItemWithRangeKeyForStr.api.get({'name': 'hello'})
+
+
+def test_scan_fallback():
+    ItemWithRangeKeyForStr(hash_field='hash', range_field='range', name='first').api.send()
+    ItemWithRangeKeyForStr(hash_field='other-h', range_field='other-r', name='second').api.send()
+
+    items = ItemWithRangeKeyForStr.api.get({'name': 'second'}, allow_scan=True)
+    items = list(items)
+    assert len(items) == 1
+    assert items[0].hash_field == 'other-h'
+
+
+def test_conditional_delete():
+    ItemWithRangeKeyForStr(hash_field='h1', range_field='r1', name='n1').api.send()
+    o = ItemWithRangeKeyForStr(hash_field='h2', range_field='r2', name='n2')
+    o.api.send()
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+
+    # try to delete with a condition that fails.
+    o.api.delete(condition={'name': 'n1'})
+    assert o.api.response_state.had_error
+
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+    o.api.delete(condition={'name': 'n2'})
+    objs = list(ItemWithRangeKeyForStr.api.get())
+
+    assert len(objs) == 1
+    assert objs[0].hash_field == 'h1'
+    assert objs[0].range_field == 'r1'
+
+
+def test_conditional_put():
+    ItemWithRangeKeyForStr(hash_field='h1', range_field='r1', name='n1').api.send()
+    o = ItemWithRangeKeyForStr(hash_field='h2', range_field='r2', name='n2')
+    o.api.send()
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+
+    # modify (so there is a change to send), see if it won't update due to condition.
+    o.items = [{'a': 2}]
+    o.api.send(condition={'name': 'n1'})
+    assert o.api.response_state.had_error
+    assert o.api.response_state.has_field_error('_conditional_check', 'failed')
+
+    assert ItemWithRangeKeyForStr.api.get_via_id(o.id).items is None
+
+    o.items = [{'a': 3}]
+    o.api.send(condition={'name': 'n2'})
+    assert not o.api.response_state.had_error
+    assert not o.api.response_state.has_field_error('_conditional_check', 'failed')
+
+    assert ItemWithRangeKeyForStr.api.get_via_id(o.id).items == [{'a': 3}]

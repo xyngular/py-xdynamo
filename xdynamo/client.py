@@ -3,11 +3,14 @@ from typing import (
 )
 from boto3.dynamodb import conditions
 from boto3.dynamodb.table import BatchWriter, TableResource
+from xbool import bool_value
 
 from .db import DynamoDB
 from xcon import xcon_settings
 from logging import getLogger
-from xmodel.common.types import FieldNames
+from .const import CONDITIONAL_CHECK_FAILED_KEY
+from xboto.resource import dynamodb
+from xmodel.common.types import FieldNames, JsonDict
 from xmodel.remote import XRemoteError
 from xmodel.base.fields import Converter
 from xmodel.remote.client import RemoteClient
@@ -22,9 +25,11 @@ from xloop import xloop
 if TYPE_CHECKING:
     from xdynamo.model import DynModel
     from xdynamo.api import DynApi
+    M = TypeVar('M', bound=DynModel)
+else:
+    M = TypeVar('M')
 
 log = getLogger(__name__)
-M = TypeVar('M')
 
 
 class DynClient(RemoteClient[M]):
@@ -38,67 +43,189 @@ class DynClient(RemoteClient[M]):
     # See `xmodel.remote.client.RemoteClient.api` for more details.
     api: 'DynApi[M]'
 
-    def delete_obj(self, obj: Union['DynModel[M]', DynKey]):
-        # raise NotImplementedError()
+    def delete_obj(self, obj: Union[M, DynKey], *, condition: Query = None):
+        """
+         Attempts to delete passed in object from dynamodb table.
 
-        # table_name = self.api.structure.dyn_name
-        # params = {
-        #     "TableName": table_name,
-        #     # todo: find out if need "S", "N", level...
-        #     "Key": DynKey.via_obj(obj).key_as_dict()
-        #     # todo: put this into separate method, support '*params' for extra dynamo params
-        #     #   like we do with some of the other methods.
-        # }
+         If you pass in a condition, it will be evaluated on the dynamodb-service side and the
+         deletes will only happen if the condition is met.
+         This can help prevent race conditions if used correctly.
 
-        resource = self._table_or_batch_writer()
+         If there is a batch-writer currently in use, we will try to use that to batch the deletes.
+
+         Keep in mind that if you pass in a `condition`, we can't use the batch write.
+         We will instead send of a single-item delete request with the condition attached
+         (bypassing any current batch-writer that may be in use).
+
+         Args:
+            obj: Object to delete, it MUST have values for it's primary key(s)
+                (no other values are required, the primary-key values are the only ones used).
+            condition: Optional, if passed in we will send this as a `ConditionExpression`
+                to dynamo.  You can pass in a Query, ie: the same structure that is used
+                for `self.query()` and `self.scan()`.
+
+                We will take the Query correctly format it for you into the `ConditionExpression`.
+
+                If the condition is met, the item will be deleted.
+
+                If the condition is NOT met, we will handle it for you by catch the exception,
+                logging about it, setting error on response_state of object, and then returning.
+                Conditions are generally used to help prevent race-conditions,
+                ie: to prevent a deleted on purpose.
+
+                Most of the time the intent is to ignore what the result is, it was either
+                deleted or not;
+                ie: it will eventually be handled in some way it if it was not deleted.
+
+                If you want to know when a conditional delete fails, you can look at
+                deleted objects `obj.api.response_state`.
+
+                It's `had_error` will be `True`, there will be some info in `errors`,
+                but also a field error with name `_conditional_check` and code `failed`
+                you can easily check for via:
+
+                `....response_state.has_field_error('_conditional_check', 'failed')`
+
+                or you can use `xyn_model_dynamo.const.CONDITIONAL_CHECK_FAILED_KEY` for
+                the field key.
+         """
+        # Reset object error response state, we are try afresh.
+        obj.api.response_state.reset()
 
         # Get the DynKey
         # If we don't get a dyn-key, check for that and raise nicer, higher-level error.
         key = obj if isinstance(obj, DynKey) else DynKey.via_obj(obj)
+        params = {
+            'Key': key.key_as_dict(),
+        }
 
         # To keep things simple, I am using 'put' which replaces entire item,
         # so get all properties of item regardless if they changed or not.
         # todo: Check for primary key and raise a nicer, higher-level exception in that case.
-        resource.delete_item(Key=key.key_as_dict())
 
-    def delete_objs(self, objs: Sequence[Union['DynModel[M]', DynKey]]):
-        """ Uses a batch-writer to put the items.
-            WAY more efficient then doing it one at a time.
+        if not condition:
+            resource = self._table_or_batch_writer()
+            resource.delete_item(**params)
+            return
+
+        # Add the conditional query to the dynamodb params dict...
+        # (can't batch-delete things with conditions, so we do them one at a time instead).
+        self._add_conditions_from_query(
+            query=condition, params=params, filter_key='ConditionExpression'
+        )
+
+        try:
+            self.api.table.delete_item(**params)
+        except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as e:
+            # By default, we ignore conditional check failed, because this means we did not want
+            # to delete the item on purpose; ie: it's not an error.
+            # conditions are mostly used to prevent race-conditions, hence ignored by default.
+            # If someone in the future ends up wanting the exception, we can have an argument
+            # or some other way to indicate that we should re-raise the condition check exception.
+            # See `self.delete_obj` doc comment (above) for more details.
+            log.info(
+                f"Didn't delete dynamo obj ({obj}) due to condition not met ({condition}), "
+                f"exception from dynamo ({e})."
+            )
+            state = obj.api.response_state
+            state.had_error = True
+            state.errors = [
+                'The conditional check failed, item was not deleted.',
+                {'conditional-check-failed-exception': e}
+            ]
+            state.add_field_error(field=CONDITIONAL_CHECK_FAILED_KEY, code='failed')
+
+    def delete_objs(self, objs: Sequence[Union[M, DynKey]], condition: Query = None):
+        """ Uses a batch-writer to put the items. Much more efficient than doing it one at a time.
+
+            If you pass in a `condition`, the batch-writer can't be used and normal single-deletes
+            will automatically be used instead.
+
             If you only give me one item, directly calls `delete_obj` without a batch-writer.
         """
         if not objs:
             return
 
         if len(objs) == 1:
-            self.delete_obj(obj=objs[0])
+            self.delete_obj(obj=objs[0], condition=condition)
             return
 
         with _DynBatchResource.grab().current_writer(create_if_none=True):
             for i in objs:
-                self.delete_obj(obj=i)
+                self.delete_obj(obj=i, condition=condition)
 
+    # todo: Someday support an iterable for `objs`
+    #  (ie: open it wider then a Sequence, ie: to support generators).
     def send_objs(
             self,
-            objs: Sequence['DynModel[M]'],
+            objs: Sequence[M],
             *,
+            condition: Query = None,
             url: URLStr = None,
             send_limit: int = None
     ):
         """
         Used to send any number of objects to Dynamo in as efficient a manner as possible.
 
+        If possible, uses a batch-writer to put the items.
+        It's WAY more efficient than doing it one at a time.
+
+        If a condition is supplied, won't use a batch-writer as only one item can be put
+        at a time with a condition.
+
+        In the future at some point, will support transactions and at that point could put
+        more items per-request at a time with condition(s).
+
         Args:
             objs: Objects to send to dynamo.
             url: Not used in Dynamo, ignore
             send_limit: Currently unused, we try to push as much as possible.
 
+            condition: Optional, if passed in we will send this as a `ConditionExpression`
+                to dynamo.  You can pass in a Query, ie: the same structure that is used
+                for `self.query()` and `self.scan()`.
+
+                We will take the Query correctly format it for you into the `ConditionExpression`.
+
+                If the condition is met, the item will be put into table.
+
+                If the condition is NOT met, we will handle it for you by catch the exception,
+                logging about it, setting error on response_state of object, and then returning.
+                Conditions are generally used to help prevent race-conditions,
+                ie: to prevent a put on purpose; so we don't raise an exception.
+
+                Most of the time the intent is to ignore what the result is, it was either
+                put into table or not;
+                ie: it will eventually be handled in some way it if it was not put into table.
+
+                If you want to know when a conditional delete fails, you can look at
+                deleted objects `obj.api.response_state`.
+
+                It's `had_error` will be `True`, there will be some info in `errors`,
+                but also a field error with name `_conditional_check` and code `failed`
+                you can easily check for via:
+
+                `....response_state.has_field_error('_conditional_check', 'failed')`
+
+                or you can use `xyn_model_dynamo.const.CONDITIONAL_CHECK_FAILED_KEY` for
+                the field key.
+
         """
-        # For now, assume all objs come from same API, and so just get the first one...
         if not objs:
             return
 
-        api = objs[0].api
-        self._put_items(api=api, items=objs)
+        if len(objs) == 1:
+            self._put_item(item=objs[0], condition=condition)
+            return
+
+        if condition:
+            for i in objs:
+                self._put_item(item=i, condition=condition)
+            return
+
+        with _DynBatchResource.grab().current_writer(create_if_none=True):
+            for i in objs:
+                self._put_item(item=i)
 
     def get(
             self,
@@ -106,6 +233,7 @@ class DynClient(RemoteClient[M]):
             *,
             top: int = None,
             fields: FieldNames = Default,
+            allow_scan: bool = False,
             **dynamo_params
     ) -> Iterable[M]:
         """
@@ -143,6 +271,14 @@ class DynClient(RemoteClient[M]):
               - Table only has a hash-key (no range/sort key) and you provide nothing but
                 hash-keys (ie: no other attributes in query)
         3. Next, we see if we can use a Dynamo query via `DynClient.query`.
+              - This will use multiple queries if/as needed, but while minimizing the number of
+                queries that are needed. Just depends on the query that is provided.
+                More then one query is needed if there is more then one hash-key in the query,
+                and there are other attributes you are filtering on
+                (and so #2 above, batch-get, can't be used)
+                Doing multiple queries is still far-faster then doing a scan.
+                We return objects via the generator and only execute the second (or more)
+                queries
               - In the future, this will automatically querying a Secondary Index if one is
                 available.
                 (Not Implemented Yet, we will add this when needed)
@@ -179,6 +315,13 @@ class DynClient(RemoteClient[M]):
             top: This is supposed to only return this mean records; currently not implemented.
             fields: This is supposed to only retrieve provided field names in returned objects;
                 currently not implemented.
+            allow_scan: Defaults to False, which means this will raise an exception if a scan
+                is required to execute your get.  Set to True to allow a scan if needed
+                (it will still do a query, batch-get, etc; if it can, it only does a scan
+                if there is no other choice).
+
+                If the query is blank or None will still do a scan regardless of what you pass
+                (to return all items in the table).
             **dynamo_params: Extra parameters to include on the Dynamo request(s) that are
                 generated. This is 100% optional.
         Returns:
@@ -256,17 +399,22 @@ class DynClient(RemoteClient[M]):
             # We have a query that has the hash-key in it, that's good enough to use a query.
             return self.query(query=query)
 
+        if allow_scan:
+            return self.scan(query=query)
+
         # todo: Support 'scans' or always raise error? Scans are very expensive.
         # todo: Support Global + Secondary Indexes
         #  (secondary indexes are partially supported now, since they require the hash-key
         #   so we would currently do a query with a filter, and scan whole hash-key/page).
         raise NotImplementedError(
             "There are no hash-keys or id's in query, and I don't support auto routing to a scan "
-            "operation or global indexes at the moment. "
+            "when `allow_scan` is False, or using a global indexes at the moment. "
             "This is what you need to do without a hash-key/id. "
             "Scan operations are slow, so for being conservative to prevent accidentally doing "
-            "one. For now you need to explicitly do them unless your "
-            "retrieving all records (ie: blank query). This may change in the future."
+            "one. For now you need to explicitly do them via self.scan or pass in True to the "
+            "`allow_scan` parameter of this `get` method; unless your "
+            "retrieving all records (ie: blank query). This may change in the future, but for "
+            "now a scan operation requires an explicit opt-in."
             "\n"
             "TODO: Support Global Indexes - if there is a global index "
             "then we should use them if query is using the global-index hash-key and other"
@@ -277,7 +425,7 @@ class DynClient(RemoteClient[M]):
             self, keys: Iterable[DynKey], **params: DynParams
     ) -> Iterable[M]:
         """
-        Will fetch keys in largest batch at a time it can from Dynamo;
+        Will fetch keys in the largest batch it can at a time it can from Dynamo;
         Dynamo will fetch each page of values in parallel!
 
         We split up the keys into 100 increments at a time automatically right now
@@ -286,7 +434,7 @@ class DynClient(RemoteClient[M]):
         them sequentially).
 
         In the future, we may attempt to fetch multiple 100 blocks of keys asynchronously.
-        As the returned generator/iterable is gone though to increase the speed.
+        As the returned generator/iterable is gone through to increase the speed.
         We don't do that yet.
 
         Args:
@@ -413,7 +561,7 @@ class DynClient(RemoteClient[M]):
                 depending on what attributes are in the query dict.
 
         Yields:
-            DynModel[M]: The next object we got from dynamo. This method returns a generator
+            M: (DynModel subclass instances) - The next object we got from dynamo. This method returns a generator
                 that will eventually go though all the results from dynamo in a memory-efficient
                 manner.
         """
@@ -461,12 +609,24 @@ class DynClient(RemoteClient[M]):
             for value in self._paginate_all_items_generator(method='query', params=params):
                 yield value
 
+    def scan(self, query: Query = None, **dynamo_params: DynParams) -> Iterable[M]:
+        params = {**dynamo_params}
+        self._add_conditions_from_query(
+            query=query,
+            params=params
+        )
+        return self._paginate_all_items_generator(method='scan', params=params)
+
     def _add_conditions_from_query(
             self,
             query: Query,
             params: DynParams,
             dyn_key: DynKey = None,
+            filter_key: str = 'FilterExpression'
     ):
+        if not query and not dyn_key:
+            return
+
         query = _ProcessedQuery.process_query(query, api=self.api)
         key_names: Set[str] = set()
         api = self.api
@@ -484,22 +644,38 @@ class DynClient(RemoteClient[M]):
             # as the ones in the boto3 dynamo library. So we grab the condition/operator
             # via the same names. _ProcessedQuery will normalize the names for us.
 
+            # exists/not_exists don't require a 'value' parameter,
+            # so we need to interpret/parse query value ourselves and do the right thing.
+            operator_needs_param = True
+            if operator == 'exists':
+                operator_needs_param = False
+                if not bool_value(value):
+                    # False value, so swap to the inverse/opposite operator.
+                    operator = 'not_exists'
+            elif operator == 'not_exists':
+                operator_needs_param = False
+                if not bool_value(value):
+                    # False value, so swap to the inverse/opposite operator.
+                    operator = 'exists'
+
             # Construct condition by allocating base, grabbing operator and assigning value.
             operator = getattr(condition_base(name), operator, None)
             condition = None
             if operator:
                 field = structure.get_field(name)
-                if field and field.converter:
+                if operator_needs_param and field and field.converter:
                     value = field.converter(
                         api,
                         Converter.Direction.to_json,
                         field,
                         value
                     )
-                condition = operator(value)
+
+                operator_params = [value] if operator_needs_param else []
+                condition = operator(*operator_params)
 
             # If we found a condition operator, use it.
-            # Otherwise we construct and raise a helpful error message.
+            # Otherwise, we construct and raise a helpful error message.
             if operator is not None:
                 cond_list.append(condition)
                 return
@@ -572,7 +748,7 @@ class DynClient(RemoteClient[M]):
                     value=range_key
                 )
 
-        params_to_mod = (('KeyConditionExpression', keys), ('FilterExpression', filters))
+        params_to_mod = (('KeyConditionExpression', keys), (filter_key, filters))
         for (param_key, exp_list) in params_to_mod:
             for key in exp_list:
                 exp = params.get(param_key)
@@ -618,7 +794,7 @@ class DynClient(RemoteClient[M]):
             KeyConditionExpression=key_exp
         )
 
-        data = None
+        data: Optional[JsonDict] = None
         db_datas = response['Items']
         if db_datas:
             data = db_datas[0]
@@ -631,19 +807,36 @@ class DynClient(RemoteClient[M]):
     # todo: BaseModel objects are capable of letting us know if something actually changed or not.
     #       At some point take advantage of that.
     #       This would allow us to prevent putting an unchanged item into dynamo [saves cost].
-    def _put_item(self, item: 'DynModel'):
+    def _put_item(self, item: 'DynModel', condition: Query = None):
         """
-        Put item into dynamo-table.
+        Put item into dynamo-table. WON'T use any current batch-writer if a condition is supplied.
+        If a condition is supplied, we always use the table and execute put immediately.
 
-        :param item:
-            Item to put in.
+        Object will only be sent if there are any changes in object
+        (compared to what was originally retrieved from table).
+
+        If there is a change, entire object with all current attributes will be sent
+        (a put fully replaces the item in table, it's not a PATCH).
+
+        Condition will be sent with put if provided, it will be checked against anything
+        that is currently in table before it's replaced in a transaction-safe way.
+
+        Args:
+            item: Item to put into dynamo table; if condition not supplied we check for a current
+                batch-writer resource and use that if there is one.
+            condition: Conditional query; query is sent to dynamodb, and it will check condition
+                against any existing item in a transaction-safe way. If condition checks out
+                then the put is done.  Otherwise, it won't be.
+                If it is not, we add a field-error to object to indicate conditional check failed:
+
+                `item.api.response_state.add_field_error('_conditional_check', 'failed')`
+                or you can use `xyn_model_dynamo.const.CONDITIONAL_CHECK_FAILED_KEY` for
+                the field key.
         """
         # Check to see if there is anything I actually need to send.
-        if not item.api.json(only_include_changes=True):
-            log.debug(f"Dynamo - {item} did not have any changes to send, skipping.")
+        if not item.api.json(only_include_changes=True, log_output=True, include_removals=True):
+            log.info(f"Dynamo - {item} did not have any changes to send, skipping.")
             return
-
-        resource = self._table_or_batch_writer()
 
         structure = self.api.structure
         hash_name = structure.dyn_hash_key_name
@@ -657,23 +850,44 @@ class DynClient(RemoteClient[M]):
         # To keep things simple, I am using 'put' which replaces entire item,
         # so get all properties of item regardless if they changed or not.
         # todo: Check for primary key and raise a nicer, higher-level exception in that case.
-        resource.put_item(Item=item.api.json())
+        item.api.response_state.reset()
 
-    def _put_items(self, api: 'DynApi', items: Sequence['DynModel']):
-        """ Uses a batch-writer to put the items.
-            WAY more efficient then doing it one at a time.
-            If you only give me one item, directly calls `put_item` without a batch-writer.
-        """
-        if not items:
-            return
+        params = {
+            "Item": item.api.json()
+        }
 
-        if len(items) == 1:
-            self._put_item(item=items[0])
-            return
+        resource = self._table_or_batch_writer()
+        if condition:
 
-        with _DynBatchResource.grab().current_writer(create_if_none=True):
-            for i in items:
-                self._put_item(item=i)
+            # Can't batch-put things with conditions, so we do them one at a time instead.
+            resource = self.api.table
+
+            # Add the conditional query to the dynamodb params dict...
+            self._add_conditions_from_query(
+                query=condition, params=params, filter_key='ConditionExpression'
+            )
+
+        # Finally, tell the boto resource to put the item:
+        try:
+            resource.put_item(**params)
+        except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as e:
+            # By default, we ignore conditional check failed, because this means we did not want
+            # to delete the item on purpose; ie: it's not an error.
+            # conditions are mostly used to prevent race-conditions, hence ignored by default.
+            # If someone in the future ends up wanting the exception, we can have an argument
+            # or some other way to indicate that we should re-raise the condition check exception.
+            # See `self.delete_obj` doc comment (above) for more details.
+            log.info(
+                f"Didn't send/put dynamo obj ({item}) due to condition not met ({condition}), "
+                f"exception from dynamo ({e})."
+            )
+            state = item.api.response_state
+            state.had_error = True
+            state.errors = [
+                'The conditional check failed, item was not deleted.',
+                {'conditional-check-failed-exception': e}
+            ]
+            state.add_field_error(field=CONDITIONAL_CHECK_FAILED_KEY, code='failed')
 
     def _get_all_items(self):
         return self._paginate_all_items_generator(method='scan', params={})

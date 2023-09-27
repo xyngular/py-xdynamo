@@ -75,8 +75,10 @@ class DynStructure(RemoteStructure[F]):
 
     def configure_for_model_type(
             self,
-            dyn_name: str,
+            *,
+            dyn_name: str = Default,
             dyn_service: str = Default,
+            dyn_environment: str = Default,
             dyn_id_delimiter: str = Default,
             **kwargs
     ):
@@ -112,6 +114,10 @@ class DynStructure(RemoteStructure[F]):
                 look up each time when needed. The current APP_ENV is used in the host-name
                 for our normal API's.  And so it makes sense to look up the APP_ENV dynamically
                 each time to get the final table name.
+            dyn_environment:
+                See above dyn_service; same thing applies here except this is for the environment
+                name aspect/component.
+
             **kwargs: These all come from class-arguments given to the
                 `xdynamo.model.DynModel` at class-definition time that need to be sent to
                 my super-class via
@@ -121,6 +127,8 @@ class DynStructure(RemoteStructure[F]):
         super().configure_for_model_type(**kwargs)
         self.dyn_name = dyn_name
         self.dyn_service = dyn_service
+        self.dyn_environment = dyn_environment
+
         if dyn_id_delimiter:
             self.dyn_id_delimiter = dyn_id_delimiter
 

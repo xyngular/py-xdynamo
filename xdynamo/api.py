@@ -1,4 +1,4 @@
-from typing import TypeVar, Optional, Any, Union, List, Dict, Iterable
+from typing import TypeVar, Optional, Any, Union, List, Dict, Iterable, TYPE_CHECKING
 from boto3.dynamodb.table import TableResource
 
 from .db import DynamoDB
@@ -14,7 +14,25 @@ from xsentinels.default import Default
 from xurls.url import Query
 from xloop import xloop
 
-M = TypeVar('M')
+
+if TYPE_CHECKING:
+    from .model import DynModel
+    M = TypeVar('M', bound=DynModel)
+else:
+    M = TypeVar('M')
+
+
+def lazy_load_types_for_dyn_api(cls):
+    """
+    Lazy load our circular reference right before it's needed.
+    This is put in as DynModel's lazy_loader, xyn_model will call us here when needed.
+
+    See `xyn_model.base.model.BaseModel.__init_subclass__` and it's lazy_loader argument
+    for more details.
+    """
+    if 'DynModel' not in globals():
+        from xdynamo.model import DynModel
+        globals()['DynModel'] = DynModel
 
 
 class DynApi(RemoteApi[M]):
@@ -29,6 +47,45 @@ class DynApi(RemoteApi[M]):
     """
     client: DynClient[M]
     structure: DynStructure[DynField]
+    # This type-hint is only for IDE, `RemoteApi` does not use it
+    # (self.model_type value is passed in when RemoteApi is allocated, in __init__ method).
+    model: M
+
+    def get(
+            self,
+            query: Query = None,
+            *,
+            top: int = None,
+            fields: Optional[FieldNames] = Default,
+            allow_scan=False
+    ) -> Iterable[M]:
+        """
+        Convenience method for the `self.client.get` method.
+
+        Generally, will get/query/scan/batch-get; generally,
+        the client will figure out the best way to get the items based on the provided query.
+        If the query is None or blank, it will grab everything in the table.
+
+        Args:
+            query: A dict with key the field, with optional double-underscore and operation
+                (such as `{'some_field__beginswith': 'search-value'}`).
+                The value is what to search for.
+                If you give this a list, it implies a `__in` operator, and will do an OR
+                on the values in the list.
+            top:
+            fields:
+            allow_scan: Defaults to False, which means this will raise an exception if a scan
+                is required to execute your get.  Set to True to allow a scan if needed
+                (it will still do a query, batch-get, etc; if it can, it only does a scan
+                if there is no other choice).
+
+                If the query is blank or None will still do a scan regardless of what you pass
+                (to return all items in the table).
+
+        Returns:
+
+        """
+        return self.client.get(query, top=top, fields=fields, allow_scan=allow_scan)
 
     def get_key(self, hash_key: Any, range_key: Optional[Any] = None) -> DynKey:
         """
@@ -103,33 +160,51 @@ class DynApi(RemoteApi[M]):
     def _create_table(self, dynamo: DynamoDB) -> TableResource:
         return self.client.create_table()
 
-    def json(self, **kwargs) -> Optional[Dict[str, Any]]:
+    def delete(self, *, condition: Query = None):
         """
-        See `xmodel.base.api.BaseApi.json`() for docs.
+        REQUIRES associated model object [see self.model].
 
-        This filters/modifies the json to make it compliant with Dynamo.
-        Example: Dynamo does not like blank strings as attribute values.
+        Convenience method to delete this single object in API.
 
-        Right now this simply deletes the values out of the json dict if they are blank.
-        If we start doing patch-like updates [and not full puts] with dynamo, we could
-        easily adapt to detect when we are blanking a value so we can tell dynamo to
-        remove the attribute in the item during the patch-like update.
+        If you pass in a condition, it will be evaluated on the dynamodb-service side and the
+        deletes will only happen if the condition is met.
+        This can help prevent race conditions if used correctly.
 
-        For now we only use full 'puts' to update dynamo items regardless of what actually
-        changed [we can detect changes, I would like to support this sort of thing this when
-        we add support for Dynamo Transactions, ie: grouping multiple creates/updates into a
-        single request. With a transaction, it's possible to only update specific attributes in a
-        dynamo row, while leaving any other attributes alone/in-tact.
-        (https://app.shortcut.com/xyngular/story/13989) [consolidate dynamo code]
+        If there is a batch-writer currently in use, we will try to use that to batch the deletes.
+
+        Keep in mind that if you pass in a `condition`, we can't use the batch write.
+        We will instead send of a single-item delete request with the condition attached
+        (bypassing any current batch-writer that may be in use).
+
+        Args:
+            condition: Conditions in query will be sent to dynamodb; object will only be deleted
+                if the conditions match.
+                See doc comments on `xyn_model_dynamo.client.DynClient.delete_obj` for more
+                details.
         """
-        # This dict is a copy and can be mutated without a problem.
-        json = super().json(**kwargs)
-        if not json:
-            return json
 
-        for k in list(json.keys()):
-            v = json[k]
-            if isinstance(v, str) and not v:
-                del json[k]
+        # Normally I would call super().delete(...) and have the super have a **kwargs it can
+        # simply pass along (so it can do any normal checks it does).
+        # Don't want to modify another library right now, so for now copying/pasting the code here.
+        model = self.model
+        if model.id is None:
+            raise XRemoteError(
+                f"A deleted was requested for an object that had no id for ({model})."
+            )
 
-        return json
+        self.client.delete_obj(model, condition=condition)
+
+    def send(self, *, condition: Query = None):
+        """
+        """
+
+        # Normally I would call super().delete(...) and have the super have a **kwargs it can
+        # simply pass along (so it can do any normal checks it does).
+        # Don't want to modify another library right now, so for now copying/pasting the code here.
+        model = self.model
+        if model.id is None:
+            raise XRemoteError(
+                f"A deleted was requested for an object that had no id for ({model})."
+            )
+
+        self.client.send_objs([model], condition=condition)
