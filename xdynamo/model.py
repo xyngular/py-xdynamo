@@ -1,7 +1,9 @@
 from typing import TypeVar, Optional
 from xmodel.remote import XRemoteError
 from xmodel.remote.model import RemoteModel
-from xdynamo.api import DynApi
+from xsentinels import Default
+
+from xdynamo.api import DynApi, lazy_load_types_for_dyn_api
 from xdynamo.common_types import DynKey
 from xmodel.base.model import Self
 
@@ -9,7 +11,13 @@ from xmodel.base.model import Self
 M = TypeVar('M')
 
 
-class DynModel(RemoteModel, dyn_name=None, dyn_service=None):
+class DynModel(
+    RemoteModel,
+    dyn_name=None,
+    dyn_service=Default,
+    dyn_environment=Default,
+    lazy_loader=lazy_load_types_for_dyn_api
+):
     """
     Used to easily parse/generate JSON from xyn_sdk model's for use in Dynamo.
     So it will take advantage of all the other features of the xyn_sdk models.

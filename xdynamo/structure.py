@@ -91,13 +91,12 @@ class DynStructure(RemoteStructure[F]):
 
     def configure_for_model_type(
             self,
-
+            *,
             # These fields are used to name the table
             # format: `{dyn_service}-{dyn_environment}-{dyn_name}`
-            dyn_name: Optional[str] = Default,
-            dyn_environment: str = Default,
+            dyn_name: str = Default,
             dyn_service: str = Default,
-
+            dyn_environment: str = Default,
             dyn_id_delimiter: str = Default,
 
             **kwargs
@@ -153,8 +152,9 @@ class DynStructure(RemoteStructure[F]):
 
         # Resolve default `dyn_name` if needed
         if dyn_name is Default:
+            # Attempt to use model class name (with first char lower-cased) if we have one.
             model_name = self.model_cls.__name__
-            dyn_name = model_name[:1].lower() + model_name[1:] if model_name else ''
+            dyn_name = f'{model_name[:1].lower()}{model_name[1:]}' if model_name else ''
 
         if dyn_name == '':
             raise XRemoteError(

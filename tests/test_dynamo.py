@@ -54,26 +54,17 @@ class ItemWithRangeKey(DynModel, dyn_name=None):
         assert self.basic_bool == other.basic_bool
 
 
-class ItemWithRangeKeyForStr(
-    ItemWithRangeKey,
-    dyn_name="testItemWithRangeKey"
-):
+class ItemWithRangeKeyForStr(ItemWithRangeKey, dyn_name="testItemWithRangeKey"):
     hash_field: str = HashField()
     range_field: str = RangeField()
 
 
-class ItemWithRangeKeyForInt(
-    ItemWithRangeKey,
-    dyn_name="testItemWithRangeWithIntKeys",
-):
+class ItemWithRangeKeyForInt(ItemWithRangeKey, dyn_name="testItemWithRangeWithIntKeys"):
     hash_field: int = HashField()
     range_field: int = RangeField()
 
 
-class ItemWithRangeKeyForDateTime(
-    ItemWithRangeKey,
-    dyn_name="testItemWithRangeWithIntKeys",
-):
+class ItemWithRangeKeyForDateTime(ItemWithRangeKey, dyn_name="testItemWithRangeWithIntKeys"):
     hash_field: dt.datetime = HashField()
     range_field: dt.datetime = RangeField()
 
@@ -482,3 +473,59 @@ def test_multiple_keys_error():
         MultipleHashes.api.get()
     with pytest.raises(XRemoteError):
         MultipleRanges.api.get()
+
+
+def test_scan_raise_exception():
+    with pytest.raises(NotImplementedError, match='There are no hash-keys'):
+        ItemWithRangeKeyForStr.api.get({'name': 'hello'})
+
+
+def test_scan_fallback():
+    ItemWithRangeKeyForStr(hash_field='hash', range_field='range', name='first').api.send()
+    ItemWithRangeKeyForStr(hash_field='other-h', range_field='other-r', name='second').api.send()
+
+    items = ItemWithRangeKeyForStr.api.get({'name': 'second'}, allow_scan=True)
+    items = list(items)
+    assert len(items) == 1
+    assert items[0].hash_field == 'other-h'
+
+
+def test_conditional_delete():
+    ItemWithRangeKeyForStr(hash_field='h1', range_field='r1', name='n1').api.send()
+    o = ItemWithRangeKeyForStr(hash_field='h2', range_field='r2', name='n2')
+    o.api.send()
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+
+    # try to delete with a condition that fails.
+    o.api.delete(condition={'name': 'n1'})
+    assert o.api.response_state.had_error
+
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+    o.api.delete(condition={'name': 'n2'})
+    objs = list(ItemWithRangeKeyForStr.api.get())
+
+    assert len(objs) == 1
+    assert objs[0].hash_field == 'h1'
+    assert objs[0].range_field == 'r1'
+
+
+def test_conditional_put():
+    ItemWithRangeKeyForStr(hash_field='h1', range_field='r1', name='n1').api.send()
+    o = ItemWithRangeKeyForStr(hash_field='h2', range_field='r2', name='n2')
+    o.api.send()
+    assert len(list(ItemWithRangeKeyForStr.api.get())) == 2
+
+    # modify (so there is a change to send), see if it won't update due to condition.
+    o.items = [{'a': 2}]
+    o.api.send(condition={'name': 'n1'})
+    assert o.api.response_state.had_error
+    assert o.api.response_state.has_field_error('_conditional_check', 'failed')
+
+    assert ItemWithRangeKeyForStr.api.get_via_id(o.id).items is None
+
+    o.items = [{'a': 3}]
+    o.api.send(condition={'name': 'n2'})
+    assert not o.api.response_state.had_error
+    assert not o.api.response_state.has_field_error('_conditional_check', 'failed')
+
+    assert ItemWithRangeKeyForStr.api.get_via_id(o.id).items == [{'a': 3}]
