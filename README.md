@@ -13,7 +13,7 @@ Here are a few other related libraries I wrote written that are in a much better
 - https://github.com/xyngular/py-xsettings
     - Centeralize settings for a project.
     - Can be used with xcon (see above).
-    - Know immediately if a setting can't be found as soon as it's asked for vs letting the incorrect setting value cause a problem/crash it happen later on, and then having to back-track it.
+    - Know immediately if a setting can't be found as soon as it's asked for vs letting the incorrect setting value cause a problem/crash it happen later on, and then having to back-track it. 
 
 ## Documentation
 
