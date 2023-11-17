@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/xyngular/py-xdynamo/compare/v0.6.0...v0.7.0) (2023-11-17)
+
+
+### Features
+
+* Update README.md ([231940b](https://github.com/xyngular/py-xdynamo/commit/231940bfe7aa7df0cdc51f916d3c986ff1eabd12))
+
 ## [0.6.0](https://github.com/xyngular/py-xdynamo/compare/v0.5.0...v0.6.0) (2023-11-17)
 
 
