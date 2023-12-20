@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/xyngular/py-xdynamo/compare/v0.7.0...v0.8.0) (2023-12-20)
+
+
+### Features
+
+* support python 3.12 ([88c4b34](https://github.com/xyngular/py-xdynamo/commit/88c4b34b01d3b9c4dcf5f8840426c104fcc9daa5))
+
 ## [0.7.0](https://github.com/xyngular/py-xdynamo/compare/v0.6.0...v0.7.0) (2023-11-17)
 
 
