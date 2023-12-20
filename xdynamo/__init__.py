@@ -503,7 +503,7 @@ Like I said earlier, the nice thing about `DynApi.get` / `DynClient.get`
 is that it can figure out the best way to query the objects for you based on what you give
 so you don't have figure it out your self.
 
-"""  # noqa -- Some lines can't be cut shorter (URL's).
+"""  # noqa -- Some lines can't be cut shorter (Url's).
 
 from xdynamo.model import DynModel
 from xdynamo.fields import DynField, HashField, RangeField
