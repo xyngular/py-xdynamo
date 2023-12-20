@@ -1,0 +1,1905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>xdynamo API documentation</title>
+<meta name="description" content="ORM Dynamo Overview
+[orm-dynamo-overview]: #orm-library-overview …" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Package <code>xdynamo</code></h1>
+</header>
+<section id="section-intro">
+<h2 id="orm-dynamo-overview">ORM Dynamo Overview</h2>
+<p>Intended use of this library is for an quick way to get/retrieve objects from Dynamo tables.</p>
+<p>Things that it can help with:</p>
+<ul>
+<li>
+<p>If table does not exist, it will create it automatically.</p>
+<ul>
+<li>
+<p>Helps when unit-testing with <code>@moto.mock_dynamodb</code> decorator, since mock expects you to
+create the table before using it. This means tables are automatically/lazily created as
+needed (with no special effort on the part of the unit test).
+!!! tip "Tip:&ensp;To use"</p>
+</li>
+<li>
+<p>When running any code locally, it can automatically create the table for you without
+any special effort.</p>
+</li>
+<li>Normally, lambdas are not given permission to create table as we want
+cloud-formation/serverless to manage the table.
+During deployment into aws serverless/cloud-formation should be the one creating table
+if needed</li>
+<li>Works like with the other standard <code>xmodel.remote.model.RemoteModel</code>'s:</li>
+<li><code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code> and other related classed work very similar.
+Supports the same basic/common methods.</li>
+<li>Easy to use single 'string' to identify any dynamo object via <code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code><ul>
+<li>will synthesize a string representing the full primary key, for use
+with other BaseModel's when using child objects (ie: they know how to look each other up).</li>
+</ul>
+</li>
+<li>Easy/Standard way to Paginate<ul>
+<li>When you use the standard <code>DynApi.get</code> method, it will return a generator giving you
+one object at a time while bulk-getting up to 100 per-request to dynamo, depending on
+how it had to query the data for you
+(the goal is for it to figure out the most efficient way to query automatically).</li>
+<li>You don't have to worry about what page of results you are on or how it works,
+you just loop/run the generator and it will eventually give you back all of
+the objects. <a href="./#auto-prefetch-children">Auto Prefetch Children</a></li>
+<li><strong>TODO</strong> (rest-client <code>xmodel_rest.RestClient</code> has this, need to do it still for
+<code>DynClient</code>).
+You can still use methods in <code>xmodel.children</code>
+to bulk-grab them.<ul>
+<li>If your curious, see <a href="./#auto-prefetch-children">Auto Prefetch Children</a>
+for more info about how to use the auto-pre-fetch feature with the standard
+<code>xmodel.base.model.BaseModel</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Simple way to insert/update/delete objects individually or in bulk.</li>
+<li>Full power of the JSON to/from BaseModel's infrastructure.<ul>
+<li>Including automated conversion of types to/from, such as dates.</li>
+<li>Default values</li>
+<li>Read only fields, etc.</li>
+</ul>
+</li>
+<li>Central spot to put future high-level dynamo code to share among our projects.</li>
+</ul>
+</li>
+</ul>
+<h3 id="quick-start">Quick Start</h3>
+<p>If you don't know much about the ORM, have a look at
+<a href="./#orm-library-overview">ORM Library Overview</a> first.
+It's an overview of the basic concepts.</p>
+<p>Index/Summary of the main classes you'll be interacting with:</p>
+<ul>
+<li><code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code>: Represents an object in a table.</li>
+<li><code>DynApi</code>: Basically represents the table, it's the central 'hub' class that lets you get to the<ul>
+<li><code>DynStructure</code>: List of fields and other class-level info about the <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code>.</li>
+<li><code>DynClient</code>: Wraps boto, figures out the request to use with boto and executes it.</li>
+</ul>
+</li>
+<li><code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>: Contains a hash + range keys, along with ways to put them together into an
+<code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code> string and splitting them apart again.</li>
+<li><code><a title="xdynamo.DynField" href="#xdynamo.DynField">DynField</a></code>: Represents a field on a <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code>.
+Automatically created in <code>DynStructure</code> if
+it's not user allocated on a attribute/field on <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code>.<ul>
+<li><code><a title="xdynamo.HashField" href="#xdynamo.HashField">HashField</a></code>: Special <code><a title="xdynamo.DynField" href="#xdynamo.DynField">DynField</a></code> object, indicated field is the Hash of the table.</li>
+<li><code><a title="xdynamo.RangeField" href="#xdynamo.RangeField">RangeField</a></code>: Indicates the Range field of the table (if there is one).</li>
+</ul>
+</li>
+<li><code><a title="xdynamo.DynBatch" href="#xdynamo.DynBatch">DynBatch</a></code>: Context manager (ie: <code>with</code> object).
+Allows you to batch non-transaction put's (so system will just use strait put') and deletes.</li>
+</ul>
+<h3 id="example-data-models">Example Data Models</h3>
+<p>Examples are probably the best way to get a 'quick start', here are some below.</p>
+<p>First, I'll get a few BaseModel's defined. After I'll show examples of using them.</p>
+<p>This first one show's a table with a Hash + Range key, along with a list of dicts along
+with some basic data fields (str/bool).</p>
+<div class="admonition note">
+<p class="admonition-title">Note:&ensp;You can see models vary similar to these in action in sine unit-tests</p>
+<p>Look at
+<a href="https://github.com/xyngular/py-xyn-model-dynamo/blob/master/tests/test_dynamo.py">tests/test_dynamo.py</a>
+in xdynamo source if your interested.</p>
+</div>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class ModelWithRangeKey(
+...     DynModel,
+...     # ---&gt; used for end of table name:
+...     dyn_name=&quot;modelWithRangeKey&quot;
+... ):
+...     my_hash: str = HashField()
+...     my_range: str = RangeField()
+...     name: str
+...     a_number: int
+...     hello: bool
+...     items: List[Dict[str, str]]
+</code></pre>
+<p>Here is a normal non-dynamo model. We will be using this as a way to parse a sub-dict
+automatically into a regular model object.
+We enabled <code>Field.include_in_repr</code> in the below example, it will make <code>sub_name</code> print out
+in string when object is converted to a string (such as when logging object out).</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from xmodel.fields import Field
+&gt;&gt;&gt; class ModelAsSubJsonDict(BaseModel, has_id_field=False):
+...
+...     # It puts 'sub-name' into the object description when converting object
+...     # to a string
+...     # (ie: such as when you log out a object of type 'ModelAsSubJsonDict')
+...     sub_name: str = Field(include_in_repr=True)
+...     queue: bool
+</code></pre>
+<p>Here is a second <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code> for a separate table.
+It has a relationship to a
+<code>ModelWithRangeKey</code>.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class ModelOnlyHash(
+...     DynModel,
+...     dyn_name=&quot;visibleShipConfirm&quot;,
+...     dyn_service=&quot;experimental&quot;
+... ):
+...     hash_only: str = HashField()
+...     name: str
+...     items: List[Dict[str, str]]
+...     a_number: int
+...     test_item_id: str
+...     test_item: ModelWithRangeKey
+...     sub_item: ModelAsSubJsonDict
+</code></pre>
+<p>In the real dynamo table, it would store <code>VisiblePackage.sub_item</code> as a
+<code>test_item_id</code> attribute by grabbing the <code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code> from the <code>ModelWithRangeKey</code> object.</p>
+<p>It would lazily lookup object if you try to access <code>VisiblePackage.sub_item</code>, just like you
+would expect.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>rest-client <code>xmodel_rest.RestClient</code> has an ability to auto pre-fetch children.
+Still need to do it for <code>DynClient</code>. You can still use methods in <code>xmodel.children</code>
+to bulk-grab them.</p>
+<p>If your curious, see <a href="./#auto-prefetch-children">Auto Prefetch Children</a>
+for more info about how to use the auto-pre-fetch feature with the standard
+<code>xmodel.base.model.BaseModel</code>.</p>
+</div>
+<p>Create a few items in a table (for illustrative purposes, for the following examples):</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelWithRangeKey(my_hash=&quot;my-h1&quot;, my_range=&quot;my-r1&quot;, name=&quot;A&quot;).api.send()
+&gt;&gt;&gt; ModelWithRangeKey(my_hash=&quot;my-h2&quot;, my_range=&quot;my-r2&quot;, name=&quot;B&quot;).api.send()
+</code></pre>
+<h3 id="basics-of-getting-items">Basics of Getting Items</h3>
+<p>Quick Example of getting an item, this gets the item by a <code>"my-h1"</code> hash-key and
+<code>"my-r1"</code> range-key:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({'my_hash': &quot;my-h1&quot;, 'my_range': &quot;my-r1&quot;})
+ModelWithRangeKey(my_hash: &quot;my-h1&quot;, my_range: &quot;my-r1&quot;)
+</code></pre>
+<p>Various ways Get Item are below, in general you need a hash-key to do a dynamo-query and to
+generally get items. If you don't have a hash-key value, then you must scan the table.</p>
+<p>Right now, you can grab all items in a table via <code>DynApi.get</code>.
+This will pass a blank query to <code>DynClient.get</code>, which will make it do a
+full-table scan and return all items.</p>
+<p>Right now, <code>DynClient</code> won't scan and will instead raise an
+<code>xmodel.remote.errors.XRemoteError</code>
+if you pass in a non-blank query without including a hash-key value.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>Support scanning entire table with a non-blank query to filter it with.
+This will be supported in the future, right now it's unimplemented.
+Most of the time, you'll really, really want to query the table in any case.
+Querying the table (with a hash-key) is <strong>MUCH</strong> faster then scanning it.</p>
+</div>
+<p>I have various examples below, but in general we support querying in these ways,
+you can use <code>DynApi.get</code> or <code>DynClient.get</code>.
+These methods will figure out the best way to execute get request/query, generally detailed
+below:</p>
+<ul>
+<li>If provided query is blank, scans and returns all items/objects in table.</li>
+<li>Generally if you have both (and only) hash and range keys, it will do a batch-get automatically
+which lets us query for 100 objects at a time. Otherwise it will fall-back to a query.
+When doing a query, dynamo only supports one query-request per-hash.<ul>
+<li>If the table structure has only a hash-key (and no range key),
+then it's a list of only hashes.</li>
+</ul>
+</li>
+<li>If you only have a:<ul>
+<li>hash-key:
+Will return all objects with that hash, could be multiple objects if the table
+structure has a range-key.<ul>
+<li>If table only supports hash-key, it will be either a single object or empty list.</li>
+</ul>
+</li>
+<li>single hash + range keys: Return's a single object if it exists, or empty-list.<ul>
+<li>Consider using <code>XynApi.get_via_id</code>, it won't return a <code>list</code> if you provide
+the <code>id</code> value as a single string/dict as first argument.</li>
+</ul>
+</li>
+<li>multiple Hash + range keys: Will query every combination of hash + range keys automatically.
+It can use a batch-get for this and attempt to lookup up to 100 objects per-request.
+If you have more than 100, we will split up the requests for you automatically
+(you'll just see a single stream of objects come back).</li>
+<li><code>id</code>: If you have the <code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code> for an object, it contains one or both keys and can
+be used to query object via <code>DynApi.get_via_id</code>.</li>
+<li><code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>: You can use this via <code>DynApi.get_via_id</code> to query for the object.<ul>
+<li><code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>'s represet one or both components of a DynamoDB primary key.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>If you have other attributes besides just the range/hash key:<ul>
+<li>We need to fallback to a query in this case, to support filtering by non-key attributes.</li>
+<li>One query per-hash/range key in the query.<ul>
+<li>If the range-key is using <code>between</code> operator, we still only do one query since dynamo supports
+this operator in a query.<ul>
+<li>We'll talk more about operators later in the <a href="#advanced-queries">Advanced Queries</a>
+section further on.</li>
+</ul>
+</li>
+<li>If you use a list of values with range-key, it will have to use
+multiple queries, one per-hash/range key combination(s) provided.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>First there is <code>DynApi.get_via_id</code> which can take a list of id strings,
+or a list of dicts with a hash-key and (optionally) a range-key:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({'my_hash': &quot;my-h1&quot;, 'my_range': &quot;my-r1&quot;})
+ModelWithRangeKey(my_hash: &quot;my-h1&quot;, my_range: &quot;my-r1&quot;)
+</code></pre>
+<p>This will produce an error, you must provide all parts of the key to use <code>get_via_id</code>,
+so it needs the range-key part:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({'my_hash': &quot;my-h1&quot;})
+Raises XRemoteError
+</code></pre>
+<p>If you want all the objects for a particular hash regadless of the range-key, you can
+uss the <code>DynApi.get</code> method instead. We wrap it in a list, because a generator is
+normally returned (to showcase all output). You can put the returned generator in
+a <code>for</code> loop instead if you want. The generator will correctly paginate all results
+for you automatically. Here is the example:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(ModelWithRangeKey.api.get({'my_hash': &quot;my-h1&quot;}))
+[ModelWithRangeKey(..., my_range=&quot;my-r1&quot;), ModelWithRangeKey(..., my_range=&quot;my-r2&quot;)]
+</code></pre>
+<p>You can also query on other non-key attributes,</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(ModelWithRangeKey.api.get({'my_hash': &quot;my-h1&quot;}))
+</code></pre>
+<p>You can also use a generic object that represents a dynamo key with <code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>.
+You can pass <code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code> objects directly into <code>DynApi.get_via_id</code>.
+Other methods let you also directly pass <code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>'s, such as <code>DynClient.delete_objs</code>.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; key = DynKey(hash_key='my-h1', range_key='my-r1')
+&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id(key)
+</code></pre>
+<p>To you can grab a list of them, a list of dicts or a list of keys,
+when you provide a list you get a generator back that will paginate though
+the results correctly.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list(ModelWithRangeKey.api.get_via_id([key]))
+[ModelWithRangeKey(....)]
+</code></pre>
+<p>Also, if your table only has a hash-key, you can just directly provide it's string/int value;
+or a list of them:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelOnlyHash.api.get_via_id('a-hash-key')
+</code></pre>
+<p>This is the same value as you get from the model's <code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code> attribute.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; obj = ModelOnlyHash(hash_only = 'a-hash-key')
+&gt;&gt;&gt; assert obj.id == 'a-hash-key'
+</code></pre>
+<p>Objects with a range-key by default have them joined together with hash-key via a pipe <code>|</code>
+delimiter, like so:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; obj = ModelWithRangeKey(my_hash=&quot;my-h1&quot;, my_range=&quot;my-r1&quot;)
+&gt;&gt;&gt; assert obj.id == 'my-h1|my-r1'
+</code></pre>
+<p>You can change the joining/delimiter string via <code>DynStructure.dyn_id_delimiter</code>.
+Just like with the normal <code>xmodel.base.model.BaseModel</code>, you can set these attributes via the
+class arguments on <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code> subclasses.
+(for more details on class arguments, see <code>xmodel.base.model.BaseModel.__init_subclass__</code>
+and <code>DynStructure.configure_for_model_type</code> for the DynModel specific ones available).</p>
+<p>Every <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code> has this 'virtual' <code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">DynModel.id</a></code> value that is the primary key of
+the object. THis is the hash-key, plus range-key value (if object has one) of an object.
+This single string uniquely identified the object.</p>
+<p>The rest of the <code>xmodel.remote</code> can use this just like any <code>id</code> from
+other <code>xmodel.base.model.BaseModel</code> objects. Meaning, this virtual <code>id</code> value can be
+stored in other places to form relationships (as you can see with the above
+example on <code>ModelOnlyHash.sub_item</code>.</p>
+<h3 id="updating-items">Updating Items</h3>
+<p>Just like other <code>xmodel.base.model.BaseModel</code> objects, <code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code> can be changes and then
+the changes sent to Dynamo like so:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; obj = ModelOnlyHash(hash_only=&quot;a-hash-key&quot;)
+&gt;&gt;&gt; obj.carrier = &quot;new-carrier&quot;
+&gt;&gt;&gt; obj.api.send()
+</code></pre>
+<p>You can also mass-update/create objects via <code>DynClient.send_objs</code>:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; list_of_objs: List[ModelOnlyHash]
+&gt;&gt;&gt; ModelOnlyHash.api.client.send_objs(list_of_objs)
+</code></pre>
+<p>Right now we only support "Putting" objects into dynamo (ie: not patching them).
+It will replace the entire item in dynamo, no mater what you change or update on the object.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>In the future, there will be an option to patch object(s) via <code>DynTransaction</code>.
+The feature has not been finished yet.
+It will use a Dynamo Transaction to do it.
+See <a href="#todofuture-batch-via-transaction">Todo/Future: Batch via Transaction</a></p>
+</div>
+<h3 id="deleting-items">Deleting Items</h3>
+<pre><code class="language-python-repl">&gt;&gt;&gt; obj.api.delete()
+</code></pre>
+<p>You can mass delete via:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; key = DynKey(hash_key='my-h1', range_key='my-r1')
+&gt;&gt;&gt; objs = list(ModelWithRangeKey.api.get_via_id(key))
+&gt;&gt;&gt; ModelWithRangeKey.api.client.delete_objs(objs)
+</code></pre>
+<p>You can also give the <code>DynClient.delete_objs</code> a list of <code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code>'s.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; ModelWithRangeKey.api.client.delete_objs([key])
+</code></pre>
+<p>This allows you to delete objects without having to create full-models and looking to see
+which field is the hash/range key.
+The <code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code> always accepts the values the same way.</p>
+<h3 id="batch-updating-deleting">Batch Updating / Deleting</h3>
+<p>You can send a one-off list of multiple objects to update/delete all at once (see examples above).</p>
+<p>If you want a section of code that gets executed to batch-delete/update you can directly use
+the <code><a title="xdynamo.DynBatch" href="#xdynamo.DynBatch">DynBatch</a></code> class. It's a context-manager and can apply batch Put's and Delete's via a
+<code>with</code> statment that will continue to apply it no mater how deep the call stack is inside
+the <code>with</code> statement. See <code><a title="xdynamo.DynBatch" href="#xdynamo.DynBatch">DynBatch</a></code> for more details</p>
+<p>Quick Example:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # DynModel objects of some sort....
+&gt;&gt;&gt; obj1: ModelOnlyHash
+&gt;&gt;&gt; obj2: ModelOnlyHash
+&gt;&gt;&gt; obj3: ModelOnlyHash
+&gt;&gt;&gt; with DynBatch():
+...     obj1.carrier = &quot;changed&quot;
+...     obj1.api.send()
+...     obj2.carrier = &quot;changed&quot;
+...     obj2.api.send()
+...     obj3.api.delete()
+</code></pre>
+<p>This would end up sending both updates and the delete in the same request.
+It works by 'batching' a number of objects at a time and sending them.
+If there are still objects to send by the time the <code>with</code> statement exits,
+the renaming unsent objects are sent to dynamo.</p>
+<h3 id="todofuture-batch-via-transaction">Todo/Future: Batch via Transaction</h3>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>In the future, there will be a class called <code>DynTransaction</code> that you can use to
+batch transactions together. It would also allow bulk-partial updating/patching objects
+instead of using 'puts' to replace entire object. And to tie a set of objects together
+that must all be written or rolled back in one go.</p>
+</div>
+<h2 id="mocking-dynamo-with-moto">Mocking Dynamo with moto</h2>
+<p>You can use the <code>moto</code> 3rd part dependency, and their <code>@moto.mock_dynamodb</code> method decorator
+to 'mock' dynamo. There is something to be aware though, but they are easy to get correct:</p>
+<ul>
+<li>The mocking library expects you to first your dynamo tables via boto3 calls
+before they are used.
+<code>xdynamo.DynClient</code> will check and ensure the tables
+are created automatically in a lazy fashion
+(ie: first time an attempt to send/get a <code>DynMode</code> from Dynamo).</li>
+<li>
+<p>In an effort to reuse already opened connections to dynamo, we use a shared resource
+<code>xdynamo.dyn_connections.DynamoDB</code>.
+It's important that the connection is created
+while <code>moto</code> is active for <code>moto</code> to mock the connection/session.</p>
+<div class="admonition note">
+<p class="admonition-title">Note:&ensp;<code>xinject.fixtures.context</code> fixture is automatically used when <code>xinject</code> is</p>
+<p>installed as a dependency.
+This ensures when a <code>xdynamo.dyn_connections.DynamoDB</code> is asked for, a brand new
+one will be created for the unit test and therefore create a new connection/session.</p>
+</div>
+<ul>
+<li>It's relatively expensive to open a new connection vs using an already existing
+connection to Dynamo since Dynamo has to setup a encryption key context in it's self.</li>
+</ul>
+</li>
+</ul>
+<h2 id="advanced-queries">Advanced Queries</h2>
+<p>Ensure you've read the earilier segment about <a href="#basics-of-getting-items">Basics of Getting Items</a>
+first before reading this more advanced section.</p>
+<p><code>DynApi.get</code> and <code>DynClient.get</code>, for the <code>query</code> param can accept more then
+just the hash-key and range-key; other attributes are allowed to filter the results even more!</p>
+<p>Dynamo has a concept of a 'query' and a 'scan' to get data. A query needs to at least each
+by the hash-key (range-key is optional).
+Scan will let you search with any attribute but has
+to look at all records, and so is slow.</p>
+<p>If you at least provide the hash-key, you can filter by other attributes and still get
+decent performance (as it only has to scan records with that hash).
+If you also provide the
+range-key, that's even better as that will narrow it down to one-record, and is fast since
+Dynamo can use an index.</p>
+<p>You can also provide a list of hash-keys, with other attributes to fitler by.
+<code>DynClient</code> will automatically break it up into multiple queries, one per-hash key
+automatically and paginate all the results together for you.</p>
+<h3 id="operators">Operators</h3>
+<p>It also supports operators, like <code>some_field__gte: 3</code> would look for things that are
+greater-than-or-equal to <code>3</code>. A hash-key must be exact, or a list (ie: <code>__in</code>).</p>
+<p>When wanting to query, the hash-field has to be an exact-equals value (no other special operators)
+or a <code>list</code> value and/or <code>__in</code> operator.
+When it's a list (which maps it's self automatically
+to the <code>__in</code> operator by default) we simulate it by doing multiple queries, one per-item
+in the list for the hash and then concatenating the results together via the generator
+that gets returned (ie: lazily execute each query as the generator runs).</p>
+<p>To get full list of operators, see operator method names on <code>bot3.dynamodb.conditions.Attr</code>
+(and it's AttributeBase superclass). Also have a mapping at <code>operator_alias_map</code> that maps
+some of our standard xyngular-api operators to how it's named in Dynamo.</p>
+<p>I also have a list right below:</p>
+<p>non-hash query operators you can use:</p>
+<h4 id="operator-list">Operator List</h4>
+<ul>
+<li>eq</li>
+<li>lt</li>
+<li>lte</li>
+<li>gt</li>
+<li>gte</li>
+<li>begins_with</li>
+<li>between</li>
+<li>is_int
+_ exists
+_ not_exists</li>
+<li>contains</li>
+<li>size</li>
+<li>attribute_type</li>
+</ul>
+<p>See examples below to see how operators can be used.</p>
+<p>For more info, take a look at some of the following examples and also look at
+<code>DynClient.get</code>.</p>
+<h3 id="examples">Examples</h3>
+<pre><code class="language-python">ModelOnlyHash.api.get(
+    query={
+        'hash_only':['vis-track-id-2', 'vis-track-id-1'],
+        'carrier': 'c2'
+    }
+)
+</code></pre>
+<p>This will do two queries in Dynamo, one for each:</p>
+<ol>
+<li>'hash_only: vis-track-id-2' + 'carrier: c2'</li>
+<li>'hash_only: vis-track-id-1' + 'carrier: c2'</li>
+</ol>
+<p>It will combine the results of both together into a single generator and return the generator.
+You can iterate on the generator to get all the results, all paginated for you.</p>
+<p>You can use operators after the keyword, just like you can do for the Xyngular APIs:</p>
+<pre><code class="language-python">ModelOnlyHash.api.get(
+    query={
+        'hash_only':['vis-track-id-2', 'vis-track-id-1'],
+        'a_number__gte': 2
+    }
+)
+</code></pre>
+<p>Looks for the two different <code>hash_only</code>'s that have a <code>a_number</code> attribute that
+is greater then or equal to 2.</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; my_objs = ModelWithRangeKey.api.get(
+...     query={
+...         'my_hash':['hash-1', 'hash-2'],
+...         'my_range':['range-1', 'range-2'],
+...         'a_number__gte': 2
+...     }
+... )
+</code></pre>
+<p>It looks for all of the following combinations of range/hash with four seperate queries
+(internally):</p>
+<ul>
+<li>hash-1, range-1</li>
+<li>hash-1, range-2</li>
+<li>hash-2, range-1</li>
+<li>hash-2, range-2</li>
+</ul>
+<p>Each of these queries will also have a filter where <code>a_number</code> attribute will need
+to be greater then or equal to 2.</p>
+<p><code>DynApi.get</code> will return a generator, that will return all objects returns from
+these four internal queries it will do for you.</p>
+<p>All you have to do is run the generator to see all the objects, like so:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; for o in my_objs:
+...     print(o.a_number)
+--- outputs one number per-object in table that match query ---
+</code></pre>
+<p>If the above example query only had <code>my_hash</code> and <code>my_range</code> and <strong>NOT</strong> <code>a_number__gte</code>,
+it would have executed a very-fast batch-get on dynamo with the hash/range key combinations.</p>
+<p>Doing four query/requests are still pretty fast,
+but doing a batch-get can be executed in a single request (100 key combinations per-request)!</p>
+<p>Like I said earlier, the nice thing about <code>DynApi.get</code> / <code>DynClient.get</code>
+is that it can figure out the best way to query the objects for you based on what you give
+so you don't have figure it out your self.</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34;
+## ORM Dynamo Overview
+[orm-dynamo-overview]: #orm-library-overview
+
+Intended use of this library is for an quick way to get/retrieve objects from Dynamo tables.
+
+Things that it can help with:
+
+- If table does not exist, it will create it automatically.
+    - Helps when unit-testing with `@moto.mock_dynamodb` decorator, since mock expects you to
+        create the table before using it. This means tables are automatically/lazily created as
+        needed (with no special effort on the part of the unit test).
+        .. tip:: To use
+    - When running any code locally, it can automatically create the table for you without
+        any special effort.
+    - Normally, lambdas are not given permission to create table as we want
+        cloud-formation/serverless to manage the table.
+        During deployment into aws serverless/cloud-formation should be the one creating table
+        if needed
+- Works like with the other standard `xmodel.remote.model.RemoteModel`&#39;s:
+    - `DynModel` and other related classed work very similar.
+        Supports the same basic/common methods.
+    - Easy to use single &#39;string&#39; to identify any dynamo object via `DynModel.id`
+        - will synthesize a string representing the full primary key, for use
+            with other BaseModel&#39;s when using child objects (ie: they know how to look each other up).
+    - Easy/Standard way to Paginate
+        - When you use the standard `DynApi.get` method, it will return a generator giving you
+            one object at a time while bulk-getting up to 100 per-request to dynamo, depending on
+            how it had to query the data for you
+            (the goal is for it to figure out the most efficient way to query automatically).
+        - You don&#39;t have to worry about what page of results you are on or how it works,
+            you just loop/run the generator and it will eventually give you back all of
+            the objects. [Auto Prefetch Children](./#auto-prefetch-children)
+        - **TODO** (rest-client `xmodel_rest.RestClient` has this, need to do it still for
+            `DynClient`).  You can still use methods in `xmodel.children`
+            to bulk-grab them.
+            - If your curious, see [Auto Prefetch Children](./#auto-prefetch-children)
+                for more info about how to use the auto-pre-fetch feature with the standard
+                `xmodel.base.model.BaseModel`.
+    - Simple way to insert/update/delete objects individually or in bulk.
+    - Full power of the JSON to/from BaseModel&#39;s infrastructure.
+        - Including automated conversion of types to/from, such as dates.
+        - Default values
+        - Read only fields, etc.
+    - Central spot to put future high-level dynamo code to share among our projects.
+
+### Quick Start
+
+If you don&#39;t know much about the ORM, have a look at
+[ORM Library Overview](./#orm-library-overview) first.  It&#39;s an overview of the basic concepts.
+
+Index/Summary of the main classes you&#39;ll be interacting with:
+
+- `DynModel`: Represents an object in a table.
+- `DynApi`: Basically represents the table, it&#39;s the central &#39;hub&#39; class that lets you get to the
+    - `DynStructure`: List of fields and other class-level info about the `DynModel`.
+    - `DynClient`: Wraps boto, figures out the request to use with boto and executes it.
+- `DynKey`: Contains a hash + range keys, along with ways to put them together into an
+    `DynModel.id` string and splitting them apart again.
+- `DynField`: Represents a field on a `DynModel`.  Automatically created in `DynStructure` if
+    it&#39;s not user allocated on a attribute/field on `DynModel`.
+    - `HashField`: Special `DynField` object, indicated field is the Hash of the table.
+    - `RangeField`: Indicates the Range field of the table (if there is one).
+- `DynBatch`: Context manager (ie: `with` object).
+    Allows you to batch non-transaction put&#39;s (so system will just use strait put&#39;) and deletes.
+
+### Example Data Models
+
+Examples are probably the best way to get a &#39;quick start&#39;, here are some below.
+
+First, I&#39;ll get a few BaseModel&#39;s defined. After I&#39;ll show examples of using them.
+
+This first one show&#39;s a table with a Hash + Range key, along with a list of dicts along
+with some basic data fields (str/bool).
+
+.. note:: You can see models vary similar to these in action in sine unit-tests
+    Look at
+    [tests/test_dynamo.py](https://github.com/xyngular/py-xyn-model-dynamo/blob/master/tests/test_dynamo.py)
+    in xdynamo source if your interested.
+
+&gt;&gt;&gt; class ModelWithRangeKey(
+...     DynModel,
+...     # ---&gt; used for end of table name:
+...     dyn_name=&#34;modelWithRangeKey&#34;
+... ):
+...     my_hash: str = HashField()
+...     my_range: str = RangeField()
+...     name: str
+...     a_number: int
+...     hello: bool
+...     items: List[Dict[str, str]]
+
+Here is a normal non-dynamo model. We will be using this as a way to parse a sub-dict
+automatically into a regular model object.
+We enabled `Field.include_in_repr` in the below example, it will make `sub_name` print out
+in string when object is converted to a string (such as when logging object out).
+
+&gt;&gt;&gt; from xmodel.fields import Field
+&gt;&gt;&gt; class ModelAsSubJsonDict(BaseModel, has_id_field=False):
+...
+...     # It puts &#39;sub-name&#39; into the object description when converting object
+...     # to a string
+...     # (ie: such as when you log out a object of type &#39;ModelAsSubJsonDict&#39;)
+...     sub_name: str = Field(include_in_repr=True)
+...     queue: bool
+
+Here is a second `DynModel` for a separate table.  It has a relationship to a
+`ModelWithRangeKey`.
+
+&gt;&gt;&gt; class ModelOnlyHash(
+...     DynModel,
+...     dyn_name=&#34;visibleShipConfirm&#34;,
+...     dyn_service=&#34;experimental&#34;
+... ):
+...     hash_only: str = HashField()
+...     name: str
+...     items: List[Dict[str, str]]
+...     a_number: int
+...     test_item_id: str
+...     test_item: ModelWithRangeKey
+...     sub_item: ModelAsSubJsonDict
+
+In the real dynamo table, it would store `VisiblePackage.sub_item` as a
+`test_item_id` attribute by grabbing the `DynModel.id` from the `ModelWithRangeKey` object.
+
+It would lazily lookup object if you try to access `VisiblePackage.sub_item`, just like you
+would expect.
+
+.. todo:: rest-client `xmodel_rest.RestClient` has an ability to auto pre-fetch children.
+    Still need to do it for `DynClient`. You can still use methods in `xmodel.children`
+    to bulk-grab them.
+
+    If your curious, see [Auto Prefetch Children](./#auto-prefetch-children)
+    for more info about how to use the auto-pre-fetch feature with the standard
+    `xmodel.base.model.BaseModel`.
+
+Create a few items in a table (for illustrative purposes, for the following examples):
+
+&gt;&gt;&gt; ModelWithRangeKey(my_hash=&#34;my-h1&#34;, my_range=&#34;my-r1&#34;, name=&#34;A&#34;).api.send()
+&gt;&gt;&gt; ModelWithRangeKey(my_hash=&#34;my-h2&#34;, my_range=&#34;my-r2&#34;, name=&#34;B&#34;).api.send()
+
+### Basics of Getting Items
+
+Quick Example of getting an item, this gets the item by a `&#34;my-h1&#34;` hash-key and
+`&#34;my-r1&#34;` range-key:
+
+&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({&#39;my_hash&#39;: &#34;my-h1&#34;, &#39;my_range&#39;: &#34;my-r1&#34;})
+ModelWithRangeKey(my_hash: &#34;my-h1&#34;, my_range: &#34;my-r1&#34;)
+
+Various ways Get Item are below, in general you need a hash-key to do a dynamo-query and to
+generally get items. If you don&#39;t have a hash-key value, then you must scan the table.
+
+Right now, you can grab all items in a table via `DynApi.get`.
+This will pass a blank query to `DynClient.get`, which will make it do a
+full-table scan and return all items.
+
+Right now, `DynClient` won&#39;t scan and will instead raise an
+`xmodel.remote.errors.XRemoteError`
+if you pass in a non-blank query without including a hash-key value.
+
+.. todo:: Support scanning entire table with a non-blank query to filter it with.
+    This will be supported in the future, right now it&#39;s unimplemented.
+    Most of the time, you&#39;ll really, really want to query the table in any case.
+    Querying the table (with a hash-key) is **MUCH** faster then scanning it.
+
+I have various examples below, but in general we support querying in these ways,
+you can use `DynApi.get` or `DynClient.get`.
+These methods will figure out the best way to execute get request/query, generally detailed
+below:
+
+- If provided query is blank, scans and returns all items/objects in table.
+- Generally if you have both (and only) hash and range keys, it will do a batch-get automatically
+    which lets us query for 100 objects at a time. Otherwise it will fall-back to a query.
+    When doing a query, dynamo only supports one query-request per-hash.
+    - If the table structure has only a hash-key (and no range key),
+        then it&#39;s a list of only hashes.
+- If you only have a:
+    - hash-key:  Will return all objects with that hash, could be multiple objects if the table
+        structure has a range-key.
+        - If table only supports hash-key, it will be either a single object or empty list.
+    - single hash + range keys: Return&#39;s a single object if it exists, or empty-list.
+        - Consider using `XynApi.get_via_id`, it won&#39;t return a `list` if you provide
+            the `id` value as a single string/dict as first argument.
+    - multiple Hash + range keys: Will query every combination of hash + range keys automatically.
+        It can use a batch-get for this and attempt to lookup up to 100 objects per-request.
+        If you have more than 100, we will split up the requests for you automatically
+        (you&#39;ll just see a single stream of objects come back).
+    - `id`: If you have the `DynModel.id` for an object, it contains one or both keys and can
+        be used to query object via `DynApi.get_via_id`.
+    - `DynKey`: You can use this via `DynApi.get_via_id` to query for the object.
+        - `DynKey`&#39;s represet one or both components of a DynamoDB primary key.
+- If you have other attributes besides just the range/hash key:
+    - We need to fallback to a query in this case, to support filtering by non-key attributes.
+    - One query per-hash/range key in the query.
+        - If the range-key is using `between` operator, we still only do one query since dynamo supports
+            this operator in a query.
+            - We&#39;ll talk more about operators later in the [Advanced Queries](#advanced-queries)
+                section further on.
+        - If you use a list of values with range-key, it will have to use
+            multiple queries, one per-hash/range key combination(s) provided.
+
+
+First there is `DynApi.get_via_id` which can take a list of id strings,
+or a list of dicts with a hash-key and (optionally) a range-key:
+
+&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({&#39;my_hash&#39;: &#34;my-h1&#34;, &#39;my_range&#39;: &#34;my-r1&#34;})
+ModelWithRangeKey(my_hash: &#34;my-h1&#34;, my_range: &#34;my-r1&#34;)
+
+This will produce an error, you must provide all parts of the key to use `get_via_id`,
+so it needs the range-key part:
+
+&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id({&#39;my_hash&#39;: &#34;my-h1&#34;})
+Raises XRemoteError
+
+If you want all the objects for a particular hash regadless of the range-key, you can
+uss the `DynApi.get` method instead. We wrap it in a list, because a generator is
+normally returned (to showcase all output). You can put the returned generator in
+a `for` loop instead if you want. The generator will correctly paginate all results
+for you automatically. Here is the example:
+
+&gt;&gt;&gt; list(ModelWithRangeKey.api.get({&#39;my_hash&#39;: &#34;my-h1&#34;}))
+[ModelWithRangeKey(..., my_range=&#34;my-r1&#34;), ModelWithRangeKey(..., my_range=&#34;my-r2&#34;)]
+
+You can also query on other non-key attributes,
+
+&gt;&gt;&gt; list(ModelWithRangeKey.api.get({&#39;my_hash&#39;: &#34;my-h1&#34;}))
+
+You can also use a generic object that represents a dynamo key with `DynKey`.
+You can pass `DynKey` objects directly into `DynApi.get_via_id`.
+Other methods let you also directly pass `DynKey`&#39;s, such as `DynClient.delete_objs`.
+
+&gt;&gt;&gt; key = DynKey(hash_key=&#39;my-h1&#39;, range_key=&#39;my-r1&#39;)
+&gt;&gt;&gt; ModelWithRangeKey.api.get_via_id(key)
+
+To you can grab a list of them, a list of dicts or a list of keys,
+when you provide a list you get a generator back that will paginate though
+the results correctly.
+
+&gt;&gt;&gt; list(ModelWithRangeKey.api.get_via_id([key]))
+[ModelWithRangeKey(....)]
+
+Also, if your table only has a hash-key, you can just directly provide it&#39;s string/int value;
+or a list of them:
+
+&gt;&gt;&gt; ModelOnlyHash.api.get_via_id(&#39;a-hash-key&#39;)
+
+This is the same value as you get from the model&#39;s `DynModel.id` attribute.
+
+&gt;&gt;&gt; obj = ModelOnlyHash(hash_only = &#39;a-hash-key&#39;)
+&gt;&gt;&gt; assert obj.id == &#39;a-hash-key&#39;
+
+Objects with a range-key by default have them joined together with hash-key via a pipe `|`
+delimiter, like so:
+
+&gt;&gt;&gt; obj = ModelWithRangeKey(my_hash=&#34;my-h1&#34;, my_range=&#34;my-r1&#34;)
+&gt;&gt;&gt; assert obj.id == &#39;my-h1|my-r1&#39;
+
+You can change the joining/delimiter string via `DynStructure.dyn_id_delimiter`.
+Just like with the normal `xmodel.base.model.BaseModel`, you can set these attributes via the
+class arguments on `DynModel` subclasses.
+(for more details on class arguments, see `xmodel.base.model.BaseModel.__init_subclass__`
+and `DynStructure.configure_for_model_type` for the DynModel specific ones available).
+
+Every `DynModel` has this &#39;virtual&#39; `DynModel.id` value that is the primary key of
+the object. THis is the hash-key, plus range-key value (if object has one) of an object.
+This single string uniquely identified the object.
+
+The rest of the `xmodel.remote` can use this just like any `id` from
+other `xmodel.base.model.BaseModel` objects. Meaning, this virtual `id` value can be
+stored in other places to form relationships (as you can see with the above
+example on `ModelOnlyHash.sub_item`.
+
+
+
+### Updating Items
+
+Just like other `xmodel.base.model.BaseModel` objects, `DynModel` can be changes and then
+the changes sent to Dynamo like so:
+
+&gt;&gt;&gt; obj = ModelOnlyHash(hash_only=&#34;a-hash-key&#34;)
+&gt;&gt;&gt; obj.carrier = &#34;new-carrier&#34;
+&gt;&gt;&gt; obj.api.send()
+
+You can also mass-update/create objects via `DynClient.send_objs`:
+
+&gt;&gt;&gt; list_of_objs: List[ModelOnlyHash]
+&gt;&gt;&gt; ModelOnlyHash.api.client.send_objs(list_of_objs)
+
+Right now we only support &#34;Putting&#34; objects into dynamo (ie: not patching them).
+It will replace the entire item in dynamo, no mater what you change or update on the object.
+
+.. todo:: In the future, there will be an option to patch object(s) via `DynTransaction`.
+    The feature has not been finished yet.
+    It will use a Dynamo Transaction to do it.
+    See [Todo/Future: Batch via Transaction](#todofuture-batch-via-transaction)
+
+### Deleting Items
+
+&gt;&gt;&gt; obj.api.delete()
+
+You can mass delete via:
+
+&gt;&gt;&gt; key = DynKey(hash_key=&#39;my-h1&#39;, range_key=&#39;my-r1&#39;)
+&gt;&gt;&gt; objs = list(ModelWithRangeKey.api.get_via_id(key))
+&gt;&gt;&gt; ModelWithRangeKey.api.client.delete_objs(objs)
+
+You can also give the `DynClient.delete_objs` a list of `DynKey`&#39;s.
+
+&gt;&gt;&gt; ModelWithRangeKey.api.client.delete_objs([key])
+
+This allows you to delete objects without having to create full-models and looking to see
+which field is the hash/range key.  The `DynKey` always accepts the values the same way.
+
+
+### Batch Updating / Deleting
+
+You can send a one-off list of multiple objects to update/delete all at once (see examples above).
+
+If you want a section of code that gets executed to batch-delete/update you can directly use
+the `DynBatch` class. It&#39;s a context-manager and can apply batch Put&#39;s and Delete&#39;s via a
+`with` statment that will continue to apply it no mater how deep the call stack is inside
+the `with` statement. See `DynBatch` for more details
+
+Quick Example:
+
+&gt;&gt;&gt; # DynModel objects of some sort....
+&gt;&gt;&gt; obj1: ModelOnlyHash
+&gt;&gt;&gt; obj2: ModelOnlyHash
+&gt;&gt;&gt; obj3: ModelOnlyHash
+&gt;&gt;&gt; with DynBatch():
+...     obj1.carrier = &#34;changed&#34;
+...     obj1.api.send()
+...     obj2.carrier = &#34;changed&#34;
+...     obj2.api.send()
+...     obj3.api.delete()
+
+This would end up sending both updates and the delete in the same request.
+It works by &#39;batching&#39; a number of objects at a time and sending them.
+If there are still objects to send by the time the `with` statement exits,
+the renaming unsent objects are sent to dynamo.
+
+### Todo/Future: Batch via Transaction
+
+.. todo:: In the future, there will be a class called `DynTransaction` that you can use to
+    batch transactions together. It would also allow bulk-partial updating/patching objects
+    instead of using &#39;puts&#39; to replace entire object. And to tie a set of objects together
+    that must all be written or rolled back in one go.
+
+## Mocking Dynamo with moto
+
+You can use the `moto` 3rd part dependency, and their `@moto.mock_dynamodb` method decorator
+to &#39;mock&#39; dynamo. There is something to be aware though, but they are easy to get correct:
+
+- The mocking library expects you to first your dynamo tables via boto3 calls
+    before they are used.  `xdynamo.DynClient` will check and ensure the tables
+    are created automatically in a lazy fashion
+    (ie: first time an attempt to send/get a `DynMode` from Dynamo).
+- In an effort to reuse already opened connections to dynamo, we use a shared resource
+    `xdynamo.dyn_connections.DynamoDB`.  It&#39;s important that the connection is created
+    while `moto` is active for `moto` to mock the connection/session.
+
+    .. note:: `xinject.fixtures.context` fixture is automatically used when `xinject` is
+        installed as a dependency.
+        This ensures when a `xdynamo.dyn_connections.DynamoDB` is asked for, a brand new
+        one will be created for the unit test and therefore create a new connection/session.
+
+    - It&#39;s relatively expensive to open a new connection vs using an already existing
+        connection to Dynamo since Dynamo has to setup a encryption key context in it&#39;s self.
+
+## Advanced Queries
+[advanced-queries]: #advanced-queries
+
+Ensure you&#39;ve read the earilier segment about [Basics of Getting Items](#basics-of-getting-items)
+first before reading this more advanced section.
+
+`DynApi.get` and `DynClient.get`, for the `query` param can accept more then
+just the hash-key and range-key; other attributes are allowed to filter the results even more!
+
+Dynamo has a concept of a &#39;query&#39; and a &#39;scan&#39; to get data. A query needs to at least each
+by the hash-key (range-key is optional).  Scan will let you search with any attribute but has
+to look at all records, and so is slow.
+
+If you at least provide the hash-key, you can filter by other attributes and still get
+decent performance (as it only has to scan records with that hash).  If you also provide the
+range-key, that&#39;s even better as that will narrow it down to one-record, and is fast since
+Dynamo can use an index.
+
+You can also provide a list of hash-keys, with other attributes to fitler by.
+`DynClient` will automatically break it up into multiple queries, one per-hash key
+automatically and paginate all the results together for you.
+
+### Operators
+
+It also supports operators, like `some_field__gte: 3` would look for things that are
+greater-than-or-equal to `3`. A hash-key must be exact, or a list (ie: `__in`).
+
+When wanting to query, the hash-field has to be an exact-equals value (no other special operators)
+or a `list` value and/or `__in` operator.  When it&#39;s a list (which maps it&#39;s self automatically
+to the `__in` operator by default) we simulate it by doing multiple queries, one per-item
+in the list for the hash and then concatenating the results together via the generator
+that gets returned (ie: lazily execute each query as the generator runs).
+
+To get full list of operators, see operator method names on `bot3.dynamodb.conditions.Attr`
+(and it&#39;s AttributeBase superclass). Also have a mapping at `operator_alias_map` that maps
+some of our standard xyngular-api operators to how it&#39;s named in Dynamo.
+
+I also have a list right below:
+
+non-hash query operators you can use:
+
+#### Operator List
+
+- eq
+- lt
+- lte
+- gt
+- gte
+- begins_with
+- between
+- is_int
+_ exists
+_ not_exists
+- contains
+- size
+- attribute_type
+
+See examples below to see how operators can be used.
+
+For more info, take a look at some of the following examples and also look at
+`DynClient.get`.
+
+### Examples
+[examples_1]: #examples_1
+
+```python
+ModelOnlyHash.api.get(
+    query={
+        &#39;hash_only&#39;:[&#39;vis-track-id-2&#39;, &#39;vis-track-id-1&#39;],
+        &#39;carrier&#39;: &#39;c2&#39;
+    }
+)
+```
+
+This will do two queries in Dynamo, one for each:
+
+1. &#39;hash_only: vis-track-id-2&#39; + &#39;carrier: c2&#39;
+2. &#39;hash_only: vis-track-id-1&#39; + &#39;carrier: c2&#39;
+
+It will combine the results of both together into a single generator and return the generator.
+You can iterate on the generator to get all the results, all paginated for you.
+
+You can use operators after the keyword, just like you can do for the Xyngular APIs:
+
+```python
+ModelOnlyHash.api.get(
+    query={
+        &#39;hash_only&#39;:[&#39;vis-track-id-2&#39;, &#39;vis-track-id-1&#39;],
+        &#39;a_number__gte&#39;: 2
+    }
+)
+```
+
+Looks for the two different `hash_only`&#39;s that have a `a_number` attribute that
+is greater then or equal to 2.
+
+
+&gt;&gt;&gt; my_objs = ModelWithRangeKey.api.get(
+...     query={
+...         &#39;my_hash&#39;:[&#39;hash-1&#39;, &#39;hash-2&#39;],
+...         &#39;my_range&#39;:[&#39;range-1&#39;, &#39;range-2&#39;],
+...         &#39;a_number__gte&#39;: 2
+...     }
+... )
+
+
+It looks for all of the following combinations of range/hash with four seperate queries
+(internally):
+
+- hash-1, range-1
+- hash-1, range-2
+- hash-2, range-1
+- hash-2, range-2
+
+Each of these queries will also have a filter where `a_number` attribute will need
+to be greater then or equal to 2.
+
+`DynApi.get` will return a generator, that will return all objects returns from
+these four internal queries it will do for you.
+
+All you have to do is run the generator to see all the objects, like so:
+
+&gt;&gt;&gt; for o in my_objs:
+...     print(o.a_number)
+--- outputs one number per-object in table that match query ---
+
+If the above example query only had `my_hash` and `my_range` and **NOT** `a_number__gte`,
+it would have executed a very-fast batch-get on dynamo with the hash/range key combinations.
+
+Doing four query/requests are still pretty fast,
+but doing a batch-get can be executed in a single request (100 key combinations per-request)!
+
+Like I said earlier, the nice thing about `DynApi.get` / `DynClient.get`
+is that it can figure out the best way to query the objects for you based on what you give
+so you don&#39;t have figure it out your self.
+
+&#34;&#34;&#34;  # noqa -- Some lines can&#39;t be cut shorter (Url&#39;s).
+
+from xdynamo.model import DynModel
+from xdynamo.fields import DynField, HashField, RangeField
+from xdynamo.common_types import DynKey
+from xdynamo.resources import DynBatch
+
+__all__ = [
+    &#34;DynKey&#34;, &#34;DynModel&#34;, &#34;HashField&#34;, &#34;RangeField&#34;, &#34;DynBatch&#34;, &#34;DynField&#34;
+]</code></pre>
+</details>
+</section>
+<section>
+<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+<dl>
+<dt><code class="name"><a title="xdynamo.api" href="api.html">xdynamo.api</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.client" href="client.html">xdynamo.client</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.common_types" href="common_types.html">xdynamo.common_types</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.const" href="const.html">xdynamo.const</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.db" href="db.html">xdynamo.db</a></code></dt>
+<dd>
+<div class="desc"><p>Used to keep track of a shared connection and Dynamo table resources …</p></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.errors" href="errors.html">xdynamo.errors</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.fields" href="fields.html">xdynamo.fields</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.model" href="model.html">xdynamo.model</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.resources" href="resources.html">xdynamo.resources</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.structure" href="structure.html">xdynamo.structure</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="xdynamo.utils" href="utils.html">xdynamo.utils</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="xdynamo.DynBatch"><code class="flex name class">
+<span>class <span class="ident">DynBatch</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Allows one to batch bulk updates/deletes (via dynamo put/delete-item) with a context manager.
+You can bulk-delete/update currently via:</p>
+<ul>
+<li><code>DynClient.delete_objs</code></li>
+<li><code>DynClient.update_objs</code></li>
+</ul>
+<p>But if you want to combine a number of separate update/delete object calls
+(including with other calls to <code>DynClient.delete_objs</code> / <code>DynClient.update_objs</code>)
+into the same request(s), this class allows you to do that.</p>
+<p>For example code, see <a href="#batch-updating-deleting">Batch Updating Deleting</a>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DynBatch(_DynBatcher):
+    &#34;&#34;&#34;
+    Allows one to batch bulk updates/deletes (via dynamo put/delete-item) with a context manager.
+    You can bulk-delete/update currently via:
+
+    - `DynClient.delete_objs`
+    - `DynClient.update_objs`
+
+    But if you want to combine a number of separate update/delete object calls
+    (including with other calls to `DynClient.delete_objs` / `DynClient.update_objs`)
+    into the same request(s), this class allows you to do that.
+
+    For example code, see [Batch Updating Deleting](#batch-updating-deleting).
+    &#34;&#34;&#34;
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>xdynamo.resources._DynBatcher</li>
+</ul>
+</dd>
+<dt id="xdynamo.DynField"><code class="flex name class">
+<span>class <span class="ident">DynField</span></span>
+<span>(</span><span>name: str = Default, type_hint: Type = &lt;property object&gt;, nullable: bool = Default, read_only: bool = Default, exclude: bool = Default, default: Any = Default, post_filter: Optional[xmodel.base.fields.Filter] = Default, converter: Optional[xmodel.base.fields.Converter] = Default, fget: Optional[Callable[[M], Any]] = Default, fset: Optional[Callable[[BaseModel, Any], None]] = Default, include_with_fields: Set[str] = Default, json_path: str = Default, json_path_separator: str = Default, include_in_repr: bool = Default, related_type: Optional[Type[BaseModel]] = Default, related_field_name_for_id: Optional[str] = Default, related_to_many: bool = Default, model: BaseModel = Default)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>If this is not used on a model field/attribute, the field will get the default set of
+options automatically if the field has a type-hint; see topic
+<a href="./#model-fields">BaseModel Fields</a>.</p>
+<p>Preferred way going forward to provide additional options/configuration to BaseModel fields.</p>
+<p>If you don't specify a value for a particular attribute, it will have the
+<code>xsentinels.default.Default</code> value. When a Default value is encountered while constructing a
+<code>xmodel.base.model.BaseModel</code>, it will resolve these Default values and assign the final
+value for the field.</p>
+<p>To resolve these Defaults, it will look at field on the parent BaseModel class.
+If a non-Default value is defined there, it will use that for the child.
+If not, then it looks at the next parent. If no non-Default value is found we then use
+a value that makes sense. You can see what this is in the first line of each doc-comment.
+In the future, when we start using Python 3.9 we can use type annotations (typing.Annotated)
+to annotate a specific value to the Default type generically. For now it's hard-coded.</p>
+<h2 id="side-notes">Side Notes</h2>
+<p>Keep in mind that after the <code>.<a title="xdynamo.api" href="api.html">xdynamo.api</a></code> is accessed for the first time on a particular model
+class, the sdk will construct the rest of the class (lazily)&hellip;
+it will read and then remove/delete from the BaseModel class any type-hinted json fields
+with a Field object assigned to the class. It moves these Field objects into a special
+internal structure.
+The class gets <code>None</code> values set on all fields after this is done.</p>
+<h2 id="details-on-why-we-remove-them">Details on why we remove them:</h2>
+<p>Doing this helps with <strong>getattr</strong>, as it will still be executed for fields without a value
+when we create an object instance. <strong>getattr</strong> is used to support lazy lookups [via API] of
+related objects. Using <strong>getattr</strong> is much faster than using the <strong>getattribute</strong> version.
+So I want to keep using the <strong>getattr</strong> version if possible.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DynField(Field):
+    dyn_key: Optional[DynKeyType] = Default
+
+    def resolve_defaults(
+            self,
+            name,
+            type_hint: Type,
+            default_converter_map: Optional[Dict[Type, Converter]] = None,
+            parent_field: &#34;DynField&#34; = None
+    ):
+        # pydoc3 will copy the parent-class doc-comment if left empty here;
+        # that&#39;s exactly what I want so leaving doc-comment blank.
+        super().resolve_defaults(
+            name=name,
+            type_hint=type_hint,
+            default_converter_map=default_converter_map,
+            parent_field=parent_field
+        )
+
+        if self.dyn_key:
+            if not self.was_option_explicitly_set_by_user(&#39;include_in_repr&#39;):
+                self.include_in_repr = True</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>xmodel.base.fields.Field</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="xdynamo.fields.HashField" href="fields.html#xdynamo.fields.HashField">HashField</a></li>
+<li><a title="xdynamo.fields.RangeField" href="fields.html#xdynamo.fields.RangeField">RangeField</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.DynField.dyn_key"><code class="name">var <span class="ident">dyn_key</span> : Optional[<a title="xdynamo.common_types.DynKeyType" href="common_types.html#xdynamo.common_types.DynKeyType">DynKeyType</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.DynField.resolve_defaults"><code class="name flex">
+<span>def <span class="ident">resolve_defaults</span></span>(<span>self, name, type_hint: Type, default_converter_map: Optional[Dict[Type, xmodel.base.fields.Converter]] = None, parent_field: <a title="xdynamo.DynField" href="#xdynamo.DynField">DynField</a> = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Resolves all dataclass attributes/fields on self that are still set to <code>Default</code>.
+The only exception is <code>type_hint</code>. We will always use what is passed in, regardless
+of if there is a parent-field with one set. This allows one on a BaseModel to easily
+override the type-hint without having to create a field with an explicitly set
+type_hint set on it (ie: let normal python annotated type-hint override any parent type).</p>
+<p>This includes ones on subclasses [dataclass will generically tell us about all of them].
+System calls this when a BaseModel class is being lazily constructed
+[ie: when gets the <code>xmodel.base.model.BaseModel.api</code> attribute for the first time or
+attempts to create an instance of the BaseModel for the fist time].</p>
+<p>When the BaseModel class is being constructed, this method is called to resolve all
+the Default values still on the instance. We do this by:</p>
+<ol>
+<li>We first look at parent_field object if one has been given.<ul>
+<li>If ask that parent field which options where explicitly set by user and which
+ones were set by resolving a <code>xsentinels.default.Default</code>. Field objects have an
+internal/private var that keeps track of this.</li>
+</ul>
+</li>
+<li>Next, figure out standard default value for option if option's current value is
+current at <code>xsentinels.default.Default</code> (a default sentential value, used to detect
+which values were left unset by user).</li>
+</ol>
+<h2 id="more-details">More Details</h2>
+<p>I have Field objects keep track of which fields were not at
+Default when they are resolved. This allows child Field objects
+to know which values to copy into themselves and which ones
+should be resolved normally via Default.</p>
+<p>The goal here is to avoid copying value from Parent that
+were originally resolved via Default mechanism
+(and were not set explicitly by user).</p>
+<p>An example of why this is handy:</p>
+<p>If we have a parent model with a field of a different type vs the one on the child.
+Unless the converter was explicitly set by the user we want to just use the default
+converter for the different type on the child (and not use the wrong converter by default).</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def resolve_defaults(
+        self,
+        name,
+        type_hint: Type,
+        default_converter_map: Optional[Dict[Type, Converter]] = None,
+        parent_field: &#34;DynField&#34; = None
+):
+    # pydoc3 will copy the parent-class doc-comment if left empty here;
+    # that&#39;s exactly what I want so leaving doc-comment blank.
+    super().resolve_defaults(
+        name=name,
+        type_hint=type_hint,
+        default_converter_map=default_converter_map,
+        parent_field=parent_field
+    )
+
+    if self.dyn_key:
+        if not self.was_option_explicitly_set_by_user(&#39;include_in_repr&#39;):
+            self.include_in_repr = True</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="xdynamo.DynKey"><code class="flex name class">
+<span>class <span class="ident">DynKey</span></span>
+<span>(</span><span>api: DynApi, id: str = None, hash_key: Any = None, range_key: Optional[Any] = None, range_operator: str = None, require_full_key: bool = True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>DynKey(api: 'DynApi', id: str = None, hash_key: Any = None, range_key: Optional[Any] = None, range_operator: str = None, require_full_key: bool = True)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@dataclasses.dataclass(frozen=True, eq=True)
+class DynKey:
+    api: &#39;DynApi&#39; = dataclasses.field(compare=False)
+    # We only compare with `id`, this should represent our identity sufficiently.
+    id: str = None
+    hash_key: Union[Any] = dataclasses.field(default=None, compare=False)
+    range_key: Optional[Any] = (
+        dataclasses.field(default=None, compare=False)
+    )
+    range_operator: str = dataclasses.field(default=None, compare=False)
+    require_full_key: bool = dataclasses.field(default=True, compare=False)
+
+    @classmethod
+    def via_obj(cls, obj: &#39;DynModel&#39;) -&gt; &#39;DynKey&#39;:
+        structure = obj.api.structure
+        hash_name = structure.dyn_hash_key_name
+
+        if not hash_name:
+            raise XRemoteError(
+                f&#34;While constructing {structure.model_cls}, found no hash-key field. &#34;
+                f&#34;You must have at least one hash-key field.&#34;
+            )
+
+        hash_value = getattr(obj, hash_name)
+
+        if hash_value is None:
+            raise XRemoteError(
+                f&#34;Unable to get DynKey due to `None` for dynamo hash-key ({hash_value}) &#34;
+                f&#34;on object {obj}.&#34;
+            )
+
+        range_name = structure.dyn_range_key_name
+        range_value = None
+        if range_name:
+            range_value = getattr(obj, range_name)
+            if range_value is None:
+                raise XRemoteError(
+                    f&#34;Unable to get DynKey due to `None` for dynamo range-key ({range_name}) &#34;
+                    f&#34;on object {obj}.&#34;
+                )
+
+        return DynKey(api=obj.api, hash_key=hash_value, range_key=range_value)
+
+    def key_as_dict(self):
+        structure = self.api.structure
+        hash_field = structure.dyn_hash_field
+        range_field = structure.dyn_range_field
+
+        def run_converter(field: &#39;DynField&#39;, value) -&gt; Any:
+            converter = field.converter
+            if not converter:
+                return value
+
+            return converter(
+                self.api,
+                Converter.Direction.to_json,
+                field,
+                value
+            )
+
+        # Append the keys for the items we want into what we will request.
+        item_request = {hash_field.name: run_converter(hash_field, self.hash_key)}
+        if range_field:
+            item_request[range_field.name] = run_converter(range_field, self.range_key)
+        return item_request
+
+    def __post_init__(self):
+        structure = self.api.structure
+        delimiter = structure.dyn_id_delimiter
+        range_name = structure.dyn_range_key_name
+        need_range_key = bool(range_name)
+
+        hash_key = self.hash_key
+        range_key = self.range_key
+        api = self.api
+
+        _id = self.id
+        if _id is not None and not isinstance(_id, str):
+            # `self.id` must always be a string.
+            # todo: Must check for standard converter method
+            _id = str(_id)
+            object.__setattr__(self, &#39;id&#39;, _id)
+
+        require_full_key = self.require_full_key
+
+        # First, figure out `self.id` if not provided.
+        if not _id:
+            if not hash_key:
+                raise XRemoteError(
+                    f&#34;Tried to create DynKey with no id ({_id}) or no hash key ({hash_key}).&#34;
+                )
+
+            if require_full_key and need_range_key and not range_key:
+                raise XRemoteError(
+                    f&#34;Tried to create DynKey with no id ({_id}) or no range key ({range_key}).&#34;
+                )
+
+            key_names = [(structure.dyn_hash_key_name, hash_key)]
+            # Generate ID without delimiter to represent an entire hash-page (ie: any range value)
+            if need_range_key and range_key is not None:
+                key_names.append((range_name, range_key))
+
+            keys = []
+            for key_name, key_value in key_names:
+                field = structure.get_field(key_name)
+                converter = field.converter
+                final_value = key_value
+                if converter:
+                    final_value = converter(
+                        api,
+                        Converter.Direction.to_json,
+                        field,
+                        key_value
+                    )
+                keys.append(final_value)
+
+            _id = delimiter.join([str(x) for x in keys])
+            object.__setattr__(self, &#39;id&#39;, _id)
+        elif need_range_key and delimiter not in _id:
+            raise XRemoteError(
+                f&#34;Tried to create DynKey with an `id` ({_id}) &#34;
+                f&#34;that did not have delimiter ({delimiter}) in it. &#34;
+                f&#34;This means we are missing the range-key part for field ({range_name}) &#34;
+                f&#34;in the `id` that was provided.  Trying providing the id like this: &#34;
+                f&#39;&#34;{_id}{delimiter}&#39;
+                r&#39;{range-key-value-goes-here}&#34;.&#39;  # &lt;-- want to directly-output the `{` part.
+            )
+
+        # If we got provided a hash-key directly, no need to continue any farther.
+        if hash_key:
+            if require_full_key and need_range_key and not range_key:
+                raise XRemoteError(
+                    f&#34;Have hash_key ({hash_key}) without needed range_key while creating DynKey.&#34;
+                )
+            # We were provided the hash/range key already, as an optimization I don&#39;t use time
+            # checking to see if they passed in the same values that they may have passed in `id`.
+            return
+
+        # They did not pass in hash_key, so we must parse the `id` they provided
+        # and then set them on self.
+
+        if not need_range_key:
+            # If we don&#39;t need range key, there is no delimiter to look for.
+            hash_key = _id
+        else:
+            split_id = _id.split(delimiter)
+            if len(split_id) != 2:
+                raise XRemoteError(
+                    f&#34;For dynamo table ({self.api.model_type}): Have id ({_id}) but delimiter &#34;
+                    f&#34;({delimiter}) is either not present, or is in it more than once. &#34;
+                    f&#34;&#39;id&#39; needs to contain exactly one hash and range key combined together &#34;
+                    f&#34;with the delimiter, ie: &#39;hash-key-value{delimiter}range-key-value&#39;. &#34;
+                    f&#34;See xdynamo.dyn_connections documentation for more details on how &#34;
+                    f&#34;this works.&#34;
+                )
+            # todo: Consider converting these `from_json`, like we convert `to_json`
+            #   when we put the keys into the `id` (see above, where we generate `id` if needed)?
+            hash_key = split_id[0]
+            range_key = split_id[1]
+
+        object.__setattr__(self, &#39;hash_key&#39;, hash_key)
+        object.__setattr__(self, &#39;range_key&#39;, range_key)</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.DynKey.api"><code class="name">var <span class="ident">api</span> : DynApi</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="xdynamo.DynKey.hash_key"><code class="name">var <span class="ident">hash_key</span> : Any</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="xdynamo.DynKey.id"><code class="name">var <span class="ident">id</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="xdynamo.DynKey.range_key"><code class="name">var <span class="ident">range_key</span> : Optional[Any]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="xdynamo.DynKey.range_operator"><code class="name">var <span class="ident">range_operator</span> : str</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="xdynamo.DynKey.require_full_key"><code class="name">var <span class="ident">require_full_key</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="xdynamo.DynKey.via_obj"><code class="name flex">
+<span>def <span class="ident">via_obj</span></span>(<span>obj: <a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a>) ‑> <a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def via_obj(cls, obj: &#39;DynModel&#39;) -&gt; &#39;DynKey&#39;:
+    structure = obj.api.structure
+    hash_name = structure.dyn_hash_key_name
+
+    if not hash_name:
+        raise XRemoteError(
+            f&#34;While constructing {structure.model_cls}, found no hash-key field. &#34;
+            f&#34;You must have at least one hash-key field.&#34;
+        )
+
+    hash_value = getattr(obj, hash_name)
+
+    if hash_value is None:
+        raise XRemoteError(
+            f&#34;Unable to get DynKey due to `None` for dynamo hash-key ({hash_value}) &#34;
+            f&#34;on object {obj}.&#34;
+        )
+
+    range_name = structure.dyn_range_key_name
+    range_value = None
+    if range_name:
+        range_value = getattr(obj, range_name)
+        if range_value is None:
+            raise XRemoteError(
+                f&#34;Unable to get DynKey due to `None` for dynamo range-key ({range_name}) &#34;
+                f&#34;on object {obj}.&#34;
+            )
+
+    return DynKey(api=obj.api, hash_key=hash_value, range_key=range_value)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.DynKey.key_as_dict"><code class="name flex">
+<span>def <span class="ident">key_as_dict</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def key_as_dict(self):
+    structure = self.api.structure
+    hash_field = structure.dyn_hash_field
+    range_field = structure.dyn_range_field
+
+    def run_converter(field: &#39;DynField&#39;, value) -&gt; Any:
+        converter = field.converter
+        if not converter:
+            return value
+
+        return converter(
+            self.api,
+            Converter.Direction.to_json,
+            field,
+            value
+        )
+
+    # Append the keys for the items we want into what we will request.
+    item_request = {hash_field.name: run_converter(hash_field, self.hash_key)}
+    if range_field:
+        item_request[range_field.name] = run_converter(range_field, self.range_key)
+    return item_request</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="xdynamo.DynModel"><code class="flex name class">
+<span>class <span class="ident">DynModel</span></span>
+<span>(</span><span>*args, id=Default, **initial_values)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Used to easily parse/generate JSON from xyn_sdk model's for use in Dynamo.
+So it will take advantage of all the other features of the xyn_sdk models.
+This includes automatically converting dates to/from strings, converting strings
+to numbers, looking up child-objects from other tables automatically, etc.
+It also will modify the results JSON so remove blank values; to easily prevent
+these sorts of errors in dynamo boto3 library.</p>
+<p>We pass in None for name/service to indicate we don't have an associated table,
+that we are more of an abstract class.</p>
+<p>Creates a new model object. The first/second params need to be passed as positional
+arguments. The rest must be sent as key-word arguments. Everything is optional.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong></dt>
+<dd>Specify the <code>BaseModel.id</code> attribute, if you know it. If left as Default, nothing
+will be set on it. It could be set to something via args[0] (ie: a JSON dict).
+If you do provide a value, it be set last after everything else has been set.</dd>
+<dt><strong><code>*args</code></strong></dt>
+<dd>
+<p>I don't want to take names from what you could put into 'initial_values',
+so I keep it as position-only *args. Once Python 3.8 comes out, we can use a
+new feature where you can specify some arguments as positional-only and not
+keyword-able.</p>
+<h2 id="firstarg-if-dict">FirstArg - If Dict:</h2>
+<p>If raw dictionary parsed from JSON string. It just calls
+<code>self.api.update_from_json(args[0])</code> for you.</p>
+<h2 id="firstart-if-basemodel">FirstArt - If BaseModel:</h2>
+<p>If a <code>BaseModel</code>, will copy fields over that have the same name.
+You can use this to duplicate a Model object, if you want to copy it.
+Or can be used to copy fields from one model type into another,
+on fields that are the same name.</p>
+<p>Will ignore fields that are present on one but not the other.
+Only copy fields that are on both models types.</p>
+</dd>
+<dt><strong><code>**initial_values</code></strong></dt>
+<dd>Let's you specify other attribute values for convenience.
+They will be set into the object the same way you would normally doing it:
+ie: <code>model_obj.some_attr = v</code> is the same as <code>ModelClass(some_attr=v)</code>.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DynModel(
+    RemoteModel,
+    dyn_name=None,
+    dyn_service=Default,
+    dyn_environment=Default,
+    lazy_loader=lazy_load_types_for_dyn_api
+):
+    &#34;&#34;&#34;
+    Used to easily parse/generate JSON from xyn_sdk model&#39;s for use in Dynamo.
+    So it will take advantage of all the other features of the xyn_sdk models.
+    This includes automatically converting dates to/from strings, converting strings
+    to numbers, looking up child-objects from other tables automatically, etc.
+    It also will modify the results JSON so remove blank values; to easily prevent
+    these sorts of errors in dynamo boto3 library.
+
+    We pass in None for name/service to indicate we don&#39;t have an associated table,
+    that we are more of an abstract class.
+    &#34;&#34;&#34;
+    api: DynApi[Self]
+    id: str
+
+    @property
+    def id(self) -&gt; Optional[str]:
+        # We could do some intelligent caching, but for now just calculate each time.
+        try:
+            return DynKey.via_obj(self).id
+        except XRemoteError:
+            return None
+
+    @id.setter
+    def id(self, value):
+        structure = self.api.structure
+        if type(value) is str:
+            parsed_value = value.split(&#39;|&#39;)
+            hash_value = parsed_value[0]
+            range_value = parsed_value[1] if len(parsed_value) == 2 else None
+
+            self.__setattr__(structure.dyn_hash_field.name, hash_value)
+            if range_value:
+                self.__setattr__(structure.dyn_range_field.name, range_value)
+            return
+
+        raise NotImplementedError(
+            &#34;Read-only for now, but want to support it. &#34;
+            &#34;Supporting it would involve parsing ID with DynKey, and taking hash/range key &#34;
+            &#34;components and setting them on the proper attributes.&#34;
+            &#34;\n\n&#34;
+            &#34;Also, want to eventually support for using &#39;id&#39; as a HashField &#34;
+            &#34;(ie: a single/only key called &#39;id&#39; in dynamo-db)&#34;
+        )</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>xmodel.remote.model.RemoteModel</li>
+<li>xmodel.base.model.BaseModel</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.DynModel.api"><code class="name">var <span class="ident">api</span> : <a title="xdynamo.api.DynApi" href="api.html#xdynamo.api.DynApi">DynApi</a>[xmodel.base.model.BaseModel]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="xdynamo.DynModel.id"><code class="name">var <span class="ident">id</span> : Optional[str]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def id(self) -&gt; Optional[str]:
+    # We could do some intelligent caching, but for now just calculate each time.
+    try:
+        return DynKey.via_obj(self).id
+    except XRemoteError:
+        return None</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="xdynamo.HashField"><code class="flex name class">
+<span>class <span class="ident">HashField</span></span>
+<span>(</span><span>name: str = Default, type_hint: Type = &lt;property object&gt;, nullable: bool = Default, read_only: bool = Default, exclude: bool = Default, default: Any = Default, post_filter: Optional[xmodel.base.fields.Filter] = Default, converter: Optional[xmodel.base.fields.Converter] = Default, fget: Optional[Callable[[M], Any]] = Default, fset: Optional[Callable[[BaseModel, Any], None]] = Default, include_with_fields: Set[str] = Default, json_path: str = Default, json_path_separator: str = Default, include_in_repr: bool = Default, related_type: Optional[Type[BaseModel]] = Default, related_field_name_for_id: Optional[str] = Default, related_to_many: bool = Default, model: BaseModel = Default)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>If this is not used on a model field/attribute, the field will get the default set of
+options automatically if the field has a type-hint; see topic
+<a href="./#model-fields">BaseModel Fields</a>.</p>
+<p>Preferred way going forward to provide additional options/configuration to BaseModel fields.</p>
+<p>If you don't specify a value for a particular attribute, it will have the
+<code>xsentinels.default.Default</code> value. When a Default value is encountered while constructing a
+<code>xmodel.base.model.BaseModel</code>, it will resolve these Default values and assign the final
+value for the field.</p>
+<p>To resolve these Defaults, it will look at field on the parent BaseModel class.
+If a non-Default value is defined there, it will use that for the child.
+If not, then it looks at the next parent. If no non-Default value is found we then use
+a value that makes sense. You can see what this is in the first line of each doc-comment.
+In the future, when we start using Python 3.9 we can use type annotations (typing.Annotated)
+to annotate a specific value to the Default type generically. For now it's hard-coded.</p>
+<h2 id="side-notes">Side Notes</h2>
+<p>Keep in mind that after the <code>.<a title="xdynamo.api" href="api.html">xdynamo.api</a></code> is accessed for the first time on a particular model
+class, the sdk will construct the rest of the class (lazily)&hellip;
+it will read and then remove/delete from the BaseModel class any type-hinted json fields
+with a Field object assigned to the class. It moves these Field objects into a special
+internal structure.
+The class gets <code>None</code> values set on all fields after this is done.</p>
+<h2 id="details-on-why-we-remove-them">Details on why we remove them:</h2>
+<p>Doing this helps with <strong>getattr</strong>, as it will still be executed for fields without a value
+when we create an object instance. <strong>getattr</strong> is used to support lazy lookups [via API] of
+related objects. Using <strong>getattr</strong> is much faster than using the <strong>getattribute</strong> version.
+So I want to keep using the <strong>getattr</strong> version if possible.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class HashField(DynField):
+    dyn_key = DynKeyType.hash</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a></li>
+<li>xmodel.base.fields.Field</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.HashField.dyn_key"><code class="name">var <span class="ident">dyn_key</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.HashField.resolve_defaults"><code class="name flex">
+<span>def <span class="ident">resolve_defaults</span></span>(<span>self, name, type_hint: Type, default_converter_map: Optional[Dict[Type, xmodel.base.fields.Converter]] = None, parent_field: <a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a> = None)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a></code>.<code><a title="xdynamo.fields.DynField.resolve_defaults" href="fields.html#xdynamo.fields.DynField.resolve_defaults">resolve_defaults</a></code>
+</p>
+<div class="desc inherited"><p>Resolves all dataclass attributes/fields on self that are still set to <code>Default</code>.
+The only exception is <code>type_hint</code>. We will always use what is passed …</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="xdynamo.RangeField"><code class="flex name class">
+<span>class <span class="ident">RangeField</span></span>
+<span>(</span><span>name: str = Default, type_hint: Type = &lt;property object&gt;, nullable: bool = Default, read_only: bool = Default, exclude: bool = Default, default: Any = Default, post_filter: Optional[xmodel.base.fields.Filter] = Default, converter: Optional[xmodel.base.fields.Converter] = Default, fget: Optional[Callable[[M], Any]] = Default, fset: Optional[Callable[[BaseModel, Any], None]] = Default, include_with_fields: Set[str] = Default, json_path: str = Default, json_path_separator: str = Default, include_in_repr: bool = Default, related_type: Optional[Type[BaseModel]] = Default, related_field_name_for_id: Optional[str] = Default, related_to_many: bool = Default, model: BaseModel = Default)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>If this is not used on a model field/attribute, the field will get the default set of
+options automatically if the field has a type-hint; see topic
+<a href="./#model-fields">BaseModel Fields</a>.</p>
+<p>Preferred way going forward to provide additional options/configuration to BaseModel fields.</p>
+<p>If you don't specify a value for a particular attribute, it will have the
+<code>xsentinels.default.Default</code> value. When a Default value is encountered while constructing a
+<code>xmodel.base.model.BaseModel</code>, it will resolve these Default values and assign the final
+value for the field.</p>
+<p>To resolve these Defaults, it will look at field on the parent BaseModel class.
+If a non-Default value is defined there, it will use that for the child.
+If not, then it looks at the next parent. If no non-Default value is found we then use
+a value that makes sense. You can see what this is in the first line of each doc-comment.
+In the future, when we start using Python 3.9 we can use type annotations (typing.Annotated)
+to annotate a specific value to the Default type generically. For now it's hard-coded.</p>
+<h2 id="side-notes">Side Notes</h2>
+<p>Keep in mind that after the <code>.<a title="xdynamo.api" href="api.html">xdynamo.api</a></code> is accessed for the first time on a particular model
+class, the sdk will construct the rest of the class (lazily)&hellip;
+it will read and then remove/delete from the BaseModel class any type-hinted json fields
+with a Field object assigned to the class. It moves these Field objects into a special
+internal structure.
+The class gets <code>None</code> values set on all fields after this is done.</p>
+<h2 id="details-on-why-we-remove-them">Details on why we remove them:</h2>
+<p>Doing this helps with <strong>getattr</strong>, as it will still be executed for fields without a value
+when we create an object instance. <strong>getattr</strong> is used to support lazy lookups [via API] of
+related objects. Using <strong>getattr</strong> is much faster than using the <strong>getattribute</strong> version.
+So I want to keep using the <strong>getattr</strong> version if possible.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class RangeField(DynField):
+    dyn_key = DynKeyType.range</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a></li>
+<li>xmodel.base.fields.Field</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.RangeField.dyn_key"><code class="name">var <span class="ident">dyn_key</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.RangeField.resolve_defaults"><code class="name flex">
+<span>def <span class="ident">resolve_defaults</span></span>(<span>self, name, type_hint: Type, default_converter_map: Optional[Dict[Type, xmodel.base.fields.Converter]] = None, parent_field: <a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a> = None)</span>
+</code></dt>
+<dd>
+<p class="inheritance">
+<em>Inherited from:</em>
+<code><a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a></code>.<code><a title="xdynamo.fields.DynField.resolve_defaults" href="fields.html#xdynamo.fields.DynField.resolve_defaults">resolve_defaults</a></code>
+</p>
+<div class="desc inherited"><p>Resolves all dataclass attributes/fields on self that are still set to <code>Default</code>.
+The only exception is <code>type_hint</code>. We will always use what is passed …</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul>
+<li><a href="#orm-dynamo-overview">ORM Dynamo Overview</a><ul>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#example-data-models">Example Data Models</a></li>
+<li><a href="#basics-of-getting-items">Basics of Getting Items</a></li>
+<li><a href="#updating-items">Updating Items</a></li>
+<li><a href="#deleting-items">Deleting Items</a></li>
+<li><a href="#batch-updating-deleting">Batch Updating / Deleting</a></li>
+<li><a href="#todofuture-batch-via-transaction">Todo/Future: Batch via Transaction</a></li>
+</ul>
+</li>
+<li><a href="#mocking-dynamo-with-moto">Mocking Dynamo with moto</a></li>
+<li><a href="#advanced-queries">Advanced Queries</a><ul>
+<li><a href="#operators">Operators</a><ul>
+<li><a href="#operator-list">Operator List</a></li>
+</ul>
+</li>
+<li><a href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<ul>
+<li><code><a title="xdynamo.api" href="api.html">xdynamo.api</a></code></li>
+<li><code><a title="xdynamo.client" href="client.html">xdynamo.client</a></code></li>
+<li><code><a title="xdynamo.common_types" href="common_types.html">xdynamo.common_types</a></code></li>
+<li><code><a title="xdynamo.const" href="const.html">xdynamo.const</a></code></li>
+<li><code><a title="xdynamo.db" href="db.html">xdynamo.db</a></code></li>
+<li><code><a title="xdynamo.errors" href="errors.html">xdynamo.errors</a></code></li>
+<li><code><a title="xdynamo.fields" href="fields.html">xdynamo.fields</a></code></li>
+<li><code><a title="xdynamo.model" href="model.html">xdynamo.model</a></code></li>
+<li><code><a title="xdynamo.resources" href="resources.html">xdynamo.resources</a></code></li>
+<li><code><a title="xdynamo.structure" href="structure.html">xdynamo.structure</a></code></li>
+<li><code><a title="xdynamo.utils" href="utils.html">xdynamo.utils</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="xdynamo.DynBatch" href="#xdynamo.DynBatch">DynBatch</a></code></h4>
+</li>
+<li>
+<h4><code><a title="xdynamo.DynField" href="#xdynamo.DynField">DynField</a></code></h4>
+<ul class="">
+<li><code><a title="xdynamo.DynField.dyn_key" href="#xdynamo.DynField.dyn_key">dyn_key</a></code></li>
+<li><code><a title="xdynamo.DynField.resolve_defaults" href="#xdynamo.DynField.resolve_defaults">resolve_defaults</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="xdynamo.DynKey" href="#xdynamo.DynKey">DynKey</a></code></h4>
+<ul class="two-column">
+<li><code><a title="xdynamo.DynKey.api" href="#xdynamo.DynKey.api">api</a></code></li>
+<li><code><a title="xdynamo.DynKey.hash_key" href="#xdynamo.DynKey.hash_key">hash_key</a></code></li>
+<li><code><a title="xdynamo.DynKey.id" href="#xdynamo.DynKey.id">id</a></code></li>
+<li><code><a title="xdynamo.DynKey.key_as_dict" href="#xdynamo.DynKey.key_as_dict">key_as_dict</a></code></li>
+<li><code><a title="xdynamo.DynKey.range_key" href="#xdynamo.DynKey.range_key">range_key</a></code></li>
+<li><code><a title="xdynamo.DynKey.range_operator" href="#xdynamo.DynKey.range_operator">range_operator</a></code></li>
+<li><code><a title="xdynamo.DynKey.require_full_key" href="#xdynamo.DynKey.require_full_key">require_full_key</a></code></li>
+<li><code><a title="xdynamo.DynKey.via_obj" href="#xdynamo.DynKey.via_obj">via_obj</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="xdynamo.DynModel" href="#xdynamo.DynModel">DynModel</a></code></h4>
+<ul class="">
+<li><code><a title="xdynamo.DynModel.api" href="#xdynamo.DynModel.api">api</a></code></li>
+<li><code><a title="xdynamo.DynModel.id" href="#xdynamo.DynModel.id">id</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="xdynamo.HashField" href="#xdynamo.HashField">HashField</a></code></h4>
+<ul class="">
+<li><code><a title="xdynamo.HashField.dyn_key" href="#xdynamo.HashField.dyn_key">dyn_key</a></code></li>
+<li><code><a title="xdynamo.HashField.resolve_defaults" href="fields.html#xdynamo.HashField.resolve_defaults">resolve_defaults</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="xdynamo.RangeField" href="#xdynamo.RangeField">RangeField</a></code></h4>
+<ul class="">
+<li><code><a title="xdynamo.RangeField.dyn_key" href="#xdynamo.RangeField.dyn_key">dyn_key</a></code></li>
+<li><code><a title="xdynamo.RangeField.resolve_defaults" href="fields.html#xdynamo.RangeField.resolve_defaults">resolve_defaults</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>
