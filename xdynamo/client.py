@@ -19,7 +19,7 @@ from xdynamo.common_types import (
 )
 from xdynamo.resources import _DynBatchResource
 from xsentinels.default import Default
-from xurls.url import URLStr, Query
+from xurls.url import UrlStr, Query
 from xloop import xloop
 
 if TYPE_CHECKING:
@@ -161,7 +161,7 @@ class DynClient(RemoteClient[M]):
             objs: Sequence[M],
             *,
             condition: Query = None,
-            url: URLStr = None,
+            url: UrlStr = None,
             send_limit: int = None
     ):
         """

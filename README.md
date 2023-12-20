@@ -1,4 +1,4 @@
-![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.8|%203.9|%203.10|%203.11&color=blue?style=flat-square&logo=python)
+![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12&color=blue?style=flat-square&logo=python)
 ![PyPI version](https://badge.fury.io/py/xdynamo.svg?)
 
 This is pre-release software, and needs to be refactored in a few ways and needs more  natural documentation with examples.  Right now the documentation is in the ([API Reference](https://xyngular.GitHub.io/py-xdynamo/latest/api/xdynamo/)) documentation section.  The natural overview/high-level docs have yet to be written
