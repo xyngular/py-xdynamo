@@ -1,6 +1,8 @@
 import dataclasses
 from enum import Enum, auto as EnumAuto  # noqa
 from typing import TYPE_CHECKING, Union, Any, Optional, Dict, Iterable, Tuple, Set, Type
+
+from xdynamo.errors import XModelDynamoError, XModelDynamoNoHashKeyDefinedError
 from xmodel.remote import XRemoteError
 from xmodel.base.fields import Converter
 from xurls.url import Query
@@ -64,7 +66,7 @@ class DynKey:
         hash_name = structure.dyn_hash_key_name
 
         if not hash_name:
-            raise XRemoteError(
+            raise XModelDynamoNoHashKeyDefinedError(
                 f"While constructing {structure.model_cls}, found no hash-key field. "
                 f"You must have at least one hash-key field."
             )
@@ -72,7 +74,7 @@ class DynKey:
         hash_value = getattr(obj, hash_name)
 
         if hash_value is None:
-            raise XRemoteError(
+            raise XModelDynamoError(
                 f"Unable to get DynKey due to `None` for dynamo hash-key ({hash_value}) "
                 f"on object {obj}."
             )
@@ -82,7 +84,7 @@ class DynKey:
         if range_name:
             range_value = getattr(obj, range_name)
             if range_value is None:
-                raise XRemoteError(
+                raise XModelDynamoError(
                     f"Unable to get DynKey due to `None` for dynamo range-key ({range_name}) "
                     f"on object {obj}."
                 )

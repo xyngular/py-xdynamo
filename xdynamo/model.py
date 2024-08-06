@@ -7,6 +7,7 @@ from xdynamo.api import DynApi, lazy_load_types_for_dyn_api
 from xdynamo.common_types import DynKey
 from xmodel.base.model import Self
 
+from xdynamo.errors import XModelDynamoNoHashKeyDefinedError
 
 M = TypeVar('M')
 
@@ -37,7 +38,11 @@ class DynModel(
         # We could do some intelligent caching, but for now just calculate each time.
         try:
             return DynKey.via_obj(self).id
+        except XModelDynamoNoHashKeyDefinedError:
+            # There is something wrong with class structure, there is no hash-key defined!
+            raise
         except XRemoteError:
+            # Any other error, we simply don't have a full `id` value assigned to object.
             return None
 
     @id.setter
