@@ -1,4 +1,6 @@
 from typing import TypeVar, Optional, Any, Union, List, Dict, Iterable, TYPE_CHECKING
+from uuid import UUID
+
 from boto3.dynamodb.table import TableResource
 
 from .db import DynamoDB
@@ -100,10 +102,10 @@ class DynApi(RemoteApi[M]):
     def get_via_id(
             self,
             id: Union[
-                Union[int, str, DynKey],
-                List[Union[int, str, DynKey]],
-                Dict[str, Union[str, int]],
-                List[Dict[str, Union[str, int]]],
+                    int | str | UUID,
+                    List[int | str | UUID],
+                    Dict[str, str | int | UUID],
+                    List[Dict[str, str | int | UUID]],
             ],
             fields: FieldNames = Default,
             id_field: str = None,
@@ -189,7 +191,7 @@ class DynApi(RemoteApi[M]):
         model = self.model
         if model.id is None:
             raise XRemoteError(
-                f"A deleted was requested for an object that had no id for ({model})."
+                f"A delete was requested for an object that had no id for ({model})."
             )
 
         self.client.delete_obj(model, condition=condition)
@@ -204,7 +206,7 @@ class DynApi(RemoteApi[M]):
         model = self.model
         if model.id is None:
             raise XRemoteError(
-                f"A deleted was requested for an object that had no id for ({model})."
+                f"A send was requested for an object that had no id for ({model})."
             )
 
         self.client.send_objs([model], condition=condition)
