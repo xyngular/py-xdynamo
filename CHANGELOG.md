@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.1](https://github.com/xyngular/py-xdynamo/compare/v0.8.0...v0.8.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* allow class structural issue exception to propagate up. ([eb3c174](https://github.com/xyngular/py-xdynamo/commit/eb3c174bdaeef92388a18b2f8d83e8831ca217ad))
+* type-hint UUID for `get_via_id` (it always worked, but now type-hint is correct). ([44979d1](https://github.com/xyngular/py-xdynamo/commit/44979d1deff191a76ba0d3bba71a12d16e7dd1a1))
+
 ## [0.8.0](https://github.com/xyngular/py-xdynamo/compare/v0.7.0...v0.8.0) (2023-12-20)
 
 
