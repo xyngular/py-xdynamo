@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.2](https://github.com/xyngular/py-xdynamo/compare/v0.8.1...v0.8.2) (2024-10-02)
+
+
+### Bug Fixes
+
+* error message string had incorrect information. ([b4c6628](https://github.com/xyngular/py-xdynamo/commit/b4c6628bbab45301c7b83af68227f0abbee49be3))
+
 ## [0.8.1](https://github.com/xyngular/py-xdynamo/compare/v0.8.0...v0.8.1) (2024-08-06)
 
 
