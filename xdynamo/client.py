@@ -207,7 +207,7 @@ class DynClient(RemoteClient[M]):
 
                 `....response_state.has_field_error('_conditional_check', 'failed')`
 
-                or you can use `xyn_model_dynamo.const.CONDITIONAL_CHECK_FAILED_KEY` for
+                or you can use `xdynamo.const.CONDITIONAL_CHECK_FAILED_KEY` for
                 the field key.
 
         """
@@ -646,6 +646,7 @@ class DynClient(RemoteClient[M]):
 
             # exists/not_exists don't require a 'value' parameter,
             # so we need to interpret/parse query value ourselves and do the right thing.
+            pre_lookup_operator = operator
             operator_needs_param = True
             if operator == 'exists':
                 operator_needs_param = False
@@ -700,7 +701,7 @@ class DynClient(RemoteClient[M]):
                 )
 
             raise XRemoteError(
-                f"Using unknown boto3/dynamo operator ({operator}), "
+                f"Using unknown boto3/dynamo operator ({pre_lookup_operator}), "
                 f"for query on attr ({name}); "
                 f"the available ones are ({available}). "
                 f"{supplemental_msg}"
@@ -906,6 +907,7 @@ class DynClient(RemoteClient[M]):
 
         while True:
             table_method = getattr(resource, method)
+            # Execute Scan/Query on table:
             response = table_method(**params)
             last_key = response.get('LastEvaluatedKey', None)
 
