@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/xyngular/py-xdynamo/compare/v0.8.2...v0.9.0) (2024-10-04)
+
+
+### Features
+
+* add consistent read feature. ([9c687f6](https://github.com/xyngular/py-xdynamo/commit/9c687f672b10cd77832c6b1626a5646a6fa07f71))
+
 ## [0.8.2](https://github.com/xyngular/py-xdynamo/compare/v0.8.1...v0.8.2) (2024-10-02)
 
 
