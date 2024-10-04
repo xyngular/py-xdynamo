@@ -4,6 +4,7 @@ from typing import (
 from boto3.dynamodb import conditions
 from boto3.dynamodb.table import BatchWriter, TableResource
 from xbool import bool_value
+from xinject import Dependency
 
 from .db import DynamoDB
 from xcon import xcon_settings
@@ -18,7 +19,7 @@ from xdynamo.common_types import (
     DynKey, DynParams, _ProcessedQuery, get_dynamo_type_from_python_type
 )
 from xdynamo.resources import _DynBatchResource
-from xsentinels.default import Default
+from xsentinels.default import Default, DefaultType
 from xurls.url import UrlStr, Query
 from xloop import xloop
 
@@ -30,6 +31,23 @@ else:
     M = TypeVar('M')
 
 log = getLogger(__name__)
+
+
+class DynClientOptions(Dependency):
+    def __init__(self, *, consistent_read: bool | DefaultType = Default):
+        self.consistent_read = consistent_read
+
+    consistent_read: bool | DefaultType = Default
+    """ Way to change what the default consistent read value should be,
+        If set it will be used over the default value for the model
+        (but won't override True/False passed directly to client as method paramter to get/scan/etc.
+    """
+
+
+dyn_client_options = DynClientOptions.proxy()
+""" Proxy to the current `DynClientOptions` currently used/injected at the current moment.
+    Used this object use like you would use normal instance of DynClientOptions.
+"""
 
 
 class DynClient(RemoteClient[M]):
@@ -111,7 +129,7 @@ class DynClient(RemoteClient[M]):
         # Add the conditional query to the dynamodb params dict...
         # (can't batch-delete things with conditions, so we do them one at a time instead).
         self._add_conditions_from_query(
-            query=condition, params=params, filter_key='ConditionExpression'
+            query=condition, params=params, filter_key='ConditionExpression', consistent_read=False
         )
 
         try:
@@ -234,7 +252,8 @@ class DynClient(RemoteClient[M]):
             top: int = None,
             fields: FieldNames = Default,
             allow_scan: bool = False,
-            **dynamo_params
+            consistent_read: bool | DefaultType = Default,
+            **dynamo_params,
     ) -> Iterable[M]:
         """
         This is the standard/abstract interface method that all RestClient's support.
@@ -322,6 +341,11 @@ class DynClient(RemoteClient[M]):
 
                 If the query is blank or None will still do a scan regardless of what you pass
                 (to return all items in the table).
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
             **dynamo_params: Extra parameters to include on the Dynamo request(s) that are
                 generated. This is 100% optional.
         Returns:
@@ -330,7 +354,7 @@ class DynClient(RemoteClient[M]):
 
         if not query:
             # If no query.... just get all items via a bulk-scan.
-            return self._get_all_items()
+            return self._get_all_items(consistent_read=consistent_read)
 
         # todo: We want basic logic in here to decide on batch_get vs query
         #       vs [eventually] dyn_scan.
@@ -387,8 +411,9 @@ class DynClient(RemoteClient[M]):
             # We have just DynKey's, so we can do a batch get (no other conditions/filters).
             # This will automatically batch a 100 at a time for us via a generator.
             # Dynamo will fetch these in parallel!
+            # TODO: If we only have one key, use `get_item` instead of `batch_get_item`.
             if all_support_batch_get and dyn_keys:
-                return self.batch_get(keys=dyn_keys)
+                return self.batch_get(keys=dyn_keys, consistent_read=consistent_read)
 
         # If we have some sort of key(s) we can use (a hash key with an optional range key).
         if query.dyn_keys():
@@ -397,10 +422,10 @@ class DynClient(RemoteClient[M]):
             # todo: unless this table does not have a range key [no hash/range to tie].
 
             # We have a query that has the hash-key in it, that's good enough to use a query.
-            return self.query(query=query)
+            return self.query(query=query, consistent_read=consistent_read)
 
         if allow_scan:
-            return self.scan(query=query)
+            return self.scan(query=query, consistent_read=consistent_read)
 
         # todo: Support 'scans' or always raise error? Scans are very expensive.
         # todo: Support Global + Secondary Indexes
@@ -422,7 +447,7 @@ class DynClient(RemoteClient[M]):
         )
 
     def batch_get(
-            self, keys: Iterable[DynKey], **params: DynParams
+            self, keys: Iterable[DynKey], *, consistent_read: bool | DefaultType = Default, **params: DynParams
     ) -> Iterable[M]:
         """
         Will fetch keys in the largest batch it can at a time it can from Dynamo;
@@ -445,6 +470,12 @@ class DynClient(RemoteClient[M]):
                     We need to ensure the results are uniquified, if you pass a set we can skip
                     doing it.
 
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
+
             **params: An optional set of extra parameters to include in request to Dynamo,
                 if so desired.
 
@@ -454,6 +485,10 @@ class DynClient(RemoteClient[M]):
         structure = self.api.structure
         hash_name = structure.dyn_hash_key_name
         range_name = structure.dyn_range_key_name
+        base_params = {**params}
+
+        if consistent_read is Default:
+            consistent_read = self.consistent_reads
 
         if not keys:
             return []
@@ -465,9 +500,11 @@ class DynClient(RemoteClient[M]):
             table_name = structure.fully_qualified_table_name()
 
             # We want to merge our items with anything that could already be there...
-            copy_params = {**params}
+            copy_params = base_params.copy()
             req_items_param = copy_params.setdefault('RequestItems', {})
             table_items = req_items_param.setdefault(table_name, {})
+            if consistent_read:
+                table_items['ConsistentRead'] = True
             table_keys = table_items.setdefault('Keys', [])
             table_keys.extend(items)
 
@@ -512,7 +549,19 @@ class DynClient(RemoteClient[M]):
 
         return keys
 
-    def query(self, query: Query = None, **dynamo_params: DynParams) -> Iterable[M]:
+    @property
+    def consistent_reads(self) -> bool:
+        # Check for injected default, use that if it exists.
+        injected_default = dyn_client_options.consistent_read
+        if injected_default is not Default:
+            return injected_default
+
+        # Otherwise use the model's default for consistent reads.
+        return self.api.structure.dyn_consistent_read or False
+
+    def query(
+            self, query: Query = None, *, consistent_read: bool | DefaultType = Default, **dynamo_params: DynParams
+    ) -> Iterable[M]:
         """
         Forces `DynClient` to use a query. If you want a way for client to automatically
         figure out the best way to execute your query, use one of these instead:
@@ -553,6 +602,11 @@ class DynClient(RemoteClient[M]):
 
                 For more information with examples see [Advanced Queries](#advanced-queries).
 
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
             **params (DynParams): You can provide other standard boto3 query parameters here as you
                 need. If you provide both dynamo_params and query, the ones in query will overwrite
                 ones in dynamo_params if there is a conflict;
@@ -603,17 +657,27 @@ class DynClient(RemoteClient[M]):
             self._add_conditions_from_query(
                 query=query,
                 params=params,
-                dyn_key=dyn_key
+                dyn_key=dyn_key,
+                consistent_read=consistent_read,
             )
 
             for value in self._paginate_all_items_generator(method='query', params=params):
                 yield value
 
-    def scan(self, query: Query = None, **dynamo_params: DynParams) -> Iterable[M]:
+    def scan(
+            self, query: Query = None, *, consistent_read: bool | DefaultType = Default, **dynamo_params: DynParams
+    ) -> Iterable[M]:
+        """ Scans entire table (vs doing a `DynClient.query`, which is much more efficient).
+            Looks at every item in the table, evaluating `query` to filter which ones to return.
+            The scanning/filtering happens on the server-side.
+
+            If provided query is empty, will return all items in the table.
+        """
         params = {**dynamo_params}
         self._add_conditions_from_query(
             query=query,
-            params=params
+            params=params,
+            consistent_read=consistent_read,
         )
         return self._paginate_all_items_generator(method='scan', params=params)
 
@@ -622,8 +686,15 @@ class DynClient(RemoteClient[M]):
             query: Query,
             params: DynParams,
             dyn_key: DynKey = None,
-            filter_key: str = 'FilterExpression'
+            filter_key: str = 'FilterExpression',
+            consistent_read: bool | DefaultType = Default
     ):
+        if consistent_read is Default:
+            consistent_read = self.consistent_reads
+
+        if consistent_read:
+            params['ConsistentRead'] = True
+
         if not query and not dyn_key:
             return
 
@@ -769,42 +840,6 @@ class DynClient(RemoteClient[M]):
 
         return self.api.table
 
-    def _get_item_by_id(self, _id: str) -> Optional[M]:
-        api = self.api
-        structure = api.structure
-
-        if structure.dyn_range_key_name:
-            split_id = _id.split(structure.dyn_id_delimiter)
-            if len(split_id) != 2:
-                raise XRemoteError(
-                    f"Have id ({_id}) but delimiter ({structure.dyn_id_delimiter}) is in it "
-                    f"more/less than once and {api} needs both a hash and range key."
-                )
-            hash_key, range_key = split_id
-        else:
-            hash_key = _id
-            range_key = None
-
-        # Construct an expression with hash and if needed, range keys.
-        key_exp = conditions.Key(structure.dyn_hash_key_name).eq(hash_key)
-        if range_key:
-            key_exp = key_exp & conditions.Key(structure.dyn_range_key_name).eq(range_key)
-
-        response = api.table.query(
-            ConsistentRead=True,
-            KeyConditionExpression=key_exp
-        )
-
-        data: Optional[JsonDict] = None
-        db_datas = response['Items']
-        if db_datas:
-            data = db_datas[0]
-
-        if not data:
-            return None
-
-        return api.model_type(data)
-
     # todo: BaseModel objects are capable of letting us know if something actually changed or not.
     #       At some point take advantage of that.
     #       This would allow us to prevent putting an unchanged item into dynamo [saves cost].
@@ -865,7 +900,7 @@ class DynClient(RemoteClient[M]):
 
             # Add the conditional query to the dynamodb params dict...
             self._add_conditions_from_query(
-                query=condition, params=params, filter_key='ConditionExpression'
+                query=condition, params=params, filter_key='ConditionExpression', consistent_read=False
             )
 
         # Finally, tell the boto resource to put the item:
@@ -890,11 +925,19 @@ class DynClient(RemoteClient[M]):
             ]
             state.add_field_error(field=CONDITIONAL_CHECK_FAILED_KEY, code='failed')
 
-    def _get_all_items(self):
-        return self._paginate_all_items_generator(method='scan', params={})
+    def _get_all_items(self, consistent_read: bool | DefaultType = Default):
+        params = {}
+        if consistent_read is Default:
+            consistent_read = self.consistent_reads
+
+        if consistent_read:
+            params['ConsistentRead'] = True
+
+        return self._paginate_all_items_generator(method='scan', params=params)
 
     def _paginate_all_items_generator(
-            self, method: str,
+            self, *,
+            method: str,
             params: Dict[str, Any],
             use_table=True,
     ) -> Iterable[M]:

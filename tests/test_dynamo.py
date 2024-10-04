@@ -1,6 +1,8 @@
 from xdynamo import DynKey, DynModel, HashField, RangeField, DynBatch, DynField
+from xdynamo.api import DynApi
+from xdynamo.client import DynClient, DynClientOptions
 from xmodel import JsonModel, Field
-from typing import List, Dict, Union, Optional, Type, Any, Callable
+from typing import List, Dict, Union, Optional, Type, Any, Callable, Tuple
 import moto
 from typing import TypeVar
 import pytest
@@ -31,7 +33,40 @@ class SubObj(JsonModel):
     queue: bool
 
 
+class ItemWithRangeKeyClient(DynClient):
+    last_paginate_params: dict | None = None
+
+    @property
+    def unit_test_was_last_consistent(self):
+        params = self.last_paginate_params
+
+        # Ensure we don't accidentally use the previous, previous result.
+        self.last_paginate_params = None
+
+        if not params:
+            return False
+
+        if params.get('ConsistentRead') is True:
+            return True
+
+        request_items = list(params.get('RequestItems', {}).values())
+        if request_items and request_items[0].get('ConsistentRead') is True:
+            return True
+        return False
+
+    def _paginate_all_items_generator(self, *args, **kwargs):
+        self.last_paginate_params = kwargs['params']
+        for v in super()._paginate_all_items_generator(*args, **kwargs):
+            yield v
+
+
+class ItemWithRangeKeyApi(DynApi):
+    client: ItemWithRangeKeyClient
+
+
 class ItemWithRangeKey(DynModel, dyn_name=None):
+    api: ItemWithRangeKeyApi
+
     hash_field: str = HashField()
     range_field: str = RangeField()
     name: str
@@ -224,6 +259,24 @@ def simple_obj_get_via_id(simple_obj, simple_obj_def) -> Optional[ItemWithRangeK
     return obj
 
 
+@pytest.fixture()
+def simple_obj_get_with_read_consistency(simple_obj, simple_obj_def) -> Optional[ItemWithRangeKey]:
+    """ List of various ways to lookup simple object via `ItemWithRangeKey.api.get_via_id`. """
+    get_via_id = simple_obj_def.get_via_id
+    if isinstance(get_via_id, DynModel):
+        obj = get_via_id
+    else:
+        obj = simple_obj_def.model_cls.api.get_via_id(get_via_id, consistent_read=True)
+        params = obj.api.client.last_paginate_params
+        assert (
+                params.get('ConsistentRead') is True or
+                list(params['RequestItems'].values())[0]['ConsistentRead'] is True
+        )
+
+    assert obj, f"We were unable to retrieve object via {get_via_id}"
+    return obj
+
+
 @pytest.fixture(autouse=True)
 @pytest.mark.order(-10)
 def mock_dynamo_db():
@@ -273,6 +326,15 @@ def test_deleting_via_delete_obj_via_dynkey(simple_obj, simple_obj_get_via_id, s
     # Try to delete it using only dyn-key see if getting it again will return None now.
     simple_obj_def.model_cls.api.client.delete_obj(dyn_key)
     assert simple_obj_def.model_cls.api.get_via_id(simple_obj.id) is None
+
+
+def test_getting_simple_obj(simple_obj, simple_obj_get_via_id):
+    # See if all of the simple objects we get compare the same to original simple object.
+    simple_obj.assert_with(simple_obj_get_via_id)
+
+
+def test_getting_simple_obj_with_read_consistency(simple_obj, simple_obj_get_with_read_consistency):
+    simple_obj.assert_with(simple_obj_get_with_read_consistency)
 
 
 def test_getting_simple_obj(simple_obj, simple_obj_get_via_id):
@@ -480,6 +542,56 @@ def test_scan_raise_exception():
         ItemWithRangeKeyForStr.api.get({'name': 'hello'})
 
 
+def test_scan_with_read_consistency_works(simple_obj, simple_obj_def):
+    # Just see if a simple scan works without problems
+    result = list(simple_obj_def.model_cls.api.get(consistent_read=True))
+    assert len(result) == 1
+    assert result[0].api.client.last_paginate_params['ConsistentRead'] is True
+
+
+@pytest.mark.parametrize("test_input", [
+    {'hash_field': "1", 'some_other_param': "3"},
+    {'hash_field': "1", 'range_field': "2"},
+    {'hash_field': "1"}
+])
+def test_see_if_read_consistency_used(test_input):
+    api = ItemWithRangeKeyForStr.api
+    client = api.client
+
+    list(api.get(test_input))
+    assert not client.unit_test_was_last_consistent
+
+    list(api.get(test_input, consistent_read=True))
+    assert client.unit_test_was_last_consistent
+
+    with DynClientOptions(consistent_read=True):
+        list(api.get(test_input))
+        assert client.unit_test_was_last_consistent
+
+    with DynClientOptions(consistent_read=True):
+        list(api.get(test_input, consistent_read=False))
+        assert not client.unit_test_was_last_consistent
+
+    # Next test the class arg `dyn_consistent_read` works correctly.
+    class ItemWithRangeKeyForStrWithDefaultConsistent(ItemWithRangeKeyForStr, dyn_consistent_read=True):
+        # TODO: Figure out and fix why we can't inherit hash/range fields, we must define it again?
+        hash_field: str = HashField()
+        range_field: str = RangeField()
+
+    api = ItemWithRangeKeyForStrWithDefaultConsistent.api
+    client = api.client
+
+    list(api.get(test_input))
+    assert client.unit_test_was_last_consistent
+
+    list(api.get(test_input, consistent_read=False))
+    assert not client.unit_test_was_last_consistent
+
+    with DynClientOptions(consistent_read=False):
+        list(api.get(test_input))
+        assert not client.unit_test_was_last_consistent
+
+
 def test_scan_fallback():
     ItemWithRangeKeyForStr(hash_field='hash', range_field='range', name='first').api.send()
     ItemWithRangeKeyForStr(hash_field='other-h', range_field='other-r', name='second').api.send()
@@ -488,6 +600,7 @@ def test_scan_fallback():
     items = list(items)
     assert len(items) == 1
     assert items[0].hash_field == 'other-h'
+    assert 'ConsistentRead' not in items[0].api.client.last_paginate_params
 
 
 def test_conditional_delete():

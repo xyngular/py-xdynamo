@@ -8,11 +8,11 @@ from .db import DynamoDB
 from xmodel.common.types import FieldNames
 from xmodel.remote import XRemoteError
 from xmodel.remote.api import RemoteApi
-from xdynamo.client import DynClient
+from xdynamo.client import DynClient, DynClientOptions
 from xdynamo.common_types import DynKey
 from xdynamo.fields import DynField
 from xdynamo.structure import DynStructure
-from xsentinels.default import Default
+from xsentinels.default import Default, DefaultType
 from xurls.url import Query
 from xloop import xloop
 
@@ -58,8 +58,9 @@ class DynApi(RemoteApi[M]):
             query: Query = None,
             *,
             top: int = None,
-            fields: Optional[FieldNames] = Default,
-            allow_scan=False
+            fields: FieldNames | DefaultType | None = Default,
+            allow_scan=False,
+            consistent_read: bool | DefaultType = Default,
     ) -> Iterable[M]:
         """
         Convenience method for the `self.client.get` method.
@@ -83,11 +84,16 @@ class DynApi(RemoteApi[M]):
 
                 If the query is blank or None will still do a scan regardless of what you pass
                 (to return all items in the table).
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read_by_default,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
 
         Returns:
 
         """
-        return self.client.get(query, top=top, fields=fields, allow_scan=allow_scan)
+        return self.client.get(query, top=top, fields=fields, allow_scan=allow_scan, consistent_read=consistent_read)
 
     def get_key(self, hash_key: Any, range_key: Optional[Any] = None) -> DynKey:
         """
@@ -109,7 +115,8 @@ class DynApi(RemoteApi[M]):
             ],
             fields: FieldNames = Default,
             id_field: str = None,
-            aux_query: Query = None
+            aux_query: Query = None,
+            consistent_read: bool | DefaultType = Default,
     ) -> Union[Iterable[M], M, None]:
         """
         Overridden in DynApi to convert any provided `DynKey` into string-based `id` and
@@ -122,6 +129,11 @@ class DynApi(RemoteApi[M]):
             fields: See `xmodel.remote.api.RemoteApi.get_via_id`
             id_field: See `xmodel.remote.api.RemoteApi.get_via_id`
             aux_query: See `xmodel.remote.api.RemoteApi.get_via_id`
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read_by_default,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
 
         Returns:
             See `xmodel.remote.api.RemoteApi.get_via_id`
@@ -136,7 +148,14 @@ class DynApi(RemoteApi[M]):
         else:
             new_id = id.id if type(id) is DynKey else id
 
-        return super().get_via_id(new_id, fields=fields, id_field=id_field, aux_query=aux_query)
+        if consistent_read is Default:
+            return super().get_via_id(new_id, fields=fields, id_field=id_field, aux_query=aux_query)
+
+        # If we have a non-Default consistent-read, then temporarily inject the option.
+        dyn_options = DynClientOptions()
+        dyn_options.consistent_read = consistent_read
+        with dyn_options:
+            return super().get_via_id(new_id, fields=fields, id_field=id_field, aux_query=aux_query)
 
     @property
     def table(self) -> TableResource:
