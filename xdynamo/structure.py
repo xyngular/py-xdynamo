@@ -64,6 +64,13 @@ class DynStructure(RemoteStructure[F]):
         When you do this, we will fill in `dyn_range_key_name` for you.
     """
 
+    dyn_consistent_read: bool = Default
+    """ If True will default reads for the associated model to be consistent,
+        Otherwise it won't use consistent reads by default.
+
+        Individual gets/queries can override this default via function param.
+    """
+
     dyn_id_delimiter = "|"
     """
     Default way to delimit the hash/range keys when used in external systems and with code under
@@ -98,6 +105,7 @@ class DynStructure(RemoteStructure[F]):
             dyn_service: str = Default,
             dyn_environment: str = Default,
             dyn_id_delimiter: str = Default,
+            dyn_consistent_read: bool = Default,
 
             **kwargs
     ):
@@ -142,6 +150,10 @@ class DynStructure(RemoteStructure[F]):
 
                 By default, a pipe char `|` is used.
 
+            dyn_consistent_read: Lets model default to consistent reads by default.
+                If unspecified, consistent reads are not used by default.
+                You can override this on a per-get/query/scan basis via function param.
+
             **kwargs: These all come from class-arguments given to the
                 `xdynamo.model.DynModel` at class-definition time that need to be sent to
                 my super-class via
@@ -165,6 +177,7 @@ class DynStructure(RemoteStructure[F]):
         self.dyn_name = dyn_name
         self.dyn_service = dyn_service
         self.dyn_environment = dyn_environment
+        self.dyn_consistent_read = dyn_consistent_read
 
         if dyn_id_delimiter:
             self.dyn_id_delimiter = dyn_id_delimiter

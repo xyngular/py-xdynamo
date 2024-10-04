@@ -60,6 +60,9 @@ class DynKey:
     range_operator: str = dataclasses.field(default=None, compare=False)
     require_full_key: bool = dataclasses.field(default=True, compare=False)
 
+    def __str__(self):
+        return self.id or ''
+
     @classmethod
     def via_obj(cls, obj: 'DynModel') -> 'DynKey':
         structure = obj.api.structure
