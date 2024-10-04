@@ -268,7 +268,10 @@ def simple_obj_get_with_read_consistency(simple_obj, simple_obj_def) -> Optional
     else:
         obj = simple_obj_def.model_cls.api.get_via_id(get_via_id, consistent_read=True)
         params = obj.api.client.last_paginate_params
-        assert params.get('ConsistentRead') is True or list(params['RequestItems'].values())[0]['ConsistentRead'] is True
+        assert (
+                params.get('ConsistentRead') is True or
+                list(params['RequestItems'].values())[0]['ConsistentRead'] is True
+        )
 
     assert obj, f"We were unable to retrieve object via {get_via_id}"
     return obj
