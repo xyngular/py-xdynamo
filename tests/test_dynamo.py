@@ -550,6 +550,7 @@ def test_scan_with_read_consistency_works(simple_obj, simple_obj_def):
 
 
 @pytest.mark.parametrize("test_input", [
+    {'hash_field': "1", 'some_other_param': "3"},
     {'hash_field': "1", 'range_field': "2"},
     {'hash_field': "1"}
 ])
