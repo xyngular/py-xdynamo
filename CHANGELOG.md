@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.1](https://github.com/xyngular/py-xdynamo/compare/v0.9.0...v0.9.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* between fixes created bugs with is_in operator, fixed that as well. ([28d7f53](https://github.com/xyngular/py-xdynamo/commit/28d7f53a1b95ca6693daf73eeeb8221e18368eac))
+* between operator was broken, fixed it up. ([f7d7318](https://github.com/xyngular/py-xdynamo/commit/f7d7318adc08e79f89ce99f44765ae2769a4b755))
+* only separate the results if range/between used. ([4347125](https://github.com/xyngular/py-xdynamo/commit/43471256d50d5e6e9d1aa5a492f33ffe442966a3))
+
 ## [0.9.0](https://github.com/xyngular/py-xdynamo/compare/v0.8.2...v0.9.0) (2024-10-04)
 
 
