@@ -789,7 +789,7 @@ class DynClient(RemoteClient[M]):
             # TODO: If there are other filters beyond what we use for the RANGE-KEY query,
             #   we should not skip them and still add them as regular attribute filters.
             #   ___
-            #   Update: You can't add regualr filters for the hash/range, but I could query for them
+            #   Update: You can't add regular filters for the hash/range, but I could query for them
             #   and then filter the results further myself here on the Python side.
             if name in key_names:
                 # This is handled later...
