@@ -2,6 +2,8 @@ import dataclasses
 from enum import Enum, auto as EnumAuto  # noqa
 from typing import TYPE_CHECKING, Union, Any, Optional, Dict, Iterable, Tuple, Set, Type
 
+from tomlkit import value
+
 from xdynamo.errors import XModelDynamoError, XModelDynamoNoHashKeyDefinedError
 from xmodel.remote import XRemoteError
 from xmodel.base.fields import Converter
@@ -161,12 +163,24 @@ class DynKey:
                 converter = field.converter
                 final_value = key_value
                 if converter:
-                    final_value = converter(
-                        api,
-                        Converter.Direction.to_json,
-                        field,
-                        key_value
-                    )
+                    if self.range_operator == 'between' and isinstance(key_value, list):
+                        sub_v_result = []
+                        for sub_v in key_value:
+                            sub_v = converter(
+                                api,
+                                Converter.Direction.to_json,
+                                field,
+                                sub_v
+                            )
+                            sub_v_result.append(str(sub_v))
+                        final_value = ",".join(sub_v_result)
+                    else:
+                        final_value = converter(
+                            api,
+                            Converter.Direction.to_json,
+                            field,
+                            key_value
+                        )
                 keys.append(final_value)
 
             _id = delimiter.join([str(x) for x in keys])
@@ -329,10 +343,11 @@ class _ProcessedQuery(Dict[str, Dict[str, Any]]):
 
         if hash_key and range_key in self and hash_key in self:
             hash_gen = self.generate_all_operator_values_for_name(hash_key)
-            range_gen = self.generate_all_operator_values_for_name(range_key)
+            range_list = list(self.generate_all_operator_values_for_name(range_key))
 
             # Go though every combination of hash + range keys....
             for hash_combo in hash_gen:
+                range_gen = xloop(range_list)
                 for range_combo in range_gen:
                     range_operator = range_combo[0]
                     if range_operator == 'is_in':
