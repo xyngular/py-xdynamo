@@ -35,6 +35,8 @@ operator_alias_map = {
 Used to normalize some common operators (that we use in other systems) to the one used in Dynamo.
 """
 
+between_operators = {'range', 'between'}
+
 
 def get_dynamo_type_from_python_type(some_type: Type) -> str:
     dyn_type = _type_to_aws_type_map.get(some_type)
@@ -327,7 +329,7 @@ class _ProcessedQuery(Dict[str, Dict[str, Any]]):
 
         if hash_key and range_key in self and hash_key in self:
             hash_gen = self.generate_all_operator_values_for_name(hash_key)
-            range_gen = list(self.generate_all_operator_values_for_name(range_key))
+            range_gen = self.generate_all_operator_values_for_name(range_key)
 
             # Go though every combination of hash + range keys....
             for hash_combo in hash_gen:
@@ -336,9 +338,9 @@ class _ProcessedQuery(Dict[str, Dict[str, Any]]):
                     if range_operator == 'is_in':
                         range_operator = 'eq'
 
-                    if range_operator == 'between':
+                    if range_operator in between_operators:
                         next_range = next(range_gen, None)
-                        if next_range[0] != 'between':
+                        if next_range[0] not in between_operators:
                             raise XRemoteError(
                                 f"You must provide a second value for 'between' operator on range "
                                 f"key ({range_key}), next value ({next_range[1]} had operator "

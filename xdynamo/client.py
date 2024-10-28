@@ -736,14 +736,15 @@ class DynClient(RemoteClient[M]):
             if operator:
                 field = structure.get_field(name)
                 if operator_needs_param and field and field.converter:
-                    value = field.converter(
-                        api,
-                        Converter.Direction.to_json,
-                        field,
-                        value
-                    )
+                    if isinstance(value, list):
+                        sub_results = []
+                        for sub_v in value:
+                            sub_results.append(field.converter(api, Converter.Direction.to_json, field, sub_v))
+                        value = sub_results
+                    else:
+                        value = [field.converter(api, Converter.Direction.to_json, field, value)]
 
-                operator_params = [value] if operator_needs_param else []
+                operator_params = value if operator_needs_param else []
                 condition = operator(*operator_params)
 
             # If we found a condition operator, use it.
@@ -782,6 +783,11 @@ class DynClient(RemoteClient[M]):
         keys = []
 
         for (name, criterion) in query.items():
+            # TODO: If there are other filters beyond what we use for the RANGE-KEY query,
+            #   we should not skip them and still add them as regular attribute filters.
+            #   ___
+            #   Update: You can't add regualr filters for the hash/range, but I could query for them
+            #   and then filter the results further myself here on the Python side.
             if name in key_names:
                 # This is handled later...
                 continue
