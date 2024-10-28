@@ -729,14 +729,17 @@ class DynClient(RemoteClient[M]):
                 if not bool_value(value):
                     # False value, so swap to the inverse/opposite operator.
                     operator = 'exists'
+            elif operator == 'range':
+                operator = 'between'
 
             # Construct condition by allocating base, grabbing operator and assigning value.
+            op_name = operator
             operator = getattr(condition_base(name), operator, None)
             condition = None
             if operator:
                 field = structure.get_field(name)
                 if operator_needs_param and field and field.converter:
-                    if isinstance(value, list):
+                    if isinstance(value, list) and op_name == 'between':
                         sub_results = []
                         for sub_v in value:
                             sub_results.append(field.converter(api, Converter.Direction.to_json, field, sub_v))
