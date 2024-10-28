@@ -442,7 +442,7 @@ def test_getting_multiple_obj(simple_obj, simple_obj_second, simple_obj_def):
     for obj in objs:
         obj.assert_with(original_obj_map[obj.id])
 
-    # Single hash multiple range, but should only match one result.
+    # Single hash multiple range, but should only match two result.
     objs = list(model_cls.api.get(
         query={
             "hash_field": [simple_obj_other.hash_field, obj1.hash_field],
@@ -453,6 +453,20 @@ def test_getting_multiple_obj(simple_obj, simple_obj_second, simple_obj_def):
     assert len(objs) == len(original_obj_map.values())
     for obj in objs:
         obj.assert_with(original_obj_map[obj.id])
+
+    range_result = list(model_cls.api.get({
+        'hash_field': simple_obj_other.hash_field,
+        'range_field__range': [simple_obj_other.range_field, simple_obj_other.range_field]
+    }))
+
+    single_obj_result = list(model_cls.api.get({
+        'hash_field': simple_obj_other.hash_field,
+        'range_field': simple_obj_other.range_field
+    }))
+
+    assert len(range_result) == 1
+    assert len(single_obj_result) == 1
+    range_result[0].assert_with(single_obj_result[0])
 
 
 def test_send_obj_with_related_child_and_sub_obj(simple_obj_values):
