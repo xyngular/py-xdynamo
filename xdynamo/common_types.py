@@ -270,7 +270,7 @@ class _ProcessedQuery(Dict[str, Dict[str, Any]]):
         for (k, v) in query.items():
             operator = None
             name = k
-            if not api.structure.field_map.get(name):
+            if '__' in name and not api.structure.field_map.get(name):
                 parts = k.split("__")
                 name = '__'.join(parts[0:-1])
                 if len(parts) > 1:
