@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.2](https://github.com/xyngular/py-xdynamo/compare/v0.9.1...v0.9.2) (2024-12-03)
+
+
+### Bug Fixes
+
+* allow non-fields in query for now; will take a future breaking change to raise an exception instead. ([eeea459](https://github.com/xyngular/py-xdynamo/commit/eeea4595bffb03a9645df66ae88dff0dbac9768a))
+* Handle field names with double underscores ([bff1787](https://github.com/xyngular/py-xdynamo/commit/bff1787fc6f79b676e03006a9253e8b1d0dffb53))
+
 ## [0.9.1](https://github.com/xyngular/py-xdynamo/compare/v0.9.0...v0.9.1) (2024-10-28)
 
 
