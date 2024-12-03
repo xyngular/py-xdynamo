@@ -268,11 +268,13 @@ class _ProcessedQuery(Dict[str, Dict[str, Any]]):
         processed_query = _ProcessedQuery()
         processed_query.api = api
         for (k, v) in query.items():
-            parts = k.split("__")
-            name = parts[0]
             operator = None
-            if len(parts) > 1:
-                operator = parts[1]
+            name = k
+            if '__' in name and not api.structure.field_map.get(name):
+                parts = k.split("__")
+                name = '__'.join(parts[0:-1])
+                if len(parts) > 1:
+                    operator = parts[-1]
 
             # When the operator is not provided, we guess the best one to use
             if operator is None:
