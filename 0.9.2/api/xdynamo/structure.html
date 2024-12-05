@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>xdynamo.structure API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>xdynamo.structure</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="xdynamo.structure.DynStructure"><code class="flex name class">
+<span>class <span class="ident">DynStructure</span></span>
+<span>(</span><span>*, parent: Optional[ForwardRef('RemoteStructure')], field_type: Type[~F])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Putting it here right now, it uses most of the super-class stuff, with a few extra fields.
+See <code>xmodel.base.structure.BaseStructure</code> for more details;</p>
+<p>Use these names on the DynModel's as class-arguments to configure these. Those values
+will eventually be put into this structure for use by the DynClient/DynApi classes.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DynStructure(RemoteStructure[F]):
+    &#34;&#34;&#34;
+    Putting it here right now, it uses most of the super-class stuff, with a few extra fields.
+    See `xmodel.base.structure.BaseStructure` for more details;
+
+    Use these names on the DynModel&#39;s as class-arguments to configure these. Those values
+    will eventually be put into this structure for use by the DynClient/DynApi classes.
+    &#34;&#34;&#34;
+
+    # Todo: Refer to parent docs, but put more info about how virtual-id&#39;s are used for our
+    #  dynamo tables.
+    virtual_id: bool = True
+
+    dyn_name: str = Default
+    &#34;&#34;&#34; Table name, minus service/environment name.
+        We generally want to use camelCase for this and no dashes/underscores.
+
+        If left as `Default`, will use a &#34;camelCase&#34; version of the model class name.
+    &#34;&#34;&#34;
+
+    dyn_service: str = Default
+    &#34;&#34;&#34; Service to use, by `Default` we use current `xcon.conf.XconSettings.service`.
+        If Blank/None we won&#39;t include it in the name.
+    &#34;&#34;&#34;
+
+    dyn_environment: str = Default
+    &#34;&#34;&#34; Environment to use, by `Default` we use current `xcon.conf.XconSettings.environment`.
+        If Blank/None we won&#39;t include it in the name.
+    &#34;&#34;&#34;
+
+    dyn_hash_key_name: str = None
+    &#34;&#34;&#34; Name of hash key [for now both model and table attribute must be same name].
+        If left as None, an error will be raised when we try connect to table.
+
+        You can more easily indicate this via `HashField`, ie:
+
+        &gt;&gt;&gt; class MyModel(DynModel):
+        ...     my_hash: str = HashField()
+
+        When you do this, we will fill in `dyn_hash_key_name` for you.
+    &#34;&#34;&#34;
+
+    dyn_range_key_name: str = None
+    &#34;&#34;&#34; Name of range key [for now both model and table attribute must be same name];
+        If left as None, we don&#39;t have one on the table.
+
+        You can more easily indicate this via `RangeField`, ie:
+
+        &gt;&gt;&gt; class MyModel(DynModel):
+        ...     my_hash: str = RangeField()
+
+        When you do this, we will fill in `dyn_range_key_name` for you.
+    &#34;&#34;&#34;
+
+    dyn_consistent_read: bool = Default
+    &#34;&#34;&#34; If True will default reads for the associated model to be consistent,
+        Otherwise it won&#39;t use consistent reads by default.
+
+        Individual gets/queries can override this default via function param.
+    &#34;&#34;&#34;
+
+    dyn_id_delimiter = &#34;|&#34;
+    &#34;&#34;&#34;
+    Default way to delimit the hash/range keys when used in external systems and with code under
+    the `xmodel` library. In general, it&#39;s assumed we only have one key that can uniquely
+    identify model objects/items in general. For DynamoDB, if it has a range key we can merge
+    both the hash-key and range-key together with this character. By default it&#39;s a pipe `|`.
+    But you can set it to something else here if needed.
+
+    This makes it so other systems can store just one value to refer to an item in a dynamo
+    table, ie: &#34;some-hash-value|some-range-value&#34;.  When other BaseModel&#39;s from other systems
+    need to get a Dynamo model, they can look it up via this single &#39;id&#39; value.
+    &#34;&#34;&#34;
+
+    @property
+    def dyn_hash_field(self) -&gt; DynField:
+        return self.get_field(self.dyn_hash_key_name)
+
+    @property
+    def dyn_range_field(self) -&gt; Optional[DynField]:
+        return self.get_field(self.dyn_range_key_name)
+
+    def has_id_field(self):
+        id_field = self.get_field(&#39;id&#39;)
+        return (id_field.dyn_key is DynKeyType.hash) if id_field else False
+
+    def configure_for_model_type(
+            self,
+            *,
+            # These fields are used to name the table
+            # format: `{dyn_service}-{dyn_environment}-{dyn_name}`
+            dyn_name: str = Default,
+            dyn_service: str = Default,
+            dyn_environment: str = Default,
+            dyn_id_delimiter: str = Default,
+            dyn_consistent_read: bool = Default,
+
+            **kwargs
+    ):
+        &#34;&#34;&#34;
+        See superclass method `xmodel.base.structure.BaseStructure.configure_for_model_type`
+        first. It has more information about what calls this method and how to
+        customize value via class arguments
+        (see `xmodel.base.model.BaseModel.__init_subclass__` for more about the class argument
+        angle).
+
+        This method accepts every argument in the super-class version, with the addition
+        of ones more specific to Dynamo. So se
+
+        This method accepts named-class-parameters for `xdynamo.model.DynModel`
+        subclasses.
+
+        See super-class method `xmodel.base.structure.BaseStructure.configure_for_model_type`
+        doc&#39;s for additional arguments and details.
+
+        Args:
+            dyn_name: Name of the table.  We will add dyn_service and current environment to the
+                final name.  See `DynStructure.fully_qualified_table_name` for more details.
+
+                This can also be `None` to indicate that it has no direct-table
+                (ie: this is an abstract base class, with commonly shared fields, etc).
+
+            dyn_service: Name of the service to use for that portion of the table name.
+                If not provided, and `xcon` is available, will use `con.conf.XconSettings.service`.
+                Right now `xcon` is a required dependency, but will make it optional in the future.
+
+                In that future version, leaving this as `Default` would make it not format
+                the service name into the table name.
+
+            dyn_environment: Name of the environment to use for that portion of the table name.
+                Right now `xcon` is a required dependency, but will make it optional in the future.
+
+                In that future version, leaving this as `Default` would make it not format
+                the environment name into the table name.
+
+            dyn_id_delimiter: Delimiter to use for the `id` value when table has both a
+                hash and range key (to delimit the values of the two).
+
+                By default, a pipe char `|` is used.
+
+            dyn_consistent_read: Lets model default to consistent reads by default.
+                If unspecified, consistent reads are not used by default.
+                You can override this on a per-get/query/scan basis via function param.
+
+            **kwargs: These all come from class-arguments given to the
+                `xdynamo.model.DynModel` at class-definition time that need to be sent to
+                my super-class via
+                `xmodel.base.structure.BaseStructure.configure_for_model_type`. See that
+                for more on what other arguments are supported.
+        &#34;&#34;&#34;
+        super().configure_for_model_type(**kwargs)
+
+        # Resolve default `dyn_name` if needed
+        if dyn_name is Default:
+            # Attempt to use model class name (with first char lower-cased) if we have one.
+            model_name = self.model_cls.__name__
+            dyn_name = f&#39;{model_name[:1].lower()}{model_name[1:]}&#39; if model_name else &#39;&#39;
+
+        if dyn_name == &#39;&#39;:
+            raise XRemoteError(
+                f&#34;The `dyn_name` of dynamo model ({self.model_cls}) was blank/None; &#34;
+                f&#34;model must be `None` or have a non-blank `dyn_name`.&#34;
+            )
+
+        self.dyn_name = dyn_name
+        self.dyn_service = dyn_service
+        self.dyn_environment = dyn_environment
+        self.dyn_consistent_read = dyn_consistent_read
+
+        if dyn_id_delimiter:
+            self.dyn_id_delimiter = dyn_id_delimiter
+
+        type_to_attr_map = {
+            DynKeyType.hash: &#39;dyn_hash_key_name&#39;,
+            DynKeyType.range: &#39;dyn_range_key_name&#39;,
+        }
+
+        encountered_types: Set[DynKeyType] = set()
+        for field in self.fields:
+            # We can assume all fields are DynField subclasses, since it&#39;s the field_type
+            key_type = field.dyn_key
+            if not key_type:
+                continue
+
+            attr_name = type_to_attr_map[key_type]
+            if key_type in encountered_types:
+                last_encountered_name = getattr(self, attr_name, None)
+                raise XRemoteError(
+                    f&#34;We have multiple ({DynKeyType.hash}) key-type fields: &#34;
+                    f&#34;({last_encountered_name}) and ({field.name}) for model ({self.model_cls}). &#34;
+                    f&#34;There can only be one ({DynKeyType.hash}) field key-type on a dynamo table.&#34;
+                )
+
+            encountered_types.add(key_type)
+            setattr(self, attr_name, field.name)
+
+        # If user manually set this to &#39;True&#39;, then keep it; otherwise determine it based
+        # on if there was a hash-key on &#39;id&#39;.
+        # If the `id` field is not the hash-key, then we don&#39;t consider us having a
+        # `id` field. Instead, we have a virtual-id field that is a combination of both
+        # the hash-key field value with the range-key value (if we have a range-key).
+        # The purpose of that is to indicate that the `id` field is not a normal field
+        # on this class, but a virtual property instead (see `DynModel.id`).
+
+        from xdynamo.model import DynModel
+        if self.model_cls is DynModel:
+            # Restore `DynModel.id` normal non-field property for DynModel.
+            # We want it to be a virtual-id.
+            # (BaseModel by default will capture field properties into `fget` and `fset`
+            #  in the Field object, and then execute properties when needed after doing it&#39;s
+            #  normal thing.... we want to replace that functionality with our own property,
+            #  and not have it go through the normal things... but still treat &#39;id&#39; like a
+            #  normal property otherwise).
+            id_field = self.get_field(&#39;id&#39;)
+            self.model_cls.id = property(fget=id_field.fget, fset=id_field.fset)
+
+    def fully_qualified_table_name(self) -&gt; str:
+        &#34;&#34;&#34;
+        Fully qualified name of the table in Dynamo as a str.
+        Format is: &#39;{dyn_service}-{dyn_environment}-{dyn_name}&#39;
+        &#34;&#34;&#34;
+        components = []
+        service = self.dyn_service
+        if service is Default:
+            service = xcon_settings.service
+
+        env = self.dyn_environment
+        if env is Default:
+            env = xcon_settings.environment
+
+        if service:
+            components.append(service)
+
+        if env:
+            components.append(env)
+
+        name = self.dyn_name
+        if not name:
+            raise XRemoteError(
+                f&#34;Tried to get `fully_qualified_table_name` but have no table name for {self}&#34;
+            )
+        components.append(name)
+        return &#34;-&#34;.join(components)
+
+    @property
+    def endpoint_description(self):
+        return self.fully_qualified_table_name()</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>xmodel.remote.structure.RemoteStructure</li>
+<li>xmodel.base.structure.BaseStructure</li>
+<li>typing.Generic</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="xdynamo.structure.DynStructure.dyn_consistent_read"><code class="name">var <span class="ident">dyn_consistent_read</span> : bool</code></dt>
+<dd>
+<div class="desc"><p>If True will default reads for the associated model to be consistent,
+Otherwise it won't use consistent reads by default.</p>
+<p>Individual gets/queries can override this default via function param.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_environment"><code class="name">var <span class="ident">dyn_environment</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Environment to use, by <code>Default</code> we use current <code>xcon.conf.XconSettings.environment</code>.
+If Blank/None we won't include it in the name.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_hash_key_name"><code class="name">var <span class="ident">dyn_hash_key_name</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Name of hash key [for now both model and table attribute must be same name].
+If left as None, an error will be raised when we try connect to table.</p>
+<p>You can more easily indicate this via <code>HashField</code>, ie:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class MyModel(DynModel):
+...     my_hash: str = HashField()
+</code></pre>
+<p>When you do this, we will fill in <code>dyn_hash_key_name</code> for you.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_id_delimiter"><code class="name">var <span class="ident">dyn_id_delimiter</span></code></dt>
+<dd>
+<div class="desc"><p>Default way to delimit the hash/range keys when used in external systems and with code under
+the <code>xmodel</code> library. In general, it's assumed we only have one key that can uniquely
+identify model objects/items in general. For DynamoDB, if it has a range key we can merge
+both the hash-key and range-key together with this character. By default it's a pipe <code>|</code>.
+But you can set it to something else here if needed.</p>
+<p>This makes it so other systems can store just one value to refer to an item in a dynamo
+table, ie: "some-hash-value|some-range-value".
+When other BaseModel's from other systems
+need to get a Dynamo model, they can look it up via this single 'id' value.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_name"><code class="name">var <span class="ident">dyn_name</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Table name, minus service/environment name.
+We generally want to use camelCase for this and no dashes/underscores.</p>
+<p>If left as <code>Default</code>, will use a "camelCase" version of the model class name.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_range_key_name"><code class="name">var <span class="ident">dyn_range_key_name</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Name of range key [for now both model and table attribute must be same name];
+If left as None, we don't have one on the table.</p>
+<p>You can more easily indicate this via <code>RangeField</code>, ie:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; class MyModel(DynModel):
+...     my_hash: str = RangeField()
+</code></pre>
+<p>When you do this, we will fill in <code>dyn_range_key_name</code> for you.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_service"><code class="name">var <span class="ident">dyn_service</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Service to use, by <code>Default</code> we use current <code>xcon.conf.XconSettings.service</code>.
+If Blank/None we won't include it in the name.</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.virtual_id"><code class="name">var <span class="ident">virtual_id</span> : bool</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="xdynamo.structure.DynStructure.dyn_hash_field"><code class="name">prop <span class="ident">dyn_hash_field</span> : <a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a></code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dyn_hash_field(self) -&gt; DynField:
+    return self.get_field(self.dyn_hash_key_name)</code></pre>
+</details>
+</dd>
+<dt id="xdynamo.structure.DynStructure.dyn_range_field"><code class="name">prop <span class="ident">dyn_range_field</span> : Optional[<a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a>]</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def dyn_range_field(self) -&gt; Optional[DynField]:
+    return self.get_field(self.dyn_range_key_name)</code></pre>
+</details>
+</dd>
+<dt id="xdynamo.structure.DynStructure.endpoint_description"><code class="name">prop <span class="ident">endpoint_description</span></code></dt>
+<dd>
+<div class="desc"><p>Gives some sort of basic descriptive string that contains the path/table-name/etc
+that basically indicates the api endpoint being used.</p>
+<p>This is meant for logging and other human readability/debugging purposes.
+Feel free to change the string to whatever is most useful to know.</p>
+<p>I expect this to be overridden by the concrete implementation, see examples here:</p>
+<ul>
+<li><code>xmodel.rest.RestStructure.endpoint_description</code></li>
+<li><code>xmodel.dynamo.DynStructure.endpoint_description</code></li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def endpoint_description(self):
+    return self.fully_qualified_table_name()</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.structure.DynStructure.configure_for_model_type"><code class="name flex">
+<span>def <span class="ident">configure_for_model_type</span></span>(<span>self, *, dyn_name: str = Default, dyn_service: str = Default, dyn_environment: str = Default, dyn_id_delimiter: str = Default, dyn_consistent_read: bool = Default, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>See superclass method <code>xmodel.base.structure.BaseStructure.configure_for_model_type</code>
+first. It has more information about what calls this method and how to
+customize value via class arguments
+(see <code>xmodel.base.model.BaseModel.__init_subclass__</code> for more about the class argument
+angle).</p>
+<p>This method accepts every argument in the super-class version, with the addition
+of ones more specific to Dynamo. So se</p>
+<p>This method accepts named-class-parameters for <code><a title="xdynamo.model.DynModel" href="model.html#xdynamo.model.DynModel">DynModel</a></code>
+subclasses.</p>
+<p>See super-class method <code>xmodel.base.structure.BaseStructure.configure_for_model_type</code>
+doc's for additional arguments and details.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>dyn_name</code></strong></dt>
+<dd>
+<p>Name of the table.
+We will add dyn_service and current environment to the
+final name.
+See <code><a title="xdynamo.structure.DynStructure.fully_qualified_table_name" href="#xdynamo.structure.DynStructure.fully_qualified_table_name">DynStructure.fully_qualified_table_name()</a></code> for more details.</p>
+<p>This can also be <code>None</code> to indicate that it has no direct-table
+(ie: this is an abstract base class, with commonly shared fields, etc).</p>
+</dd>
+<dt><strong><code>dyn_service</code></strong></dt>
+<dd>
+<p>Name of the service to use for that portion of the table name.
+If not provided, and <code>xcon</code> is available, will use <code>con.conf.XconSettings.service</code>.
+Right now <code>xcon</code> is a required dependency, but will make it optional in the future.</p>
+<p>In that future version, leaving this as <code>Default</code> would make it not format
+the service name into the table name.</p>
+</dd>
+<dt><strong><code>dyn_environment</code></strong></dt>
+<dd>
+<p>Name of the environment to use for that portion of the table name.
+Right now <code>xcon</code> is a required dependency, but will make it optional in the future.</p>
+<p>In that future version, leaving this as <code>Default</code> would make it not format
+the environment name into the table name.</p>
+</dd>
+<dt><strong><code>dyn_id_delimiter</code></strong></dt>
+<dd>
+<p>Delimiter to use for the <code>id</code> value when table has both a
+hash and range key (to delimit the values of the two).</p>
+<p>By default, a pipe char <code>|</code> is used.</p>
+</dd>
+<dt><strong><code>dyn_consistent_read</code></strong></dt>
+<dd>Lets model default to consistent reads by default.
+If unspecified, consistent reads are not used by default.
+You can override this on a per-get/query/scan basis via function param.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>These all come from class-arguments given to the
+<code><a title="xdynamo.model.DynModel" href="model.html#xdynamo.model.DynModel">DynModel</a></code> at class-definition time that need to be sent to
+my super-class via
+<code>xmodel.base.structure.BaseStructure.configure_for_model_type</code>. See that
+for more on what other arguments are supported.</dd>
+</dl></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.fully_qualified_table_name"><code class="name flex">
+<span>def <span class="ident">fully_qualified_table_name</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Fully qualified name of the table in Dynamo as a str.
+Format is: '{dyn_service}-{dyn_environment}-{dyn_name}'</p></div>
+</dd>
+<dt id="xdynamo.structure.DynStructure.has_id_field"><code class="name flex">
+<span>def <span class="ident">has_id_field</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Defaults to False, returns True for RemoteStructure,
+What this property is really saying is if you can do a foreign-key to the related
+object/model.</p>
+<p>It may be better at some point in the long-run to rename this field to more indicate
+that; perhaps the next time we have a breaking-change we need to do for xmodel.</p>
+<p>For now, we are leaving the name along and hard-coding this to
+return False in BaseStructure, and to return True in RemoteStructure.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="xdynamo" href="index.html">xdynamo</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="xdynamo.structure.DynStructure" href="#xdynamo.structure.DynStructure">DynStructure</a></code></h4>
+<ul class="">
+<li><code><a title="xdynamo.structure.DynStructure.configure_for_model_type" href="#xdynamo.structure.DynStructure.configure_for_model_type">configure_for_model_type</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_consistent_read" href="#xdynamo.structure.DynStructure.dyn_consistent_read">dyn_consistent_read</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_environment" href="#xdynamo.structure.DynStructure.dyn_environment">dyn_environment</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_hash_field" href="#xdynamo.structure.DynStructure.dyn_hash_field">dyn_hash_field</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_hash_key_name" href="#xdynamo.structure.DynStructure.dyn_hash_key_name">dyn_hash_key_name</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_id_delimiter" href="#xdynamo.structure.DynStructure.dyn_id_delimiter">dyn_id_delimiter</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_name" href="#xdynamo.structure.DynStructure.dyn_name">dyn_name</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_range_field" href="#xdynamo.structure.DynStructure.dyn_range_field">dyn_range_field</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_range_key_name" href="#xdynamo.structure.DynStructure.dyn_range_key_name">dyn_range_key_name</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.dyn_service" href="#xdynamo.structure.DynStructure.dyn_service">dyn_service</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.endpoint_description" href="#xdynamo.structure.DynStructure.endpoint_description">endpoint_description</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.fully_qualified_table_name" href="#xdynamo.structure.DynStructure.fully_qualified_table_name">fully_qualified_table_name</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.has_id_field" href="#xdynamo.structure.DynStructure.has_id_field">has_id_field</a></code></li>
+<li><code><a title="xdynamo.structure.DynStructure.virtual_id" href="#xdynamo.structure.DynStructure.virtual_id">virtual_id</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>
