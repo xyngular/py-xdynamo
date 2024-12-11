@@ -253,7 +253,7 @@ class DynClient(RemoteClient[M]):
             fields: FieldNames = Default,
             allow_scan: bool = False,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default,
+            reverse: bool = False,
             **dynamo_params,
     ) -> Iterable[M]:
         """
@@ -347,15 +347,9 @@ class DynClient(RemoteClient[M]):
 
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
-            reverse: Defaults to Model.api.structure.dyn_reverse_by_default,
-                which can be set via class arguments when DynModel subclass is defined.
-
-                Use this to override the model's default behavior.
-                Query results are always sorted by the sort key value.
-                If the data type of the sort key is Number, the results are returned in numeric order;
-                otherwise, the results are returned in order of UTF-8 bytes.
-                By default, the sort order is ascending. To reverse the order, set the reverse to True.
-                Which will set the "ScanIndexForward" parameter to False in the query.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
 
             **dynamo_params: Extra parameters to include on the Dynamo request(s) that are
                 generated. This is 100% optional.
@@ -462,7 +456,7 @@ class DynClient(RemoteClient[M]):
             keys: Iterable[DynKey],
             *,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default,
+            reverse: bool = False,
             **params: DynParams,
     ) -> Iterable[M]:
         """
@@ -492,15 +486,9 @@ class DynClient(RemoteClient[M]):
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
 
-            reverse: Defaults to Model.api.structure.dyn_reverse_by_default,
-                which can be set via class arguments when DynModel subclass is defined.
-
-                Use this to override the model's default behavior.
-                Query results are always sorted by the sort key value.
-                If the data type of the sort key is Number, the results are returned in numeric order;
-                otherwise, the results are returned in order of UTF-8 bytes.
-                By default, the sort order is ascending. To reverse the order, set the reverse to True.
-                Which will set the "ScanIndexForward" parameter to False in the query.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
 
             **params: An optional set of extra parameters to include in request to Dynamo,
                 if so desired.
@@ -592,7 +580,7 @@ class DynClient(RemoteClient[M]):
             query: Query = None,
             *,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default,
+            reverse: bool = False,
             **dynamo_params: DynParams
     ) -> Iterable[M]:
         """
@@ -641,15 +629,9 @@ class DynClient(RemoteClient[M]):
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
 
-            reverse: Defaults to Model.api.structure.dyn_reverse_by_default,
-                which can be set via class arguments when DynModel subclass is defined.
-
-                Use this to override the model's default behavior.
-                Query results are always sorted by the sort key value.
-                If the data type of the sort key is Number, the results are returned in numeric order;
-                otherwise, the results are returned in order of UTF-8 bytes.
-                By default, the sort order is ascending. To reverse the order, set the reverse to True.
-                Which will set the "ScanIndexForward" parameter to False in the query.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
 
             **params (DynParams): You can provide other standard boto3 query parameters here as you
                 need. If you provide both dynamo_params and query, the ones in query will overwrite
@@ -714,7 +696,7 @@ class DynClient(RemoteClient[M]):
             query: Query = None,
             *,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default,
+            reverse: bool = False,
             **dynamo_params: DynParams
     ) -> Iterable[M]:
         """ Scans entire table (vs doing a `DynClient.query`, which is much more efficient).
@@ -739,7 +721,7 @@ class DynClient(RemoteClient[M]):
             dyn_key: DynKey = None,
             filter_key: str = 'FilterExpression',
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default
+            reverse: bool = False
     ):
         if consistent_read is Default:
             consistent_read = self.consistent_reads
@@ -989,7 +971,7 @@ class DynClient(RemoteClient[M]):
             ]
             state.add_field_error(field=CONDITIONAL_CHECK_FAILED_KEY, code='failed')
 
-    def _get_all_items(self, consistent_read: bool | DefaultType = Default, reverse: bool | DefaultType = Default):
+    def _get_all_items(self, consistent_read: bool | DefaultType = Default, reverse: bool = False):
         params = {}
         if consistent_read is Default:
             consistent_read = self.consistent_reads

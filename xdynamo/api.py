@@ -61,7 +61,7 @@ class DynApi(RemoteApi[M]):
             fields: FieldNames | DefaultType | None = Default,
             allow_scan=False,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool | DefaultType = Default
+            reverse=False
     ) -> Iterable[M]:
         """
         Convenience method for the `self.client.get` method.
@@ -90,15 +90,9 @@ class DynApi(RemoteApi[M]):
 
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
-            reverse: Defaults to Model.api.structure.dyn_reverse_by_default,
-                which can be set via class arguments when DynModel subclass is defined.
-
-                Use this to override the model's default behavior.
-                Query results are always sorted by the sort key value.
-                If the data type of the sort key is Number, the results are returned in numeric order;
-                otherwise, the results are returned in order of UTF-8 bytes.
-                By default, the sort order is ascending. To reverse the order, set the reverse to True.
-                Which will set the "ScanIndexForward" parameter to False in the query.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
 
         Returns:
 
