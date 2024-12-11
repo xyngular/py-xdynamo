@@ -59,9 +59,9 @@ class DynApi(RemoteApi[M]):
             *,
             top: int = None,
             fields: FieldNames | DefaultType | None = Default,
-            allow_scan=False,
+            allow_scan: bool = False,
             consistent_read: bool | DefaultType = Default,
-            reverse=False
+            reverse: bool = False
     ) -> Iterable[M]:
         """
         Convenience method for the `self.client.get` method.
