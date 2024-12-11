@@ -695,7 +695,8 @@ class DynClient(RemoteClient[M]):
             for value in self._paginate_all_items_generator(method='query', params=params):
                 yield value
 
-    def scan(self, query: Query = None, *, consistent_read: bool | DefaultType = Default, **dynamo_params: DynParams
+    def scan(
+            self, query: Query = None, *, consistent_read: bool | DefaultType = Default, **dynamo_params: DynParams
     ) -> Iterable[M]:
         """ Scans entire table (vs doing a `DynClient.query`, which is much more efficient).
             Looks at every item in the table, evaluating `query` to filter which ones to return.
