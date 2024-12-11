@@ -358,7 +358,8 @@ class DynClient(RemoteClient[M]):
         """
 
         if reverse and (not query or allow_scan):
-            log.warning('The `reverse` param has been set along with no query. There is no way to Scan in reverse.')
+            log.warning('The `reverse` param has been set along with no query or allow_scan=True. '
+                        'There is no way to Scan in reverse.')
 
         if not query:
             # If no query.... just get all items via a bulk-scan.
