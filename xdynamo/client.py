@@ -357,9 +357,12 @@ class DynClient(RemoteClient[M]):
 
         """
 
+        if reverse and (not query or allow_scan):
+            log.warning('The `reverse` param has been set along with no query. There is no way to Scan in reverse.')
+
         if not query:
             # If no query.... just get all items via a bulk-scan.
-            return self._get_all_items(consistent_read=consistent_read, reverse=reverse)
+            return self._get_all_items(consistent_read=consistent_read)
 
         # todo: We want basic logic in here to decide on batch_get vs query
         #       vs [eventually] dyn_scan.
@@ -430,7 +433,7 @@ class DynClient(RemoteClient[M]):
             return self.query(query=query, consistent_read=consistent_read, reverse=reverse)
 
         if allow_scan:
-            return self.scan(query=query, consistent_read=consistent_read, reverse=reverse)
+            return self.scan(query=query, consistent_read=consistent_read)
 
         # todo: Support 'scans' or always raise error? Scans are very expensive.
         # todo: Support Global + Secondary Indexes
@@ -696,7 +699,6 @@ class DynClient(RemoteClient[M]):
             query: Query = None,
             *,
             consistent_read: bool | DefaultType = Default,
-            reverse: bool = False,
             **dynamo_params: DynParams
     ) -> Iterable[M]:
         """ Scans entire table (vs doing a `DynClient.query`, which is much more efficient).
@@ -709,8 +711,7 @@ class DynClient(RemoteClient[M]):
         self._add_conditions_from_query(
             query=query,
             params=params,
-            consistent_read=consistent_read,
-            reverse=reverse
+            consistent_read=consistent_read
         )
         return self._paginate_all_items_generator(method='scan', params=params)
 
@@ -971,16 +972,13 @@ class DynClient(RemoteClient[M]):
             ]
             state.add_field_error(field=CONDITIONAL_CHECK_FAILED_KEY, code='failed')
 
-    def _get_all_items(self, consistent_read: bool | DefaultType = Default, reverse: bool = False):
+    def _get_all_items(self, consistent_read: bool | DefaultType = Default):
         params = {}
         if consistent_read is Default:
             consistent_read = self.consistent_reads
 
         if consistent_read:
             params['ConsistentRead'] = True
-
-        if reverse:
-            params['ScanIndexForward'] = False
 
         return self._paginate_all_items_generator(method='scan', params=params)
 
