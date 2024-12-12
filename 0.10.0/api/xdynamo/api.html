@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
+<title>xdynamo.api API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>xdynamo.api</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="xdynamo.api.lazy_load_types_for_dyn_api"><code class="name flex">
+<span>def <span class="ident">lazy_load_types_for_dyn_api</span></span>(<span>cls)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Lazy load our circular reference right before it's needed.
+This is put in as DynModel's lazy_loader, xyn_model will call us here when needed.</p>
+<p>See <code>xyn_model.base.model.BaseModel.__init_subclass__</code> and it's lazy_loader argument
+for more details.</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="xdynamo.api.DynApi"><code class="flex name class">
+<span>class <span class="ident">DynApi</span></span>
+<span>(</span><span>*, api: BaseApi[M] = None, model: xmodel.base.model.BaseModel = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Put things here that are only relevant for all DynModel's.</p>
+<p>The main change vs the base BaseApi class is filtering out of the JSON invalid blank values.</p>
+<p>Right now this model class is only used to transform json from/to Dynamo via
+the <code>json</code> and <code>update_from_json()</code> methods. See <code>xmodel.base.api.BaseApi</code> for more
+details.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning:&ensp;You can probably skip the rest (below)</p>
+<p>Most of the time you don't create <code>BaseApi</code> objects your self, and so for most people
+you can skip the following unless you want to know more about internal details.</p>
+</div>
+<h1 id="init-method-specifics">Init Method Specifics</h1>
+<p>Normally you would not create an <code>BaseApi</code> object directly your self.
+<code>xmodel.base.model.BaseModel</code>'s know how to do this automatically.
+It happens in <code>xmodel.base.model.BaseModel.__init_subclass__</code>.</p>
+<p>Details about how the arguments you can pass are below.</p>
+<h2 id="basemodel-class-construction">BaseModel Class Construction:</h2>
+<p>If you provide an <code>api</code> arg without a <code>model</code> arg; we will copy the <code>BaseApi.structure</code>
+into new object, resetting the error status, and internal <code>BaseApi._state</code> to None.
+This <code>api</code> object is supposed to be the parent BaseModel's class api object.</p>
+<p>If both <code>api</code> arg + <code>model</code> arg are <code>None</code>, the BaseModel is the root/generic BaseModel
+(ie: it has no parent BaseModel).</p>
+<p>This is what is done by BaseModel classes while the class is lazily loading and
+creating/configuring the BaseModel class and it's associated <code>BaseApi</code> object
+(accessible via <code>xmodel.base.model.BaseModel.api</code>)</p>
+<h2 id="basemodel-instance-creation">BaseModel Instance Creation:</h2>
+<p>If you also pass in a <code>model</code> arg; this get you a special copy of the api you passed in
+for use just with that BaseModel instance. The model <code>BaseApi._state</code> will be allocated
+internally in the init'd BaseApi object. This is how a <code>xmodel.base.model.BaseModel</code>
+instance get's it's own associated <code>BaseApi</code> object
+(that's a different instance vs the one set on BaseModel class when the BaseModel class
+was originally constructed).</p>
+<p>All params are optional.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>api</code></strong></dt>
+<dd>
+<p>The "parent" BaseApi obj to copy the basic structure from as a starting point,
+etc.
+The superclasses BaseApi class is passed via this arg.
+This is only used when allocating a new <code>BaseApi</code> object for a new
+<code>xmodel.base.model.BaseModel</code> class (not an instance, a model class/type).
+This BaseApi object is used for the class-level BaseModel api object;
+ie: via "ModelClass.api"</p>
+<p>See above "BaseModel Class Construction" for more details.</p>
+</dd>
+<dt><strong><code>model</code></strong></dt>
+<dd>
+<p>BaseModel to associate new BaseApi obj with.
+This is only used to create a new BaseApi object for a
+<code>xmodel.base.model.BaseModel</code>
+instance for an already-existing type. ie: for BaseModel object instances.</p>
+<p>See above "BaseModel Instance Creation" for more details.</p>
+</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DynApi(RemoteApi[M]):
+    &#34;&#34;&#34;
+    Put things here that are only relevant for all DynModel&#39;s.
+
+    The main change vs the base BaseApi class is filtering out of the JSON invalid blank values.
+
+    Right now this model class is only used to transform json from/to Dynamo via
+    the `json` and `update_from_json()` methods. See `xmodel.base.api.BaseApi` for more
+    details.
+    &#34;&#34;&#34;
+    client: DynClient[M]
+    structure: DynStructure[DynField]
+    # This type-hint is only for IDE, `RemoteApi` does not use it
+    # (self.model_type value is passed in when RemoteApi is allocated, in __init__ method).
+    model: M
+
+    def get(
+            self,
+            query: Query = None,
+            *,
+            top: int = None,
+            fields: FieldNames | DefaultType | None = Default,
+            allow_scan: bool = False,
+            consistent_read: bool | DefaultType = Default,
+            reverse: bool = False
+    ) -&gt; Iterable[M]:
+        &#34;&#34;&#34;
+        Convenience method for the `self.client.get` method.
+
+        Generally, will get/query/scan/batch-get; generally,
+        the client will figure out the best way to get the items based on the provided query.
+        If the query is None or blank, it will grab everything in the table.
+
+        Args:
+            query: A dict with key the field, with optional double-underscore and operation
+                (such as `{&#39;some_field__beginswith&#39;: &#39;search-value&#39;}`).
+                The value is what to search for.
+                If you give this a list, it implies a `__in` operator, and will do an OR
+                on the values in the list.
+            top:
+            fields:
+            allow_scan: Defaults to False, which means this will raise an exception if a scan
+                is required to execute your get.  Set to True to allow a scan if needed
+                (it will still do a query, batch-get, etc; if it can, it only does a scan
+                if there is no other choice).
+
+                If the query is blank or None will still do a scan regardless of what you pass
+                (to return all items in the table).
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read_by_default,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the &#34;ScanIndexForward&#34;
+                parameter to False in the query.
+
+        Returns:
+
+        &#34;&#34;&#34;
+        return self.client.get(
+            query, top=top, fields=fields, allow_scan=allow_scan, consistent_read=consistent_read, reverse=reverse
+        )
+
+    def get_key(self, hash_key: Any, range_key: Optional[Any] = None) -&gt; DynKey:
+        &#34;&#34;&#34;
+        Easy way to generate a basic `DynKey` with hash_key, and range_key
+        (if model has range key).
+
+        If you don&#39;t provide a range-key and the model needs a range-key,
+        will raise an `xmodel.remote.errors.XRemoteError`.
+        &#34;&#34;&#34;
+        return DynKey(api=self, hash_key=hash_key, range_key=range_key)
+
+    def get_via_id(
+            self,
+            id: Union[
+                    int | str | UUID,
+                    List[int | str | UUID],
+                    Dict[str, str | int | UUID],
+                    List[Dict[str, str | int | UUID]],
+            ],
+            fields: FieldNames = Default,
+            id_field: str = None,
+            aux_query: Query = None,
+            consistent_read: bool | DefaultType = Default,
+    ) -&gt; Union[Iterable[M], M, None]:
+        &#34;&#34;&#34;
+        Overridden in DynApi to convert any provided `DynKey` into string-based `id` and
+        passing them to super and returning the result.
+
+        See `xmodel.remote.api.RemoteApi.get_via_id` for more details on how this method works.
+
+        Args:
+            id: In addition to `str` and `int` values, you can also used `DynKey`(s) if you wish.
+            fields: See `xmodel.remote.api.RemoteApi.get_via_id`
+            id_field: See `xmodel.remote.api.RemoteApi.get_via_id`
+            aux_query: See `xmodel.remote.api.RemoteApi.get_via_id`
+            consistent_read: Defaults to Model.api.structure.dyn_consistent_read_by_default,
+                which can be set via class arguments when DynModel subclass is defined.
+
+                You can use this to override the model default. True means we use consistent
+                reads, otherwise false.
+
+        Returns:
+            See `xmodel.remote.api.RemoteApi.get_via_id`
+        &#34;&#34;&#34;
+        if id is None:
+            return None
+
+        is_list = isinstance(id, list)
+        if is_list:
+            id: Union[DynKey, int, str]
+            new_id = [v.id if type(v) is DynKey else v for v in xloop(id)]
+        else:
+            new_id = id.id if type(id) is DynKey else id
+
+        if consistent_read is Default:
+            return super().get_via_id(new_id, fields=fields, id_field=id_field, aux_query=aux_query)
+
+        # If we have a non-Default consistent-read, then temporarily inject the option.
+        dyn_options = DynClientOptions()
+        dyn_options.consistent_read = consistent_read
+        with dyn_options:
+            return super().get_via_id(new_id, fields=fields, id_field=id_field, aux_query=aux_query)
+
+    @property
+    def table(self) -&gt; TableResource:
+        &#34;&#34;&#34; Returns the boto3 table resource to use for our related DynModel.
+            Don&#39;t cache or hang onto this, it&#39;s already properly cached for you via the current
+            Context and so will work in every situation [unit-tests, config-changes, etc]...
+        &#34;&#34;&#34;
+
+        if not self.structure.dyn_hash_key_name:
+            raise XRemoteError(
+                f&#34;While constructing {self.structure.model_cls}, found no hash-key field. &#34;
+                f&#34;You must have at least one hash-key field.&#34;
+            )
+
+        # Look it up each time in case config/service/env/context changes enough
+        # for it to be different. DynamoDB will cache the table by name and so it&#39;s
+        # very fast on subsequent lookups.
+        table_name = self.structure.fully_qualified_table_name()
+
+        # noinspection PyTypeChecker
+        return DynamoDB.grab().table(name=table_name, table_creator=self._create_table)
+
+    def _create_table(self, dynamo: DynamoDB) -&gt; TableResource:
+        return self.client.create_table()
+
+    def delete(self, *, condition: Query = None):
+        &#34;&#34;&#34;
+        REQUIRES associated model object [see self.model].
+
+        Convenience method to delete this single object in API.
+
+        If you pass in a condition, it will be evaluated on the dynamodb-service side and the
+        deletes will only happen if the condition is met.
+        This can help prevent race conditions if used correctly.
+
+        If there is a batch-writer currently in use, we will try to use that to batch the deletes.
+
+        Keep in mind that if you pass in a `condition`, we can&#39;t use the batch write.
+        We will instead send of a single-item delete request with the condition attached
+        (bypassing any current batch-writer that may be in use).
+
+        Args:
+            condition: Conditions in query will be sent to dynamodb; object will only be deleted
+                if the conditions match.
+                See doc comments on `xyn_model_dynamo.client.DynClient.delete_obj` for more
+                details.
+        &#34;&#34;&#34;
+
+        # Normally I would call super().delete(...) and have the super have a **kwargs it can
+        # simply pass along (so it can do any normal checks it does).
+        # Don&#39;t want to modify another library right now, so for now copying/pasting the code here.
+        model = self.model
+        if model.id is None:
+            raise XRemoteError(
+                f&#34;A delete was requested for an object that had no id for ({model}).&#34;
+            )
+
+        self.client.delete_obj(model, condition=condition)
+
+    def send(self, *, condition: Query = None):
+        &#34;&#34;&#34;
+        &#34;&#34;&#34;
+
+        # Normally I would call super().delete(...) and have the super have a **kwargs it can
+        # simply pass along (so it can do any normal checks it does).
+        # Don&#39;t want to modify another library right now, so for now copying/pasting the code here.
+        model = self.model
+        if model.id is None:
+            raise XRemoteError(
+                f&#34;A send was requested for an object that had no id for ({model}).&#34;
+            )
+
+        self.client.send_objs([model], condition=condition)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>xmodel.remote.api.RemoteApi</li>
+<li>xmodel.base.api.BaseApi</li>
+<li>typing.Generic</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="xdynamo.api.DynApi.client"><code class="name">prop <span class="ident">client</span> : <a title="xdynamo.client.DynClient" href="client.html#xdynamo.client.DynClient">DynClient</a>[~M]</code></dt>
+<dd>
+<div class="desc"><p>Returns an appropriate concrete <code>xmodel.remote.client.RemoteClient</code> subclass.
+We figure out the proper client object to use based on the type-hint for "client"
+property on the sub-class.</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; from typing import TypeVar
+&gt;&gt;&gt; from xmodel import RestApi, RestClient
+&gt;&gt;&gt; M = TypeVar(&quot;M&quot;)  # &lt;-- This allows IDE to do better code completion.
+&gt;&gt;&gt;
+&gt;&gt;&gt; class MyClient(RestClient[M]):
+&gt;&gt;&gt;     pass
+&gt;&gt;&gt;
+&gt;&gt;&gt; class MyApi(RestApi[M])
+&gt;&gt;&gt;     client: MyClient[M]  # &lt;-- Type hint on 'client' property.
+</code></pre>
+<p>This is enough for <code>xmodel.base.BaseModel</code> subclasses that have this set as their
+api type-hint:</p>
+<pre><code>&gt;&gt;&gt; from xmodel.remote.model import RemoteModel
+&gt;&gt;&gt;
+&gt;&gt;&gt; class MyModel(RemoteModel):
+&gt;&gt;&gt;     api: MyApi
+</code></pre>
+<p>When you get MyModel's api like below, it will return a MyApi instance,
+MyApi will in turn return a MyClient:</p>
+<pre><code>&gt;&gt;&gt; print(MyModel.api)
+MyApi(...)
+&gt;&gt;&gt; print(MyModel.api.client)
+MyClient(...)
+</code></pre>
+<p>For a more concreate use/example, see <code>xmodel_rest.RestModel</code>;
+it's a RemoteModel subclass that implments a RestClient that can be used with it.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def _client(self):
+    &#34;&#34;&#34; Returns an appropriate concrete `xmodel.remote.client.RemoteClient` subclass.
+        We figure out the proper client object to use based on the type-hint for &#34;client&#34;
+        property on the sub-class.
+
+        Example:
+
+            &gt;&gt;&gt; from typing import TypeVar
+            &gt;&gt;&gt; from xmodel import RestApi, RestClient
+            &gt;&gt;&gt; M = TypeVar(&#34;M&#34;)  # &lt;-- This allows IDE to do better code completion.
+            &gt;&gt;&gt;
+            &gt;&gt;&gt; class MyClient(RestClient[M]):
+            &gt;&gt;&gt;     pass
+            &gt;&gt;&gt;
+            &gt;&gt;&gt; class MyApi(RestApi[M])
+            &gt;&gt;&gt;     client: MyClient[M]  # &lt;-- Type hint on &#39;client&#39; property.
+
+        This is enough for `xmodel.base.BaseModel` subclasses that have this set as their
+        api type-hint:
+
+            &gt;&gt;&gt; from xmodel.remote.model import RemoteModel
+            &gt;&gt;&gt;
+            &gt;&gt;&gt; class MyModel(RemoteModel):
+            &gt;&gt;&gt;     api: MyApi
+
+        When you get MyModel&#39;s api like below, it will return a MyApi instance,
+        MyApi will in turn return a MyClient:
+
+            &gt;&gt;&gt; print(MyModel.api)
+            MyApi(...)
+            &gt;&gt;&gt; print(MyModel.api.client)
+            MyClient(...)
+
+        For a more concreate use/example, see `xmodel_rest.RestModel`;
+        it&#39;s a RemoteModel subclass that implments a RestClient that can be used with it.
+    &#34;&#34;&#34;
+    client = self.structure.internal_shared_api_values.get(&#39;client&#39;)
+    if client:
+        return client
+
+    client_type = get_type_hints(type(self)).get(&#39;client&#39;, None)
+    if client_type is None:
+        raise XModelError(
+            f&#34;RemoteClient subclass type is undefined for model class ({self.model_type}), &#34;
+            f&#34;a type-hint for &#39;client&#39; on BaseApi class must be in place for me to know what &#34;
+            f&#34;type to get.&#34;
+        )
+
+    client = client_type(api=self.model_type.api)
+    self.structure.internal_shared_api_values[&#39;client&#39;] = client
+    return client</code></pre>
+</details>
+</dd>
+<dt id="xdynamo.api.DynApi.model"><code class="name">prop <span class="ident">model</span> : ~M</code></dt>
+<dd>
+<div class="desc"><p>REQUIRES associated model object [see doc text below].</p>
+<p>Gives you back the model associated with this api. If this BaseApi obj is associated
+directly with the BaseModel class type and so there is no associated model, I will
+raise an exception.</p>
+<p>Some BaseApi methods are dependant on having an associated model, and when they ask for it
+and there is None, this will raise an exception for them. The first line of the doc
+comment tells you if it needs one.
+Normally, it's pretty obvious if the method
+will need the model, due to what it will return to you (ie: if it would need model attrs).</p>
+<p>The methods that are dependant on a model are ones, like 'json', where it returns the
+JSON for a model.
+It needs a model to get this data.</p>
+<p>If you access an object api via a BaseModel object, that will be the associated model.
+If you access it via a BaseModel type/class, it will be directly associated with the model
+class.</p>
+<p>Examples:</p>
+<pre><code class="language-python-repl">&gt;&gt;&gt; # Grab Account model from some_lib (as an example).
+&gt;&gt;&gt; from some_lib.account import Account
+&gt;&gt;&gt;
+&gt;&gt;&gt; # api object is associated with MyModelClass class, not model obj.
+&gt;&gt;&gt; Account.api
+&gt;&gt;&gt;
+&gt;&gt;&gt; account_obj = Account.api.get_via_id(3)
+&gt;&gt;&gt; # api is associated with the account_obj model object.
+&gt;&gt;&gt; account_obj.api
+&gt;&gt;&gt;
+&gt;&gt;&gt; # This sends object attributes to API, so it needs an associated
+&gt;&gt;&gt; # BaseModel object, so this works:
+&gt;&gt;&gt; account_obj.api.send()
+&gt;&gt;&gt;
+&gt;&gt;&gt; # This would produce an exception, since it would try to get BaseModel
+&gt;&gt;&gt; # attributes to send. But there is no associated model.
+&gt;&gt;&gt; Account.api.send()
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def model(self) -&gt; M:
+    &#34;&#34;&#34; REQUIRES associated model object [see doc text below].
+
+    Gives you back the model associated with this api. If this BaseApi obj is associated
+    directly with the BaseModel class type and so there is no associated model, I will
+    raise an exception.
+
+    Some BaseApi methods are dependant on having an associated model, and when they ask for it
+    and there is None, this will raise an exception for them. The first line of the doc
+    comment tells you if it needs one.  Normally, it&#39;s pretty obvious if the method
+    will need the model, due to what it will return to you (ie: if it would need model attrs).
+
+    The methods that are dependant on a model are ones, like &#39;json&#39;, where it returns the
+    JSON for a model.  It needs a model to get this data.
+
+    If you access an object api via a BaseModel object, that will be the associated model.
+    If you access it via a BaseModel type/class, it will be directly associated with the model
+    class.
+
+    Examples:
+    &gt;&gt;&gt; # Grab Account model from some_lib (as an example).
+    &gt;&gt;&gt; from some_lib.account import Account
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; # api object is associated with MyModelClass class, not model obj.
+    &gt;&gt;&gt; Account.api
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; account_obj = Account.api.get_via_id(3)
+    &gt;&gt;&gt; # api is associated with the account_obj model object.
+    &gt;&gt;&gt; account_obj.api
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; # This sends object attributes to API, so it needs an associated
+    &gt;&gt;&gt; # BaseModel object, so this works:
+    &gt;&gt;&gt; account_obj.api.send()
+    &gt;&gt;&gt;
+    &gt;&gt;&gt; # This would produce an exception, since it would try to get BaseModel
+    &gt;&gt;&gt; # attributes to send. But there is no associated model.
+    &gt;&gt;&gt; Account.api.send()
+
+    &#34;&#34;&#34;
+    api_state = self._api_state
+    assert api_state, &#34;BaseApi needs an attached model obj and there is no associated &#34; \
+                      &#34;model api state.&#34;
+    model = api_state.model
+    assert model, &#34;BaseApi needs an attached model obj and there is none.&#34;
+    return model</code></pre>
+</details>
+</dd>
+<dt id="xdynamo.api.DynApi.structure"><code class="name">prop <span class="ident">structure</span> : <a title="xdynamo.structure.DynStructure" href="structure.html#xdynamo.structure.DynStructure">DynStructure</a>[<a title="xdynamo.fields.DynField" href="fields.html#xdynamo.fields.DynField">DynField</a>]</code></dt>
+<dd>
+<div class="desc"><p>Contain things that don't vary among the model instances;
+ie: This is the same object and applies to all instances of a particular BaseModel class.</p>
+<p>This object has a list of <code>xmodel.fields.Field</code> that apply to the
+<code>xmodel.base.model.BaseModel</code> you can get via
+<code>xmodel.base.structure.Structure.fields</code>; for example.</p>
+<p>This is currently created in <code>BaseApi.__init__</code>.</p>
+<p>BaseApi instance for a BaseModel is only created when first asked for via
+<code>xmodel.base.model.BaseModel.api</code>.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>BaseStructure</code></dt>
+<dd>Structure with correct field and model type in it.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def _structure(self):
+    &#34;&#34;&#34;
+    Contain things that don&#39;t vary among the model instances;
+    ie: This is the same object and applies to all instances of a particular BaseModel class.
+
+    This object has a list of `xmodel.fields.Field` that apply to the
+    `xmodel.base.model.BaseModel` you can get via
+    `xmodel.base.structure.Structure.fields`; for example.
+
+    This is currently created in `BaseApi.__init__`.
+
+    BaseApi instance for a BaseModel is only created when first asked for via
+    `xmodel.base.model.BaseModel.api`.
+
+    Returns:
+        BaseStructure: Structure with correct field and model type in it.
+    &#34;&#34;&#34;
+    return self._structure</code></pre>
+</details>
+</dd>
+<dt id="xdynamo.api.DynApi.table"><code class="name">prop <span class="ident">table</span> : boto3.dynamodb.table.TableResource</code></dt>
+<dd>
+<div class="desc"><p>Returns the boto3 table resource to use for our related DynModel.
+Don't cache or hang onto this, it's already properly cached for you via the current
+Context and so will work in every situation [unit-tests, config-changes, etc]&hellip;</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def table(self) -&gt; TableResource:
+    &#34;&#34;&#34; Returns the boto3 table resource to use for our related DynModel.
+        Don&#39;t cache or hang onto this, it&#39;s already properly cached for you via the current
+        Context and so will work in every situation [unit-tests, config-changes, etc]...
+    &#34;&#34;&#34;
+
+    if not self.structure.dyn_hash_key_name:
+        raise XRemoteError(
+            f&#34;While constructing {self.structure.model_cls}, found no hash-key field. &#34;
+            f&#34;You must have at least one hash-key field.&#34;
+        )
+
+    # Look it up each time in case config/service/env/context changes enough
+    # for it to be different. DynamoDB will cache the table by name and so it&#39;s
+    # very fast on subsequent lookups.
+    table_name = self.structure.fully_qualified_table_name()
+
+    # noinspection PyTypeChecker
+    return DynamoDB.grab().table(name=table_name, table_creator=self._create_table)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="xdynamo.api.DynApi.delete"><code class="name flex">
+<span>def <span class="ident">delete</span></span>(<span>self, *, condition: Dict[str, Union[str, int, datetime.date, xurls.url._FormattedQueryValue, ForwardRef(None), uuid.UUID, Iterable[str | int | uuid.UUID | datetime.date | xurls.url._FormattedQueryValue]]] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>REQUIRES associated model object [see self.model].</p>
+<p>Convenience method to delete this single object in API.</p>
+<p>If you pass in a condition, it will be evaluated on the dynamodb-service side and the
+deletes will only happen if the condition is met.
+This can help prevent race conditions if used correctly.</p>
+<p>If there is a batch-writer currently in use, we will try to use that to batch the deletes.</p>
+<p>Keep in mind that if you pass in a <code>condition</code>, we can't use the batch write.
+We will instead send of a single-item delete request with the condition attached
+(bypassing any current batch-writer that may be in use).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>condition</code></strong></dt>
+<dd>Conditions in query will be sent to dynamodb; object will only be deleted
+if the conditions match.
+See doc comments on <code>xyn_model_dynamo.client.DynClient.delete_obj</code> for more
+details.</dd>
+</dl></div>
+</dd>
+<dt id="xdynamo.api.DynApi.get"><code class="name flex">
+<span>def <span class="ident">get</span></span>(<span>self, query: Dict[str, Union[str, int, datetime.date, xurls.url._FormattedQueryValue, ForwardRef(None), uuid.UUID, Iterable[str | int | uuid.UUID | datetime.date | xurls.url._FormattedQueryValue]]] = None, *, top: int = None, fields: Union[Sequence[str], xsentinels.default.DefaultType, ForwardRef(None)] = Default, allow_scan: bool = False, consistent_read: bool | xsentinels.default.DefaultType = Default, reverse: bool = False) ‑> Iterable[~M]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Convenience method for the <code>self.client.get</code> method.</p>
+<p>Generally, will get/query/scan/batch-get; generally,
+the client will figure out the best way to get the items based on the provided query.
+If the query is None or blank, it will grab everything in the table.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>query</code></strong></dt>
+<dd>A dict with key the field, with optional double-underscore and operation
+(such as <code>{'some_field__beginswith': 'search-value'}</code>).
+The value is what to search for.
+If you give this a list, it implies a <code>__in</code> operator, and will do an OR
+on the values in the list.</dd>
+<dt>top:</dt>
+<dt>fields:</dt>
+<dt><strong><code>allow_scan</code></strong></dt>
+<dd>
+<p>Defaults to False, which means this will raise an exception if a scan
+is required to execute your get.
+Set to True to allow a scan if needed
+(it will still do a query, batch-get, etc; if it can, it only does a scan
+if there is no other choice).</p>
+<p>If the query is blank or None will still do a scan regardless of what you pass
+(to return all items in the table).</p>
+</dd>
+<dt><strong><code>consistent_read</code></strong></dt>
+<dd>
+<p>Defaults to Model.api.structure.dyn_consistent_read_by_default,
+which can be set via class arguments when DynModel subclass is defined.</p>
+<p>You can use this to override the model default. True means we use consistent
+reads, otherwise false.</p>
+</dd>
+<dt><strong><code>reverse</code></strong></dt>
+<dd>Defaults to False, which means sort order is ascending.
+Set to True to reverse the order, which will set the "ScanIndexForward"
+parameter to False in the query.</dd>
+</dl>
+<p>Returns:</p></div>
+</dd>
+<dt id="xdynamo.api.DynApi.get_key"><code class="name flex">
+<span>def <span class="ident">get_key</span></span>(<span>self, hash_key: Any, range_key: Optional[Any] = None) ‑> <a title="xdynamo.common_types.DynKey" href="common_types.html#xdynamo.common_types.DynKey">DynKey</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Easy way to generate a basic <code>DynKey</code> with hash_key, and range_key
+(if model has range key).</p>
+<p>If you don't provide a range-key and the model needs a range-key,
+will raise an <code>xmodel.remote.errors.XRemoteError</code>.</p></div>
+</dd>
+<dt id="xdynamo.api.DynApi.get_via_id"><code class="name flex">
+<span>def <span class="ident">get_via_id</span></span>(<span>self, id: Union[int, str, uuid.UUID, List[int | str | uuid.UUID], Dict[str, str | int | uuid.UUID], List[Dict[str, str | int | uuid.UUID]]], fields: Sequence[str] = Default, id_field: str = None, aux_query: Dict[str, Union[str, int, datetime.date, xurls.url._FormattedQueryValue, ForwardRef(None), uuid.UUID, Iterable[str | int | uuid.UUID | datetime.date | xurls.url._FormattedQueryValue]]] = None, consistent_read: bool | xsentinels.default.DefaultType = Default) ‑> Union[Iterable[~M], ~M, ForwardRef(None)]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Overridden in DynApi to convert any provided <code>DynKey</code> into string-based <code>id</code> and
+passing them to super and returning the result.</p>
+<p>See <code>xmodel.remote.api.RemoteApi.get_via_id</code> for more details on how this method works.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>id</code></strong></dt>
+<dd>In addition to <code>str</code> and <code>int</code> values, you can also used <code>DynKey</code>(s) if you wish.</dd>
+<dt><strong><code>fields</code></strong></dt>
+<dd>See <code>xmodel.remote.api.RemoteApi.get_via_id</code></dd>
+<dt><strong><code>id_field</code></strong></dt>
+<dd>See <code>xmodel.remote.api.RemoteApi.get_via_id</code></dd>
+<dt><strong><code>aux_query</code></strong></dt>
+<dd>See <code>xmodel.remote.api.RemoteApi.get_via_id</code></dd>
+<dt><strong><code>consistent_read</code></strong></dt>
+<dd>
+<p>Defaults to Model.api.structure.dyn_consistent_read_by_default,
+which can be set via class arguments when DynModel subclass is defined.</p>
+<p>You can use this to override the model default. True means we use consistent
+reads, otherwise false.</p>
+</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>See <code>xmodel.remote.api.RemoteApi.get_via_id</code></p></div>
+</dd>
+<dt id="xdynamo.api.DynApi.send"><code class="name flex">
+<span>def <span class="ident">send</span></span>(<span>self, *, condition: Dict[str, Union[str, int, datetime.date, xurls.url._FormattedQueryValue, ForwardRef(None), uuid.UUID, Iterable[str | int | uuid.UUID | datetime.date | xurls.url._FormattedQueryValue]]] = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="xdynamo" href="index.html">xdynamo</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="xdynamo.api.lazy_load_types_for_dyn_api" href="#xdynamo.api.lazy_load_types_for_dyn_api">lazy_load_types_for_dyn_api</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="xdynamo.api.DynApi" href="#xdynamo.api.DynApi">DynApi</a></code></h4>
+<ul class="two-column">
+<li><code><a title="xdynamo.api.DynApi.client" href="#xdynamo.api.DynApi.client">client</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.delete" href="#xdynamo.api.DynApi.delete">delete</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.get" href="#xdynamo.api.DynApi.get">get</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.get_key" href="#xdynamo.api.DynApi.get_key">get_key</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.get_via_id" href="#xdynamo.api.DynApi.get_via_id">get_via_id</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.model" href="#xdynamo.api.DynApi.model">model</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.send" href="#xdynamo.api.DynApi.send">send</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.structure" href="#xdynamo.api.DynApi.structure">structure</a></code></li>
+<li><code><a title="xdynamo.api.DynApi.table" href="#xdynamo.api.DynApi.table">table</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
+</footer>
+</body>
+</html>
