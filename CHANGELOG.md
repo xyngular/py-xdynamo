@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.10.0](https://github.com/xyngular/py-xdynamo/compare/v0.9.2...v0.10.0) (2024-12-12)
+
+
+### Features
+
+* Add `reverse` param for api.get to support reverse ordering ([87dd69f](https://github.com/xyngular/py-xdynamo/commit/87dd69f55e659b5e1274985c1971e1110755b933))
+* Add `reverse` param for api.get to support reverse ordering (2) ([5d8818b](https://github.com/xyngular/py-xdynamo/commit/5d8818b1779e7d01d7bdafa4dd5fccb07fa410b4))
+* Add type annotation for allow_scan and reverse ([ed3b1c9](https://github.com/xyngular/py-xdynamo/commit/ed3b1c9dda7f0a91d4f090242974f8a41588dd07))
+* Remove changes for scan ([ff745b3](https://github.com/xyngular/py-xdynamo/commit/ff745b3c73ddc3147f650cbd1cc19256901b17ae))
+* Remove changes for scan ([dd83b31](https://github.com/xyngular/py-xdynamo/commit/dd83b3110d5693b98ecbd4e17f2a9f6367e65032))
+* Reverse is able only for queries ([ac227dc](https://github.com/xyngular/py-xdynamo/commit/ac227dc2537b0f790bb097ed3d7681994980f7d8))
+* Update `no reverse for scan` warning ([84c6595](https://github.com/xyngular/py-xdynamo/commit/84c659537cdfb7bbb79fc93f7b461c1c805a6909))
+
 ## [0.9.2](https://github.com/xyngular/py-xdynamo/compare/v0.9.1...v0.9.2) (2024-12-03)
 
 
