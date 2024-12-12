@@ -253,6 +253,7 @@ class DynClient(RemoteClient[M]):
             fields: FieldNames = Default,
             allow_scan: bool = False,
             consistent_read: bool | DefaultType = Default,
+            reverse: bool = False,
             **dynamo_params,
     ) -> Iterable[M]:
         """
@@ -346,11 +347,19 @@ class DynClient(RemoteClient[M]):
 
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
+
             **dynamo_params: Extra parameters to include on the Dynamo request(s) that are
                 generated. This is 100% optional.
         Returns:
 
         """
+
+        if reverse and (not query or allow_scan):
+            log.warning('The `reverse` param has been set along with no query or allow_scan=True. '
+                        'There is no way to Scan in reverse.')
 
         if not query:
             # If no query.... just get all items via a bulk-scan.
@@ -413,7 +422,7 @@ class DynClient(RemoteClient[M]):
             # Dynamo will fetch these in parallel!
             # TODO: If we only have one key, use `get_item` instead of `batch_get_item`.
             if all_support_batch_get and dyn_keys:
-                return self.batch_get(keys=dyn_keys, consistent_read=consistent_read)
+                return self.batch_get(keys=dyn_keys, consistent_read=consistent_read, reverse=reverse)
 
         # If we have some sort of key(s) we can use (a hash key with an optional range key).
         if query.dyn_keys():
@@ -422,7 +431,7 @@ class DynClient(RemoteClient[M]):
             # todo: unless this table does not have a range key [no hash/range to tie].
 
             # We have a query that has the hash-key in it, that's good enough to use a query.
-            return self.query(query=query, consistent_read=consistent_read)
+            return self.query(query=query, consistent_read=consistent_read, reverse=reverse)
 
         if allow_scan:
             return self.scan(query=query, consistent_read=consistent_read)
@@ -447,7 +456,12 @@ class DynClient(RemoteClient[M]):
         )
 
     def batch_get(
-            self, keys: Iterable[DynKey], *, consistent_read: bool | DefaultType = Default, **params: DynParams
+            self,
+            keys: Iterable[DynKey],
+            *,
+            consistent_read: bool | DefaultType = Default,
+            reverse: bool = False,
+            **params: DynParams,
     ) -> Iterable[M]:
         """
         Will fetch keys in the largest batch it can at a time it can from Dynamo;
@@ -475,6 +489,10 @@ class DynClient(RemoteClient[M]):
 
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
+
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
 
             **params: An optional set of extra parameters to include in request to Dynamo,
                 if so desired.
@@ -505,6 +523,8 @@ class DynClient(RemoteClient[M]):
             table_items = req_items_param.setdefault(table_name, {})
             if consistent_read:
                 table_items['ConsistentRead'] = True
+            if reverse:
+                params['ScanIndexForward'] = False
             table_keys = table_items.setdefault('Keys', [])
             table_keys.extend(items)
 
@@ -560,7 +580,12 @@ class DynClient(RemoteClient[M]):
         return self.api.structure.dyn_consistent_read or False
 
     def query(
-            self, query: Query = None, *, consistent_read: bool | DefaultType = Default, **dynamo_params: DynParams
+            self,
+            query: Query = None,
+            *,
+            consistent_read: bool | DefaultType = Default,
+            reverse: bool = False,
+            **dynamo_params: DynParams
     ) -> Iterable[M]:
         """
         Forces `DynClient` to use a query. If you want a way for client to automatically
@@ -607,6 +632,11 @@ class DynClient(RemoteClient[M]):
 
                 You can use this to override the model default. True means we use consistent
                 reads, otherwise false.
+
+            reverse: Defaults to False, which means sort order is ascending.
+                Set to True to reverse the order, which will set the "ScanIndexForward"
+                parameter to False in the query.
+
             **params (DynParams): You can provide other standard boto3 query parameters here as you
                 need. If you provide both dynamo_params and query, the ones in query will overwrite
                 ones in dynamo_params if there is a conflict;
@@ -659,6 +689,7 @@ class DynClient(RemoteClient[M]):
                 params=params,
                 dyn_key=dyn_key,
                 consistent_read=consistent_read,
+                reverse=reverse
             )
 
             for value in self._paginate_all_items_generator(method='query', params=params):
@@ -687,13 +718,17 @@ class DynClient(RemoteClient[M]):
             params: DynParams,
             dyn_key: DynKey = None,
             filter_key: str = 'FilterExpression',
-            consistent_read: bool | DefaultType = Default
+            consistent_read: bool | DefaultType = Default,
+            reverse: bool = False
     ):
         if consistent_read is Default:
             consistent_read = self.consistent_reads
 
         if consistent_read:
             params['ConsistentRead'] = True
+
+        if reverse:
+            params['ScanIndexForward'] = False
 
         if not query and not dyn_key:
             return

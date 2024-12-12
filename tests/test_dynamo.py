@@ -610,11 +610,12 @@ def test_scan_fallback():
     ItemWithRangeKeyForStr(hash_field='hash', range_field='range', name='first').api.send()
     ItemWithRangeKeyForStr(hash_field='other-h', range_field='other-r', name='second').api.send()
 
-    items = ItemWithRangeKeyForStr.api.get({'name': 'second'}, allow_scan=True)
+    items = ItemWithRangeKeyForStr.api.get({'name': 'second'}, allow_scan=True, reverse=True)
     items = list(items)
     assert len(items) == 1
     assert items[0].hash_field == 'other-h'
     assert 'ConsistentRead' not in items[0].api.client.last_paginate_params
+    assert 'ScanIndexForward' not in items[0].api.client.last_paginate_params
 
 
 def test_conditional_delete():
@@ -656,3 +657,25 @@ def test_conditional_put():
     assert not o.api.response_state.has_field_error('_conditional_check', 'failed')
 
     assert ItemWithRangeKeyForStr.api.get_via_id(o.id).items == [{'a': 3}]
+
+
+def test_reverse():
+    ItemWithRangeKeyForStr(hash_field='hash', range_field='range-a', name='first').api.send()
+    ItemWithRangeKeyForStr(hash_field='hash', range_field='range-b', name='second').api.send()
+
+    items = ItemWithRangeKeyForStr.api.get({'hash_field': 'hash'})
+    items = list(items)
+    assert len(items) == 2
+    assert items[0].range_field == 'range-a'
+    assert 'ScanIndexForward' not in items[0].api.client.last_paginate_params
+
+    rev_items = ItemWithRangeKeyForStr.api.get({'hash_field': 'hash'}, reverse=True)
+    rev_items = list(rev_items)
+    assert len(rev_items) == 2
+    assert rev_items[0].range_field == 'range-b'
+    assert 'ScanIndexForward' in rev_items[0].api.client.last_paginate_params
+
+    item = ItemWithRangeKeyForStr.api.get({'hash_field': 'hash', 'range_field': 'range-a'}, reverse=True)
+    item = list(item)
+    assert len(item) == 1
+    assert item[0].range_field == 'range-a'
